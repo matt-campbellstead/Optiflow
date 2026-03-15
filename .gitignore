@@ -1,5 +1,6 @@
 config.env
-log/
 node_modules/
 .vscode/
 .prettierrc
+config.js
+config.json

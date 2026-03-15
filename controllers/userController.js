@@ -9,7 +9,18 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
     status: 'success',
     results: users.length,
     data: {
-      users,
+      users: users,
+    },
+  });
+});
+
+exports.getUser = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user: user,
     },
   });
 });

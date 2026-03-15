@@ -1,0 +1,63 @@
+extends base
+
+mixin milestone(rowNum, classNum)
+    th(scope='row')
+        input(type='checkbox' class=`m${rowNum}--${classNum}`)
+
+mixin shipment(text, data)
+    .shipment-box-detail 
+        span.shipment-box_label= `${text}: ${data}`
+
+block content
+    if (user.role === 'user')
+        h1= `Welcome, ${user.name}!`
+            section.dashboard__container 
+                .heading-box 
+                    h1.heading-primary Your Shipments 
+                        each shipment, i in shipments
+                            .shipment-box 
+                                h2.heading-secondary= `${i + 1}) Customer: ${shipment.optimum_customer_name}:`
+                                +shipment('Type', shipment.routing)
+                                +shipment('Mode', shipment.mode)
+                                +shipment('Shipper', shipment.shipper)
+                            .footer-box
+                                span= `Created at: ${shipment.createdAt}`
+    if (user.role === 'admin')
+        h1= `Welcome, ${user.name}!`
+            section.dashboard__container 
+                .heading-box 
+                    h1.heading-primary Operations Dashboard 
+                        h2.heading-secondary All current shipments 
+                            each shipment, i in allShipments 
+                                .shipment-box 
+                                    h3= `DB item ${shipment.id})`
+                                    +shipment('Customer', shipment.optimum_customer_name)
+                                    +shipment('Type', shipment.routing)
+                                    +shipment('Mode', shipment.mode)
+                                    +shipment('Shipper', shipment.shipper)
+                                    +shipment('Number of packages', shipment.no_packages)
+                                    +shipment('Gross weight', shipment.gross_weight)
+                                    +shipment('Volumetric weight', shipment.volumetric_weight)
+                        
+                        //- ul.checkbox-table
+                        //-     li(class='list--1')  Cargo Collected / FCL and LCL
+                        //-         input(type='checkbox' class='m--1')
+                    section.milestones__table
+                        h2.heading-secondary Tick off your shipment milestones
+                        table.checkbox-table
+                            thead.table-columns
+                                - const arr = ['', 'Cargo Collected / FCL and LCL', 'Received at Depot / FCL and LCL', 'Cargo Packed / LCL', 'Depot LRD Date / LCL', 'Cargo Loaded/Stuffed / LCL', 'Cargo Departed Port/Airport', 'OBL/AWB Received', 'ANF/Pre-Alert Received','Customer Invoiced','Payment Received','Line Release received','Clearing Instruction Issued','Delivery Instruction Issued','Signed CI received','SARS Submission','Cargo Arrived Port/Airport','Cargo Released/ SARS','Cargo Unpacked (LCL)','Cargo Delivered','Document Pack Sent']
+                                tr
+                                    for each of arr 
+                                        th(scope='col')=`${each}`
+                            
+                            tbody.table-rows
+                                - let rowCount = 0
+                                each shipment in allShipments 
+                                    - rowCount = rowCount + 1
+                                    tr
+                                        th= `Shipment ID: ${shipment.id}`
+                                        - for (let i = 1; i <= 20; i++)
+                                            +milestone(rowCount, i)
+                                    
+                            a.btn.milestone(href='#') Submit

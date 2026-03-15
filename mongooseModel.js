@@ -63,7 +63,7 @@ const userSchema = new mongoose.Schema({
     default: true,
     select: false,
   },
-  shipments: [{ type: String, ref: 'Shipments' }],
+  shipments: [{ type: mongoose.Schema.ObjectId, ref: 'Usershipment' }],
 });
 
 // Query, doc middleware
@@ -78,6 +78,10 @@ userSchema.pre('save', function () {
 
   this.passwordChangedAt = Date.now() - 1000;
 });
+
+// userSchema.pre(/^find/, function () {
+//   this.populate({ path: 'shipments', select: 'shipment' });
+// });
 
 // Instance methods
 userSchema.methods.correctPassword = async function (candidatePass, userPass) {

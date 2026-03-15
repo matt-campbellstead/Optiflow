@@ -1,6 +1,7 @@
 'use strict';
-const Shipment = require('../sequelize');
+const Shipment = require('../sequelize/model');
 const User = require('../mongooseModel');
+const Usershipment = require('../mongooseSubModel');
 const AppError = require('../utils/AppError');
 const asyncHandler = require('../utils/asyncHandler');
 
@@ -42,16 +43,35 @@ exports.createData = asyncHandler(async (req, res, next) => {
     gross_weight: req.body.gross_weight,
     volumetric_weight: req.body.volumetric_weight,
     users: req.body.users,
+    fileNo: req.body.fileNo,
+    isCurrent: req.body.isCurrent,
+    incoterm: req.body.incoterm,
   });
 
   const newId = newShip.id;
-  await User.findByIdAndUpdate(req.body.users, { shipments: newId });
 
+  //  await User.findByIdAndUpdate(
+  //     req.body.users,
+  //     { shipments: newId },
+  //     {
+  //       new: true,
+  //       runValidators: true,
+  //     },
+  //   );
+  const newDoc = await Usershipment.create({
+    shipment: newId,
+    client: req.body.users,
+  });
+
+  await User.findByIdAndUpdate(req.body.users, { shipments: newDoc._id });
+
+  console.log(newShip);
   res.status(201).json({
     status: 'success',
     message: 'entry added successfully',
     data: {
       newShip,
+      newDoc,
     },
   });
 });
@@ -64,5 +84,15 @@ exports.deleteAllData = asyncHandler(async (req, res, next) => {
   res.status(204).json({
     status: 'success',
     data: null,
+  });
+});
+
+exports.updateData = asyncHandler(async (req, res, next) => {
+  await Shipment.update(req.body, {
+    where: { id: req.params.id },
+  });
+
+  res.status(201).json({
+    status: 'success',
   });
 });

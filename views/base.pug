@@ -1,0 +1,37 @@
+doctype html
+html 
+    head 
+   
+        meta(name='viewport' content='width=device-width, initial-scale=1.0')
+        title DB testing | #{title}
+        meta(charset='UTF-8')
+        link(rel='stylesheet' href='style.css')
+
+    body 
+   
+        header.header
+            nav.nav.nav--home 
+                    a.nav__el(href='/') Home
+            .header-logo 
+                    img(src='/img/logo.png')
+            nav.nav.nav--user
+                if user
+                    a.btn.nav__el--logout Log out
+                else 
+                    a.btn.nav__el--signup(href='') Sign up 
+                    a.btn.nav__el(href='/login') Log in
+
+
+        block content
+            main
+                h1 Testing app functionality of DB queries
+                p "Numbers written on restaurant checks within the confines of restaurants do not follow the same mathematical laws as numbers written on any other pieces of paper in any part of the Universe."
+                    span — Douglas Adams Le Guide Du Voyageur Galactique
+
+        footer.footer
+            a.btn.theme(href='#') 🌞/🌚
+            .footer-text
+                p Company Name Pty(Ltd) 2026
+                |
+                p All rights reserved 
+    script(src='/js/bundle.js')

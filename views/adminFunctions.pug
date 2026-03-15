@@ -1,0 +1,18 @@
+extends base 
+
+
+block content 
+    h1.heading-primary Functions for viewing DB data arranged by parameters 
+    section.dashboard__container
+        h2.heading-secondary Shipments by website user
+        p Select user, then click the button below to see all shipments related their account.
+            ul Users:
+                each user, i in allUsers
+                    li(class=`user-li--${i}`)=`${user.name}/${user.id}`
+                        input(type='checkbox' name='usercheckbox')
+            
+            a.btn.submit Submit
+            a.btn.view-dbx(href='#') View
+        p.shipment-logs
+        h2.heading-secondary Misc
+        p Miscellaneous

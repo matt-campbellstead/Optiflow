@@ -1,0 +1,14 @@
+extends base
+
+block content 
+    h1 Log in to see your personalised dashboard 
+        form.form
+            .form__group 
+                label.form__label(for='email') Email address 
+                input#email.form__input(type='email', placeholder='you@example.com', required)   
+            .form__group 
+                label.form__label(for='password') Password 
+                input#password.form__input(type='password', placeholder='••••••••', required, minlength='8')
+            .form__group 
+                button.btn.btn__login Log in
+

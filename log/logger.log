@@ -1,0 +1,34 @@
+App is running on port 8000, at 2026/03/15, 11:58:00
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Shipments' AND TABLE_SCHEMA = 'test'
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'SequelizeMeta' AND TABLE_SCHEMA = 'test'
+Executing (default): SHOW INDEX FROM `Shipments`
+Executing (default): SHOW FULL COLUMNS FROM `SequelizeMeta`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'SequelizeMeta' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='test' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): SHOW INDEX FROM `SequelizeMeta`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Shipments' AND TABLE_SCHEMA = 'test'
+Executing (default): SHOW FULL COLUMNS FROM `Shipments`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'Shipments' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='test' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): ALTER TABLE `Shipments` CHANGE `optimum_customer_name` `optimum_customer_name` VARCHAR(255) NOT NULL;
+Executing (default): ALTER TABLE `Shipments` CHANGE `routing` `routing` VARCHAR(255) NOT NULL;
+Executing (default): ALTER TABLE `Shipments` CHANGE `mode` `mode` VARCHAR(255) NOT NULL;
+Executing (default): ALTER TABLE `Shipments` CHANGE `shipper` `shipper` VARCHAR(255) NOT NULL;
+Executing (default): ALTER TABLE `Shipments` CHANGE `no_packages` `no_packages` INTEGER NOT NULL;
+Executing (default): ALTER TABLE `Shipments` CHANGE `gross_weight` `gross_weight` VARCHAR(255);
+Executing (default): ALTER TABLE `Shipments` CHANGE `volumetric_weight` `volumetric_weight` VARCHAR(255);
+Executing (default): ALTER TABLE `Shipments` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `Shipments` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `Shipments` CHANGE `users` `users` VARCHAR(255);
+Executing (default): ALTER TABLE `Shipments` CHANGE `isCurrent` `isCurrent` TINYINT(1);
+Executing (default): ALTER TABLE `Shipments` CHANGE `fileNo` `fileNo` VARCHAR(255);
+Executing (default): ALTER TABLE `Shipments` CHANGE `incoterm` `incoterm` VARCHAR(255);
+Executing (default): SHOW INDEX FROM `Shipments`
+MariaDB connection successful! At 11:58:01
+MongoDB: database connection succesful! At 11:58:03
+////////////////11:58:53
+////////////////11:58:53
+////////////////11:58:56
+Executing (default): SELECT `id`, `optimum_customer_name`, `routing`, `mode`, `shipper`, `no_packages`, `gross_weight`, `volumetric_weight`, `users`, `isCurrent`, `fileNo`, `incoterm` FROM `Shipments` AS `Shipment`;
+////////////////11:58:56
+////////////////12:00:38
+Executing (default): SELECT `id`, `optimum_customer_name`, `routing`, `mode`, `shipper`, `no_packages`, `gross_weight`, `volumetric_weight`, `users`, `isCurrent`, `fileNo`, `incoterm` FROM `Shipments` AS `Shipment`;
+////////////////12:00:38

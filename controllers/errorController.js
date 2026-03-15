@@ -32,28 +32,55 @@ const handleSqlzeValidationErr = (err) => {
   return new AppError(message, 400);
 };
 
-const sendDevErr = (err, res) => {
-  res.status(err.statusCode).json({
-    status: err.status,
-    error: err,
-    message: err.message,
-    stack: err.stack,
-  });
-};
-
-const sendProdErr = (err, res) => {
-  if (err.isOperational) {
+const sendDevErr = (err, req, res) => {
+  // API
+  if (req.originalUrl.startsWith('/api')) {
     res.status(err.statusCode).json({
       status: err.status,
+      error: err,
       message: err.message,
+      stack: err.stack,
     });
   } else {
-    mylog.log('ERROR👺', err);
-
-    res.status(500).json({
-      status: 'error',
-      message: 'something went very wrong!',
+    // RENDERED WEBSITE
+    res.status(err.statusCode).render('error', {
+      title: 'Something went wrong',
+      msg: err.message,
     });
+  }
+};
+
+const sendProdErr = (err, req, res) => {
+  //API
+  if (req.originalUrl.startsWith('/api')) {
+    if (err.isOperational) {
+      res.status(err.statusCode).json({
+        status: err.status,
+        message: err.message,
+      });
+    } else {
+      mylog.log('ERROR👺', err);
+
+      res.status(500).json({
+        status: 'error',
+        message: 'something went very wrong!',
+      });
+    }
+  } else {
+    // RENDERED WEBSITE
+    if (err.isOperational) {
+      res.status(err.statusCode).render('error', {
+        title: 'Something went wrong',
+        msg: err.message,
+      });
+    } else {
+      mylog.log('ERROR👺', err);
+
+      res.status(err.statusCode).render('error', {
+        title: 'Something went wrong!',
+        msg: 'Please try again later.',
+      });
+    }
   }
 };
 
@@ -62,7 +89,7 @@ module.exports = (err, req, res, next) => {
   err.status = err.status || 'error';
 
   if (process.env.NODE_ENV === 'development') {
-    sendDevErr(err, res);
+    sendDevErr(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
     let error = { ...err, message: err.message, name: err.name };
 
@@ -74,6 +101,6 @@ module.exports = (err, req, res, next) => {
     if (error.name === 'SequelizeValidationError')
       error = handleSqlzeValidationErr(error);
 
-    sendProdErr(error, res);
+    sendProdErr(error, req, res);
   }
 };
