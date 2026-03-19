@@ -1,5 +1,22 @@
-App is running on port 8000, at 2026/03/18, 21:29:16
-MariaDB: database connection established successfully. At 21:29:16.
-MongoDB: database connection succesful! At 21:29:16
-////////////////21:30:16
-////////////////21:30:21
+App is running on port 8000, at 2026/03/19, 09:39:33
+MariaDB: database connection established successfully. At 09:39:33.
+MongoDB: database connection succesful! At 09:39:34
+////////////////09:39:47
+////////////////09:39:47
+////////////////09:39:53
+////////////////09:40:59
+////////////////09:40:59
+////////////////09:42:08
+////////////////09:42:08
+JsonWebTokenError: jwt malformed
+    at module.exports (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/jsonwebtoken/verify.js:70:17)
+    at node:internal/util:496:21
+    at new Promise (<anonymous>)
+    at node:internal/util:482:12
+    at exports.isLoggedIn (/Users/matthewstead/Desktop/Node-Express-Sequelize/controllers/authController.js:143:50)
+    at Layer.handleRequest (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/lib/layer.js:152:17)
+    at next (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/lib/route.js:117:3)
+    at handle (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/lib/layer.js:152:17)
+////////////////09:42:08

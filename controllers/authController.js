@@ -3,7 +3,8 @@ const mylog = require('../log');
 const asyncHandler = require('../utils/asyncHandler');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const rateLimit = require('express-rate-limit');
+const authLimiter = require('../utils/rateLimit');
+//const rateLimit = require('express-rate-limit');
 const { promisify } = require('util');
 const User = require('../models/mongooseModel');
 const AppError = require('../utils/AppError');
@@ -82,7 +83,7 @@ exports.logIn = asyncHandler(async (req, res, next) => {
   user.password = undefined;
   user.passwordConfirm = undefined;
 
-  rateLimit();
+  //authLimiter();
 
   //console.log(user);
   createSendToken(user, 200, res);

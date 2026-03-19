@@ -97,7 +97,6 @@ exports.createMasterData = asyncHandler(async (req, res, next) => {
 
   await User.findByIdAndUpdate(req.body.users, { shipments: newDoc._id });
 
-  console.log(masterPost);
   res.status(201).json({
     status: 'success',
     message: 'entry added successfully',

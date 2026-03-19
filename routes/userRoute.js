@@ -12,9 +12,8 @@ router.get('/logout', authController.logOut);
 router.post('/forgotpassword', authController.forgotPassword);
 router.patch('/resetpassword/:token', authController.resetPassword);
 
-router.use('/:userid/shipmentlogs', dbxRouter);
-
 router.use(authController.protect);
+router.use('/:userid/shipmentlogs', dbxRouter);
 
 router.patch(
   '/updatemypassword',

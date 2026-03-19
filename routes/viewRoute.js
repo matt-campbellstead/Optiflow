@@ -6,6 +6,7 @@ const router = express.Router();
 router.get('/', authController.isLoggedIn, controller.homePage);
 router.get('/login', authController.isLoggedIn, controller.logInUser);
 router.get('/dashboard', authController.isLoggedIn, controller.displayShipment);
+
 router.get(
   '/ops-dashboard',
   authController.protect,
