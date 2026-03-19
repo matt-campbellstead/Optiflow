@@ -49,7 +49,6 @@ mongoose.connect(DB).then((con) => {
 });
 
 // Sequelize
-
 if (process.env.NODE_ENV === 'development') {
   sequelize.sync({ alter: true }).then(() => {
     const date = new Date().toLocaleString('en-ZA');

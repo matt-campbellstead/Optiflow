@@ -1,0 +1,34 @@
+extends base
+
+//- mixin formInput(text, class, required)
+//-     .form__group
+//-         label.form__label(for=`${class}`)= `${text}`
+//-         input`#{class}`.form__input(type='text', placeholder='EXW', `${required}`)
+
+block content
+    h1.heading-primary Welcome to the data submission page 
+        h2.heading-secondary Here, you can submit data into the database.
+            form.form.data-form__master
+                h2.heading-secondary Master table 
+                p 'isCurrent' default setting is 'true', and 'MasterId' is set automatically. All that is required here is the Shipment File number and the ID of the customer's user profile.
+                .form__group
+                    label.form__label(for="shipment_file_id") Shipment file no.
+                    input#shipment_file_id.form__input(type='text', placeholder='1234567ABC', required)
+                .form__group
+                    label.form__label(for="users") User ID string
+                    input#users.form__input(type='text', placeholder='userid', required)
+                .form__group 
+                    input.btn.submit(type="submit")
+            include _formDetails
+            select(id="simple" name="simple")
+                option Banana
+                option Cherry
+                option Lemon
+            
+            
+                
+
+    
+        h2.heading-seconday Your data entry: 
+            section.dashboard__container
+                p.data-preview

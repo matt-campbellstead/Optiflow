@@ -1,0 +1,50 @@
+form.form.data-form__details
+    h2.heading-secondary Shipment Details table
+    p some text
+    .form__group
+        label.form__label(for="masterId") Master ID
+        input#masterId.form__input(type='text', placeholder='1, 2, 3...')
+    .form__group
+        label.form__label(for="incoterms") Incoterms
+        input#incoterms.form__input(type='text', placeholder='EXW')
+    .form__group
+        label.form__label(for="mode") Mode
+        input#mode.form__input(type='text', placeholder='Import/Export', required)
+    .form__group
+        label.form__label(for="routing") Routing
+        input#routing.form__input(type='text', placeholder='SEA...', required)
+    .form__group
+        label.form__label(for="goods") Goods description
+        input#goods.form__input(type='text', placeholder='Some goods...')
+    .form__group
+        label.form__label(for="packaging") Packaging type
+        input#packaging.form__input(type='text', placeholder='Cartons, Crates...')
+    .form__group
+        label.form__label(for="qty") Shipping containers quantity
+        input#qty.form__input(type='text', placeholder='1, 2, 3...')
+    .form__group
+        label.form__label(for="specs") Container specification
+        input#specs.form__input(type='text', placeholder='20" GP, 40" GP...')
+    .form__group
+        label.form__label(for="numItems") Number of items
+        input#numItems.form__input(type='text', placeholder='10, 20, 30...')
+    .form__group
+        label.form__label(for="grossWeight") Cargo gross weight in kilograms
+        input#grossWeight.form__input(type='text', placeholder='...kg')
+    .form__group
+        label.form__label(for="nettWeight") Cargo nett weight in kilograms
+        input#nettWeight.form__input(type='text', placeholder='...kg')
+    .form__group
+        label.form__label(for="cbm") Cargo CBM
+        input#cbm.form__input(type='text', placeholder='...CBM')
+    .form__group
+        label.form__label(for="requirements") Handling requirements
+        input#requirements.form__input(type='text', placeholder='Message here...')
+    .form__group
+        label.form__label(for="dangerous") Dangerous goods?
+        input#dangerous.form__input(type='text', placeholder='True/False')
+    .form__group
+        label.form__label(for="drg") DRG code
+        input#drg.form__input(type='text', placeholder='123456')
+    .form__group 
+        input.btn.submit(type='submit')

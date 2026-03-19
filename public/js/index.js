@@ -1,23 +1,23 @@
 import { login, logout } from './login';
 import { changeStyle } from './changeStyle';
 import { viewShipmentLogs } from './opsFunctions';
+import { submitMaster } from './submitData';
 
 const currentTheme = localStorage.getItem('theme');
-//console.log(currentTheme);
+
 if (currentTheme) {
   changeStyle();
 }
 const logOutBtn = document.querySelector('.nav__el--logout');
-const form = document.querySelector('.form');
+const loginForm = document.querySelector('.login-form');
+const submitDataForm = document.querySelector('.data-form__master');
 const themeBtn = document.querySelector('.theme');
 const viewDbxBtn = document.querySelector('.view-dbx');
 const checkboxes = document.querySelectorAll('ul input');
-const milestones = document.querySelectorAll('input[type="checkbox"]');
 const submitBtn = document.querySelector('.submit');
-const milestoneBtn = document.querySelector('.btn.milestone');
 
-if (form)
-  form.addEventListener('submit', (e) => {
+if (loginForm)
+  loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
@@ -43,21 +43,24 @@ if (submitBtn) {
     }
   });
 }
-// for (const [checkbox, i] of checkboxes) {
-//   console.log(document.querySelector(`li.${i}`).textContent);
-//   if (checkbox[i].value === 'on') id = `li.${i}`.textContent;
-// }
+
 if (viewDbxBtn) {
   viewDbxBtn.addEventListener('click', () => {
     viewShipmentLogs(id);
   });
 }
-if (milestoneBtn) {
-  milestoneBtn.addEventListener('click', function () {
-    console.log('Howdy!');
 
-    for (let i = 0; i < milestones.length; i++) {
-      if (milestones[i].checked) console.log(milestones[i].className);
-    }
+if (submitDataForm)
+  submitDataForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const object = {};
+
+    const fileId = document.getElementById('shipment_file_id').value;
+    const userId = document.getElementById('users').value;
+
+    object.shipment_file_id = fileId;
+    object.users = userId;
+
+    submitMaster(object);
   });
-}

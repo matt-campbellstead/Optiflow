@@ -5,10 +5,10 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const { promisify } = require('util');
-const User = require('../mongooseModel');
+const User = require('../models/mongooseModel');
 const AppError = require('../utils/AppError');
 const sendEmail = require('../utils/email');
-const Shipment = require('../sequelize/model');
+const Master = require('../models/masterModel');
 
 const createSendToken = (user, statusCode, res) => {
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
@@ -169,7 +169,7 @@ exports.isLoggedIn = async (req, res, next) => {
 
 exports.restrictToUser = () => {
   return async (req, res, next) => {
-    const shipment = await Shipment.findOne({ where: { id: req.params.id } });
+    const shipment = await Master.findOne({ where: { id: req.params.id } });
 
     if (!shipment) return next(new AppError('Cannot find that data.', 404));
 

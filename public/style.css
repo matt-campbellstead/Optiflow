@@ -1,12 +1,14 @@
 :root {
   --clr-dark: black;
   --clr-light: #fff;
+  --clr-dark2: #404040;
+  --clr-light2: #f3f6f4;
   --clr-bg-light: linear-gradient(
     335deg,
     rgba(255, 140, 107, 1) 0%,
     rgba(255, 228, 168, 1) 100%
   );
-  --clr-bg-dark: linear-gradient(335deg, #00205b 0%, #7b866f 100%);
+  --clr-bg-dark: linear-gradient(335deg, #00205b 0%, #404040 100%);
 }
 
 .dark-mode-bg {
@@ -22,12 +24,21 @@
   color: var(--clr-light) !important;
 }
 
+.dark-mode-container {
+  background-color: var(--clr-dark2) !important;
+  color: var(--clr-light) !important;
+}
+
 .dark-mode-btn {
   background-color: #00205b !important ;
 }
 
 .dark-mode-input {
   color: var(--clr-dark);
+}
+
+.dark-mode-span {
+  color: var(--clr-light);
 }
 
 body {
@@ -38,6 +49,7 @@ body {
   height: 100vh;
   color: var(--clr-dark);
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 1.2rem;
 }
 
 h1 {
@@ -69,6 +81,7 @@ h1 {
 .nav__el {
   padding: 15px;
   margin: 10px;
+  height: min-content;
   display: flex;
   color: var(--clr-light);
   font-style: italic;
@@ -117,7 +130,7 @@ h1 {
 }
 .form {
   color: rgba(255, 140, 107, 1);
-  display: flex;
+  display: grid;
   margin: 0 auto;
   max-width: 55rem;
   background-color: var(--clr-light);
@@ -128,21 +141,22 @@ h1 {
 }
 
 .form__group {
-  font-size: 22px;
+  font-size: 1.2rem;
   padding: 5px;
 }
 
 .form__input {
   display: block;
   font-family: inherit;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: inherit;
-  padding: 1.25rem 1.75rem;
+  /* padding: 1.25rem 1.75rem; */
+  padding: 0.8rem 1.1rem;
   border: none;
-  width: 100%;
-
-  border-top: 3px solid transparent;
-  border-bottom: 3px solid transparent;
+  width: 75%;
+  background-color: var(--clr-light2);
+  border-top: 2px solid transparent;
+  border-bottom: 2px solid transparent;
 
   border-radius: 4px;
   -webkit-box-sizing: border-box;
@@ -160,6 +174,7 @@ h1 {
   font-weight: 200;
   background-color: rgba(255, 140, 107, 1);
   color: var(--clr-light);
+  cursor: grab;
 }
 
 .dashboard__container {
@@ -171,26 +186,26 @@ h1 {
 }
 
 .shipment-box {
-  background-color: #bcbcbc;
+  background-color: var(--clr-light2);
   color: rgba(255, 228, 168, 1);
   font-size: 1rem;
   border-radius: 4px;
 }
 
 .heading-primary {
-  color: rgba(255, 140, 107, 1);
+  font-size: 1.8rem;
 }
 
 .heading-secondary {
   font-size: 1.5rem;
   padding: 10px;
-  color: black;
+
   position: relative;
 }
 
 .shipment-box-detail {
   font-family: Arial, Helvetica, sans-serif;
-  color: black;
+  color: var(--clr-dark);
   padding: 10px;
 }
 
@@ -218,6 +233,14 @@ h1 {
 
 .alert--error {
   background-color: red;
+}
+
+.shipment-box_label {
+  white-space: pre-line;
+  overflow-x: auto;
+  font-family: monospace;
+  font-size: 12px;
+  padding: 15px;
 }
 
 /*

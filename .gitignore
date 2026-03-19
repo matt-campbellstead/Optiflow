@@ -4,3 +4,5 @@ node_modules/
 .prettierrc
 config.js
 config.json
+text
+.DS_Store

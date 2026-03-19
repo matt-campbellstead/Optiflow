@@ -12,6 +12,6 @@ router.get(
   controller.displayAllShipments,
 );
 router.get('/ops-functions', authController.protect, controller.displayUsers);
-router.post('/ops-create-post', controller.submitShipment);
+router.get('/ops-data', authController.protect, controller.submitData);
 
 module.exports = router;

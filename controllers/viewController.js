@@ -1,8 +1,15 @@
+'use strict';
 const asyncHandler = require('../utils/asyncHandler');
-const Shipment = require('../sequelize/model');
-const Usershipment = require('../mongooseSubModel');
-const User = require('../mongooseModel');
+const Master = require('../models/masterModel');
+const Shippers = require('../models/shippersModel');
+const Timeline = require('../models/timelineModel');
+const Details = require('../models/shipDetailModel');
+//const Usershipment = require('../models/mongooseSubModel');
+const User = require('../models/mongooseModel');
 const AppError = require('../utils/AppError');
+const Conveyance = require('../models/conveyanceModel');
+const Financials = require('../models/financialDetailModel');
+const Customs = require('../models/customsModel');
 
 exports.homePage = (req, res) => {
   res.status(200).render('home', {
@@ -25,8 +32,9 @@ exports.logInUser = (req, res) => {
 exports.displayShipment = asyncHandler(async (req, res, next) => {
   const userId = `${req.user._id}`; //JSON.stringify(req.user._id);
   //console.log(userId);
-  const shipments = await Shipment.findAll({
+  const shipments = await Master.findAll({
     where: { users: userId },
+    include: [{ model: Timeline }, { model: Details }],
   });
   if (!shipments) {
     return next(
@@ -41,7 +49,18 @@ exports.displayShipment = asyncHandler(async (req, res, next) => {
 });
 
 exports.displayAllShipments = asyncHandler(async (req, res, next) => {
-  const allShipments = await Shipment.findAll();
+  const allShipments = await Master.findAll({
+    where: { isCurrent: true },
+    order: [['id', 'DESC']],
+    include: [
+      { model: Shippers },
+      { model: Timeline },
+      { model: Details },
+      { model: Customs },
+      { model: Financials },
+      { model: Conveyance },
+    ],
+  });
 
   if (!allShipments) {
     return next(new AppError('There is no data matching that request.', 404));
@@ -66,6 +85,8 @@ exports.displayUsers = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.submitShipment = asyncHandler(async (req, res, next) => {
-  const newShipment = await Shipment.create({});
-});
+exports.submitData = (req, res) => {
+  res.status(200).render('adminSubmit', {
+    title: 'Admin Data Submission',
+  });
+};

@@ -31,5 +31,3 @@ export const viewShipmentLogs = async (id) => {
     //showAlert('error', err.response.data.msg);
   }
 };
-
-export const milestones = () => {};

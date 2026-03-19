@@ -1,49 +1,81 @@
 extends base
 
-mixin milestone(rowNum, classNum)
-    th(scope='row')
-        input(type='checkbox' class=`m${rowNum}--${classNum}`)
+//- mixin milestone(rowNum, classNum)
+//-     td(class=`m${rowNum}--${classNum}`)
 
-mixin shipment(text, data)
-    .shipment-box-detail 
-        span.shipment-box_label= `${text}: ${data}`
+mixin milestone(timeline)
+            td(class=`m${timeline.MasterId}--1`)= String(timeline.collected)
+            td(class=`m${timeline.MasterId}--2`)= String(timeline.atDepot)
+            td(class=`m${timeline.MasterId}--3`)= String(timeline.packed)
+            td(class=`m${timeline.MasterId}--4`)= String(timeline.lrd)
+            td(class=`m${timeline.MasterId}--5`)= String(timeline.loaded)
+            td(class=`m${timeline.MasterId}--6`)= String(timeline.departedToPort)
+            td(class=`m${timeline.MasterId}--7`)= String(timeline.obl_awb_received)
+            td(class=`m${timeline.MasterId}--8`)= String(timeline.anf_pre_received)
+            td(class=`m${timeline.MasterId}--9`)= String(timeline.invoiced)
+            td(class=`m${timeline.MasterId}--10`)= String(timeline.payment)
+            td(class=`m${timeline.MasterId}--11`)= String(timeline.lineRelease)
+            td(class=`m${timeline.MasterId}--12`)= String(timeline.instructionClearing)
+            td(class=`m${timeline.MasterId}--13`)= String(timeline.instructionDelivery)
+            td(class=`m${timeline.MasterId}--14`)= String(timeline.signedCi)
+            td(class=`m${timeline.MasterId}--15`)= String(timeline.sars)
+            td(class=`m${timeline.MasterId}--16`)= String(timeline.arrivedAtPort)
+            td(class=`m${timeline.MasterId}--17`)= String(timeline.released)
+            td(class=`m${timeline.MasterId}--18`)= String(timeline.unpacked)
+            td(class=`m${timeline.MasterId}--19`)= String(timeline.delivered)
+            td(class=`m${timeline.MasterId}--20`)= String(timeline.docSent)
+
+//- mixin shipment(text, data)
+//-     .shipment-box-detail 
+//-         span.shipment-box_label= `${text}: ${data}`
+mixin shipmentFunction(data)
+    h3= `Master ID: ${data.id})`
+        .shipment-box-detail 
+            span.shipment-box_label= `Customer: ${data.users}`
+        .shipment-box-detail
+            span.shipment-box_label= `File number: ${data.shipment_file_id}`
+        .shipment-box-detail 
+            span.shipment-box_label= `Shipment Details: ${JSON.stringify(data.Detail, null, 4)}`
+        .shipment-box-detail 
+            span.shipment-box_label= `Shipper: ${JSON.stringify(data.Shipper, null, 4)}`
+        .shipment-box-detail 
+            span.shipment-box_label= `Financial Details: ${JSON.stringify(data.Financial, null, 4)}`
+        .shipment-box-detail 
+            span.shipment-box_label= `Conveyance: ${JSON.stringify(data.Conveyance, null, 4)}`
+        .shipment-box-detail 
+            span.shipment-box_label= `Customs Details: ${JSON.stringify(data.Custom, null, 4)}`
+        .shipment-box-detail 
+            span.shipment-box_label= `Voilà!`
+
+mixin customerFunction(data)
+    h2.heading-secondary= `Customer: ${data.users}`
+        .shipment-box-detail 
+            span.shipment-box_label= `Shipment Details: ${JSON.stringify(data.Detail, null, 4)}`
+
 
 block content
     if (user.role === 'user')
         h1= `Welcome, ${user.name}!`
             section.dashboard__container 
                 .heading-box 
-                    h1.heading-primary Your Shipments 
+                    h1.heading-primary Your Current Shipments 
                         each shipment, i in shipments
                             .shipment-box 
-                                h2.heading-secondary= `${i + 1}) Customer: ${shipment.optimum_customer_name}:`
-                                +shipment('Type', shipment.routing)
-                                +shipment('Mode', shipment.mode)
-                                +shipment('Shipper', shipment.shipper)
-                            .footer-box
-                                span= `Created at: ${shipment.createdAt}`
+                                +customerFunction(shipment)
+                .footer-box
+                    span= `Shipment milestones go here`
     if (user.role === 'admin')
         h1= `Welcome, ${user.name}!`
             section.dashboard__container 
                 .heading-box 
                     h1.heading-primary Operations Dashboard 
                         h2.heading-secondary All current shipments 
-                            each shipment, i in allShipments 
-                                .shipment-box 
-                                    h3= `DB item ${shipment.id})`
-                                    +shipment('Customer', shipment.optimum_customer_name)
-                                    +shipment('Type', shipment.routing)
-                                    +shipment('Mode', shipment.mode)
-                                    +shipment('Shipper', shipment.shipper)
-                                    +shipment('Number of packages', shipment.no_packages)
-                                    +shipment('Gross weight', shipment.gross_weight)
-                                    +shipment('Volumetric weight', shipment.volumetric_weight)
-                        
-                        //- ul.checkbox-table
-                        //-     li(class='list--1')  Cargo Collected / FCL and LCL
-                        //-         input(type='checkbox' class='m--1')
+                            each shipment, i in allShipments
+                                .shipment-box
+                                    +shipmentFunction(shipment)
+
                     section.milestones__table
-                        h2.heading-secondary Tick off your shipment milestones
+                        h2.heading-secondary Progress of your shipments
                         table.checkbox-table
                             thead.table-columns
                                 - const arr = ['', 'Cargo Collected / FCL and LCL', 'Received at Depot / FCL and LCL', 'Cargo Packed / LCL', 'Depot LRD Date / LCL', 'Cargo Loaded/Stuffed / LCL', 'Cargo Departed Port/Airport', 'OBL/AWB Received', 'ANF/Pre-Alert Received','Customer Invoiced','Payment Received','Line Release received','Clearing Instruction Issued','Delivery Instruction Issued','Signed CI received','SARS Submission','Cargo Arrived Port/Airport','Cargo Released/ SARS','Cargo Unpacked (LCL)','Cargo Delivered','Document Pack Sent']
@@ -52,12 +84,8 @@ block content
                                         th(scope='col')=`${each}`
                             
                             tbody.table-rows
-                                - let rowCount = 0
-                                each shipment in allShipments 
-                                    - rowCount = rowCount + 1
-                                    tr
-                                        th= `Shipment ID: ${shipment.id}`
-                                        - for (let i = 1; i <= 20; i++)
-                                            +milestone(rowCount, i)
-                                    
-                            a.btn.milestone(href='#') Submit
+                                each shipment in allShipments
+                                    if (shipment.Timeline)
+                                        tr
+                                            th(scope='row')= `Shipment ID: ${shipment.id}`
+                                                +milestone(shipment.Timeline)
