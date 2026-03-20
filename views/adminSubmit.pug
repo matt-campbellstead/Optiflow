@@ -19,11 +19,16 @@ block content
                     input#users.form__input(type='text', placeholder='userid', required)
                 .form__group 
                     input.btn.submit(type="submit")
+            include _formShipper
             include _formDetails
-            select(id="simple" name="simple")
-                option Banana
-                option Cherry
-                option Lemon
+            include _formFinancials
+            include _formConveyance
+            include _formCustoms
+
+            //- select(id="simple" name="simple")
+            //-     option Banana
+            //-     option Cherry
+            //-     option Lemon
             
             
                 

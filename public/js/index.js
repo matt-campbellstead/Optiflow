@@ -1,7 +1,15 @@
 import { login, logout } from './login';
 import { changeStyle } from './changeStyle';
 import { viewShipmentLogs } from './opsFunctions';
-import { submitMaster } from './submitData';
+import { submitMaster, submit } from './submitData';
+import {
+  detailsArray,
+  conveyanceArray,
+  customsArray,
+  financialsArray,
+  shipperArray,
+  iterator,
+} from './data';
 
 const currentTheme = localStorage.getItem('theme');
 
@@ -11,6 +19,11 @@ if (currentTheme) {
 const logOutBtn = document.querySelector('.nav__el--logout');
 const loginForm = document.querySelector('.login-form');
 const submitDataForm = document.querySelector('.data-form__master');
+const submitShipperForm = document.querySelector('.data-form__shipper');
+const submitFinancialsForm = document.querySelector('.data-form__financials');
+const submitCustomsForm = document.querySelector('.data-form__customs');
+const submitDetailsForm = document.querySelector('.data-form__details');
+const submitConveyanceForm = document.querySelector('.data-form__conveyance');
 const themeBtn = document.querySelector('.theme');
 const viewDbxBtn = document.querySelector('.view-dbx');
 const checkboxes = document.querySelectorAll('ul input');
@@ -61,6 +74,95 @@ if (submitDataForm)
 
     object.shipment_file_id = fileId;
     object.users = userId;
+    console.log(object);
 
     submitMaster(object);
+  });
+
+if (submitShipperForm)
+  submitShipperForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const object = {};
+    for (const key of shipperArray) {
+      object[key] = null;
+    }
+    shipperArray.forEach((el) => {
+      const node = document.getElementById(el);
+      if (!node) return;
+      let key = iterator(object, el);
+      object[key] = node.value;
+    });
+
+    submit(object, 'shippers');
+  });
+
+if (submitFinancialsForm)
+  submitFinancialsForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const object = {};
+    for (const key of financialsArray) {
+      object[key] = null;
+    }
+    financialsArray.forEach((el) => {
+      const node = document.getElementById(el);
+      if (!node) return;
+      let key = iterator(object, el);
+      object[key] = node.value;
+    });
+
+    submit(object, 'financials');
+  });
+
+if (submitCustomsForm)
+  submitCustomsForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const object = {};
+    for (const key of customsArray) {
+      object[key] = null;
+    }
+    customsArray.forEach((el) => {
+      const node = document.getElementById(el);
+      if (!node) return;
+      let key = iterator(object, el);
+      object[key] = node.value;
+    });
+
+    submit(object, 'customs');
+  });
+
+if (submitDetailsForm)
+  submitDetailsForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let object = {};
+    for (const key of detailsArray) {
+      object[key] = null;
+    }
+    detailsArray.forEach((el) => {
+      const node = document.getElementById(el);
+      if (!node) return;
+      let key = iterator(object, el);
+      object[key] = node.value;
+    });
+    // if (object.dangerousGoods === 'true') {
+    //   object.dangerousGoods = true;
+    // } else if (object.dangerousGoods === 'false') {
+    //   object.dangerousGoods = false;
+    // }
+    submit(object, 'shipment-details');
+  });
+
+if (submitConveyanceForm)
+  submitConveyanceForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let object = {};
+    for (const key of conveyanceArray) {
+      object[key] = null;
+    }
+    conveyanceArray.forEach((el) => {
+      const node = document.getElementById(el);
+      if (!node) return;
+      let key = iterator(object, el);
+      object[key] = node.value;
+    });
+    submit(object, 'conveyance');
   });

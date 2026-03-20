@@ -45,9 +45,9 @@ Details.init(
 
     numItems: {
       type: DataTypes.INTEGER,
-      validate: {
-        isNumeric: true,
-      },
+      // validate: {
+      //   isNumeric: true,
+      // },
     },
 
     grossWeightKg: {
