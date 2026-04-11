@@ -11,8 +11,10 @@ export const changeStyle = () => {
   const links = document.querySelectorAll('.nav__el');
   const dashboard = document.querySelector('.dashboard__container');
   const table = document.querySelector('.milestones__table');
+  const update = document.querySelector('.milestones__update');
+  const checkbox = document.querySelector('.checkbox-table');
 
-  elements.push(header, footer, footerT, dashboard, table);
+  elements.push(header, footer, footerT, dashboard, table, update);
 
   elements.forEach((el) => {
     if (el) el.classList.toggle('dark-mode-el');
@@ -34,10 +36,11 @@ export const changeStyle = () => {
     });
 
   const boxes = document.querySelectorAll('.shipment-box');
-  if (boxes)
+  if (boxes) {
     boxes.forEach((box) => {
       box.classList.toggle('dark-mode-container');
     });
+  }
 
   const labels = document.querySelectorAll('.shipment-box_label');
   if (labels)
@@ -50,6 +53,8 @@ export const changeStyle = () => {
     inputs.forEach((input) => {
       input.classList.toggle('dark-mode-container');
     });
+
+  if (checkbox) checkbox.classList.toggle('dark-mode-container');
 
   if (document.body.classList.contains('dark-mode-bg')) {
     localStorage.setItem('theme', 'dark-mode');

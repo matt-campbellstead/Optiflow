@@ -1,0 +1,21 @@
+mixin formInput(id, type, label, placeholder)
+    .form__group
+        label.form__label(for=id)= label
+        input.form__input(type=type, id=id, placeholder=placeholder)
+form.form.data-form__customers
+    h2.heading-secondary Customer Details table
+    p This form is for submitting  a customer's details for the FIRST TIME ONLY. After submission, you will be able to select the new record for association with future shipments.
+    p There is no need to link this to a Master sheet, as that will be done elsewhere.
+    +formInput('userId', 'text', 'User database ID', 'e.g. 1230abcd000')
+    +formInput('companyName_1', 'text', 'Name of company', 'e.g. ABC Commercial Pty Ltd')
+    +formInput('phoneLandline_1', 'text', 'Landline phone number', 'e.g. 011 123 4567')
+    +formInput('phoneMobile_1', 'text', 'Mobile phone number', 'e.g. 071 123 4567')
+    +formInput('emailPri', 'text', 'Primary email address', 'e.g. john@watson.co.uk')
+    +formInput('emailSec', 'text', 'Secondary email address', 'e.g. sherlock@holmes.co.uk')
+    +formInput('addressLine1_1', 'text', 'Address line 1', 'e.g. Street Name No 1')
+    +formInput('addressLine2_1', 'text', 'Address line 2', 'e.g. Area Name City Name')
+    +formInput('addressLine3_1', 'text', 'Address line 3', 'e.g. State or Province')
+    +formInput('country_1', 'text', 'Country', 'e.g. United Kingdom')
+    .form__group
+        input.btn.submit(type='submit')
+    

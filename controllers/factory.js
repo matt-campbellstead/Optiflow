@@ -5,7 +5,6 @@ const AppError = require('../utils/AppError');
 exports.getData = (Model) =>
   asyncHandler(async (req, res, next) => {
     const document = await Model.findAll();
-
     res.status(200).json({
       status: 'success',
       results: document.length,
@@ -55,5 +54,22 @@ exports.updateData = (Model) =>
 
     res.status(200).json({
       status: 'success',
+      data: { document },
+    });
+  });
+
+exports.getSingle = (Model) =>
+  asyncHandler(async (req, res, next) => {
+    const document = await Model.findOne({
+      where: { id: req.params.id },
+    });
+
+    if (document[0] === 0) {
+      return next(new AppError('No document with that ID found.', 404));
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: { document },
     });
   });

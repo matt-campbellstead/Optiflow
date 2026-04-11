@@ -1,18 +1,18 @@
-mixin formInput(id, type='text', label, placeholder)
+mixin formInput(id, type, label, placeholder)
     .form__group
         label.form__label(for=id)= label
         input.form__input(type=type, id=id, placeholder=placeholder)
 form.form.data-form__financials
     h2.heading-secondary Financial Details table
-    p some text
-    +formInput('MasterId', 'number', 'Master ID number', '1, 2, 3...' )
-    +formInput('shipperInvoiceNum', 'Shipper invoice number', 'ABC20XX1234ABC')
-    +formInput('invoiceDate', 'Invoice date', '20XX-XX-XX')
-    +formInput('invoiceAmount', 'Invoice amount', '$100,00')
-    +formInput('currency', 'Currency', 'USD/YEN...')
-    +formInput('tradeRef', 'Trade reference','12X1XX12' )
-    +formInput('apnNum', 'APN number', 'ABCDEFGHIJKLMN123456789')
-    +formInput('bank', 'Bank', 'FNB/RMB...')
-    +formInput('apnDate', 'APN date', '20XX-XX-XX')
+    p Input the ID of the associated Master document, then fill in the remaining fields, following the correct formatting.
+    +formInput('financialsMasterId', 'text', 'Master ID number', '1, 2, 3...' )
+    +formInput('shipperInvoiceNum', 'text', 'Shipper invoice number', 'ABC20XX1234ABC')
+    +formInput('invoiceDate', 'text', 'Invoice date', '20XX-XX-XX')
+    +formInput('invoiceAmount', 'text', 'Invoice amount', '$100,00')
+    +formInput('currency', 'text', 'Currency', 'USD/YEN...')
+    +formInput('tradeRef', 'text', 'Trade reference','12X1XX12' )
+    +formInput('apnNum', 'text', 'APN number', 'ABCDEFGHIJKLMN123456789')
+    +formInput('bank', 'text', 'Bank', 'FNB/RMB...')
+    +formInput('apnDate', 'text', 'APN date', '20XX-XX-XX')
     .form__group
         input.btn.submit(type='submit')

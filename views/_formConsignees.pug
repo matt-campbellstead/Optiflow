@@ -1,0 +1,20 @@
+mixin formInput(id, type, label, placeholder)
+    .form__group
+        label.form__label(for=id)= label
+        input.form__input(type=type, id=id, placeholder=placeholder)
+form.form.data-form__consignees
+    h2.heading-secondary Consignees table
+    p Input the ID of the associated Master document, then fill in the remaining fields, following the correct formatting.
+    +formInput('consigneesMasterId', 'text', 'Master ID', 'e.g. 5')
+    +formInput('companyName_2', 'text', 'Name of company', 'e.g. ABC Commercial Pty Ltd')
+    +formInput('phoneLandline_2', 'text', 'Landline phone number', 'e.g. 011 123 4567')
+    +formInput('phoneMobile_2', 'text', 'Mobile phone number', 'e.g. 071 123 4567')
+    +formInput('emailPri_1', 'text', 'Primary email address', 'e.g. john@watson.co.uk')
+    +formInput('emailSec_1', 'text', 'Secondary email address', 'e.g. sherlock@holmes.co.uk')
+    +formInput('addressLine1_2', 'text', 'Address line 1', 'e.g. Street Name No 1')
+    +formInput('addressLine2_2', 'text', 'Address line 2', 'e.g. Area Name City Name')
+    +formInput('addressLine3_2', 'text', 'Address line 3', 'e.g. State or Province')
+    +formInput('country_2', 'text', 'Country', 'e.g. United Kingdom')
+    .form__group
+        input.btn.submit(type='submit')
+    

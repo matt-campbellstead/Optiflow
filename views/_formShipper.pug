@@ -5,17 +5,17 @@ mixin formInput(id, label, placeholder)
 form.form.data-form__shipper
     h2.heading-secondary Shipper table
     p some text
-    +formInput('masterId', 'Master ID number', '1, 2, 3...' )
-    +formInput('company', 'Company Name', 'SETSAIL CO. LTD.')
-    +formInput('contact', 'Contact Name', 'John Smith')
-    +formInput('phoneLand', 'Phone - Landline number', '+1 12345679')
+    +formInput('shippersMasterId', 'Master ID number', '1, 2, 3...' )
+    +formInput('companyName', 'Company Name', 'SETSAIL CO. LTD.')
+    +formInput('contactName', 'Contact Name', 'John Smith')
+    +formInput('phoneLandline', 'Phone - Landline number', '+1 12345679')
     +formInput('phoneMobile', 'Phone - Mobile number', '+1 12345679')
-    +formInput('emailPri', 'Primary email address', 'john@smith.com')
-    +formInput('emailSec', 'Secondary email address', 'jane@smith.com')
+    +formInput('emailPrimary', 'Primary email address', 'john@smith.com')
+    +formInput('emailSecondary', 'Secondary email address', 'jane@smith.com')
     |
-    +formInput('address1', 'Address - line 1', 'No. X, Unit X')
-    +formInput('address2', 'Address - line 2', 'X St')
-    +formInput('address3', 'Address - line 3', 'District X')
+    +formInput('addressLine1', 'Address - line 1', 'No. X, Unit X')
+    +formInput('addressLine2', 'Address - line 2', 'X St')
+    +formInput('addressLine3', 'Address - line 3', 'District X')
     +formInput('country', 'Country', 'UK/France/India/...')
     .form__group
         input.btn.submit(type='submit')

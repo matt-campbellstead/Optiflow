@@ -4,34 +4,54 @@ extends base
 //-     td(class=`m${rowNum}--${classNum}`)
 
 mixin milestone(timeline)
-            td(class=`m${timeline.MasterId}--1`)= String(timeline.collected)
-            td(class=`m${timeline.MasterId}--2`)= String(timeline.atDepot)
-            td(class=`m${timeline.MasterId}--3`)= String(timeline.packed)
-            td(class=`m${timeline.MasterId}--4`)= String(timeline.lrd)
-            td(class=`m${timeline.MasterId}--5`)= String(timeline.loaded)
-            td(class=`m${timeline.MasterId}--6`)= String(timeline.departedToPort)
-            td(class=`m${timeline.MasterId}--7`)= String(timeline.obl_awb_received)
-            td(class=`m${timeline.MasterId}--8`)= String(timeline.anf_pre_received)
-            td(class=`m${timeline.MasterId}--9`)= String(timeline.invoiced)
-            td(class=`m${timeline.MasterId}--10`)= String(timeline.payment)
-            td(class=`m${timeline.MasterId}--11`)= String(timeline.lineRelease)
-            td(class=`m${timeline.MasterId}--12`)= String(timeline.instructionClearing)
-            td(class=`m${timeline.MasterId}--13`)= String(timeline.instructionDelivery)
-            td(class=`m${timeline.MasterId}--14`)= String(timeline.signedCi)
-            td(class=`m${timeline.MasterId}--15`)= String(timeline.sars)
-            td(class=`m${timeline.MasterId}--16`)= String(timeline.arrivedAtPort)
-            td(class=`m${timeline.MasterId}--17`)= String(timeline.released)
-            td(class=`m${timeline.MasterId}--18`)= String(timeline.unpacked)
-            td(class=`m${timeline.MasterId}--19`)= String(timeline.delivered)
-            td(class=`m${timeline.MasterId}--20`)= String(timeline.docSent)
+            td(class=`m${timeline.timelineMasterId}--1`)= String(timeline.cargo_collected)
+            td(class=`m${timeline.timelineMasterId}--2`)= String(timeline.received)
+            td(class=`m${timeline.timelineMasterId}--3`)= String(timeline.cargo_packed)
+            td(class=`m${timeline.timelineMasterId}--4`)= String(timeline.depot_lrd)
+            td(class=`m${timeline.timelineMasterId}--5`)= String(timeline.cargo_loaded)
+            td(class=`m${timeline.timelineMasterId}--6`)= String(timeline.cargo_departed)
+            td(class=`m${timeline.timelineMasterId}--7`)= String(timeline.obl_awb)
+            td(class=`m${timeline.timelineMasterId}--8`)= String(timeline.anf_pre)
+            td(class=`m${timeline.timelineMasterId}--9`)= String(timeline.customer)
+            td(class=`m${timeline.timelineMasterId}--10`)= String(timeline.payment)
+            td(class=`m${timeline.timelineMasterId}--11`)= String(timeline.line)
+            td(class=`m${timeline.timelineMasterId}--12`)= String(timeline.clearing)
+            td(class=`m${timeline.timelineMasterId}--13`)= String(timeline.delivery)
+            td(class=`m${timeline.timelineMasterId}--14`)= String(timeline.signed)
+            td(class=`m${timeline.timelineMasterId}--15`)= String(timeline.sars)
+            td(class=`m${timeline.timelineMasterId}--16`)= String(timeline.cargo_arrived)
+            td(class=`m${timeline.timelineMasterId}--17`)= String(timeline.cargo_released)
+            td(class=`m${timeline.timelineMasterId}--18`)= String(timeline.cargo_unpacked)
+            td(class=`m${timeline.timelineMasterId}--19`)= String(timeline.cargo_delivered)
+            td(class=`m${timeline.timelineMasterId}--20`)= String(timeline.doc)
+            td(class=`m${timeline.timelineMasterId}--21`)= String(timeline.id)
 
-//- mixin shipment(text, data)
-//-     .shipment-box-detail 
-//-         span.shipment-box_label= `${text}: ${data}`
+mixin milestoneDate(timeline)
+    td= timeline.cargo_collected_date
+    td= timeline.received_at_date 
+    td= timeline.cargo_packed_date 
+    td= timeline.depot_lrd_date 
+    td= timeline.cargo_loaded_date 
+    td= timeline.cargo_departed_date 
+    td= timeline.obl_awb_date 
+    td= timeline.anf_pre_date 
+    td= timeline.customer_date 
+    td= timeline.payment_date 
+    td= timeline.line_release_date 
+    td= timeline.clearing_instructions_date 
+    td= timeline.delivery_instructions_date 
+    td= timeline.signed_ci_date 
+    td= timeline.sars_date 
+    td= timeline.cargo_arrived_date 
+    td= timeline.cargo_released_date 
+    td= timeline.cargo_unpacked_date 
+    td= timeline.cargo_delivered_date 
+    td= timeline.document_pack_date
+
 mixin shipmentFunction(data)
-    h3= `Master ID: ${data.id})`
+    h2.heading-secondary= `Master ID: ${data.id})`
         .shipment-box-detail 
-            span.shipment-box_label= `Customer: ${data.users}`
+            span.shipment-box_label= `Customer: ${JSON.stringify(data.Customer, null, 4).replaceAll('"', '')}`
         .shipment-box-detail
             span.shipment-box_label= `File number: ${data.shipment_file_id}`
         .shipment-box-detail 
@@ -39,13 +59,15 @@ mixin shipmentFunction(data)
         .shipment-box-detail 
             span.shipment-box_label= `Shipper: ${JSON.stringify(data.Shipper, null, 4).replaceAll('"', '')}`
         .shipment-box-detail 
+            span.shipment-box_label= `Consignee: ${JSON.stringify(data.Consignee, null, 4).replaceAll('"', '')}`
+        .shipment-box-detail 
             span.shipment-box_label= `Financial Details: ${JSON.stringify(data.Financial, null, 4).replaceAll('"', '')}`
         .shipment-box-detail 
             span.shipment-box_label= `Conveyance: ${JSON.stringify(data.Conveyance, null, 4).replaceAll('"', '')}`
         .shipment-box-detail 
             span.shipment-box_label= `Customs Details: ${JSON.stringify(data.Custom, null, 4).replaceAll('"', '')}`
         .shipment-box-detail 
-            span.shipment-box_label= `Voilà!`
+            span.shipment-box_label 🛳️🛳️🛳️ Voilà! 🛳️🛳️🛳️
 
 mixin customerFunction(data)
     h2.heading-secondary= `Customer: ${data.users}`
@@ -55,37 +77,52 @@ mixin customerFunction(data)
 
 block content
     if (user.role === 'user')
-        h1= `Welcome, ${user.name}!`
-            section.dashboard__container 
-                .heading-box 
-                    h1.heading-primary Your Current Shipments 
-                        each shipment, i in shipments
-                            .shipment-box 
-                                +customerFunction(shipment)
-                .footer-box
-                    span= `Shipment milestones go here`
+        section.dashboard__container 
+            .heading-box 
+                h1.heading-primary Your Current Shipments 
+                    each shipment, i in shipments
+                        .shipment-box 
+                            +customerFunction(shipment)
+            .footer-box
+                span= `Shipment milestones go here`
     if (user.role === 'admin')
-        h1= `Welcome, ${user.name}!`
-            section.dashboard__container 
-                .heading-box 
-                    h1.heading-primary Operations Dashboard 
-                        h2.heading-secondary All current shipments 
-                            each shipment, i in allShipments
-                                .shipment-box
-                                    +shipmentFunction(shipment)
-
-                    section.milestones__table
-                        h2.heading-secondary Progress of your shipments
-                        table.checkbox-table
-                            thead.table-columns
-                                - const arr = ['', 'Cargo Collected / FCL and LCL', 'Received at Depot / FCL and LCL', 'Cargo Packed / LCL', 'Depot LRD Date / LCL', 'Cargo Loaded/Stuffed / LCL', 'Cargo Departed Port/Airport', 'OBL/AWB Received', 'ANF/Pre-Alert Received','Customer Invoiced','Payment Received','Line Release received','Clearing Instruction Issued','Delivery Instruction Issued','Signed CI received','SARS Submission','Cargo Arrived Port/Airport','Cargo Released/ SARS','Cargo Unpacked (LCL)','Cargo Delivered','Document Pack Sent']
-                                tr
-                                    for each of arr 
-                                        th(scope='col')=`${each}`
+        section.dashboard__container 
+            .heading-box 
+                h1.heading-primary Operations Dashboard 
+                h2.heading-secondary All current shipments 
+                    each shipment, i in allShipments
+                        .shipment-box
+                            +shipmentFunction(shipment)
+            a#ops-dashboard.nav__el(href='/ops-exports') See exports only
+            a#ops-dashboard.nav__el(href='/ops-imports') See imports only
+            a#ops-dashboard.nav__el(href='/ops-past-shipments') View past shipments
+        section.milestones__table
+            h2.heading-secondary Progress of your shipments
+            table.checkbox-table
+                thead.table-columns
+                    - const arr = ['', 'Cargo Collected / FCL and LCL', 'Received at Depot / FCL and LCL', 'Cargo Packed / LCL', 'Depot LRD Date / LCL', 'Cargo Loaded/Stuffed / LCL', 'Cargo Departed Port/Airport', 'OBL/AWB Received', 'ANF/Pre Received','Customer Invoiced','Payment Received','Line Release received','Clearing Instruction Issued','Delivery Instruction Issued','Signed CI received','SARS Submission','Cargo Arrived Port/Airport','Cargo Released/ SARS','Cargo Unpacked (LCL)','Cargo Delivered','Document Pack Sent', 'timeline ID']
+                        tr
+                            for each of arr 
+                                th(scope='col')=`${each}`
                             
-                            tbody.table-rows
-                                each shipment in allShipments
-                                    if (shipment.Timeline)
-                                        tr
-                                            th(scope='row')= `Shipment ID: ${shipment.id}`
-                                                +milestone(shipment.Timeline)
+                tbody.table-rows
+                    each shipment in allShipments
+                        if (shipment.Timeline)
+                            tr
+                                th(scope='row')= `Shipment ID: ${shipment.id}`
+                                    +milestone(shipment.Timeline)
+                            tr
+                                th(scope='row') Dates
+                                    +milestoneDate(shipment.Timeline)
+
+        section.milestones__update
+            h2.heading-secondary Update your shipment timelines 
+            p Enter the ID number of the timeline document (see the final column in the above table)
+                input.timeline-id(type='number' placeholder='ID?')
+            p Select the shipment milestone you want changed to 'true', then click 'submit'.
+                select.timeline-select
+                    each str of arr
+                        option= str
+            p Enter the date on which the milestone was effected.
+                input.timeline-date(type='date')
+            button.btn.timeline-id__submit Submit

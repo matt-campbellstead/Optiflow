@@ -6,3 +6,4 @@ config.js
 config.json
 text
 .DS_Store
+misc/

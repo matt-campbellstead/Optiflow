@@ -9,6 +9,8 @@ const Details = require('../models/shipDetailModel');
 const Financials = require('../models/financialDetailModel');
 const Conveyance = require('../models/conveyanceModel');
 const Customs = require('../models/customsModel');
+const Customers = require('../models/customerModel');
+const Consignees = require('../models/consigneesModel');
 const AppError = require('../utils/AppError');
 const asyncHandler = require('../utils/asyncHandler');
 
@@ -26,11 +28,13 @@ exports.getDetails = factory.getData(Details);
 exports.createDetails = factory.createData(Details);
 exports.deleteDetails = factory.deleteData(Details);
 exports.updateDetails = factory.updateData(Details);
+exports.getSingleDetails = factory.getSingle(Details);
 
 exports.getFinancials = factory.getData(Financials);
 exports.createFinancials = factory.createData(Financials);
 exports.deleteFinancials = factory.deleteData(Financials);
 exports.updateFinancials = factory.updateData(Financials);
+exports.getSingleFinancials = factory.getSingle(Financials);
 
 exports.getCustoms = factory.getData(Customs);
 exports.createCustoms = factory.createData(Customs);
@@ -41,6 +45,18 @@ exports.getConveyance = factory.getData(Conveyance);
 exports.createConveyance = factory.createData(Conveyance);
 exports.deleteConveyance = factory.deleteData(Conveyance);
 exports.updateConveyance = factory.updateData(Conveyance);
+
+exports.getCustomers = factory.getData(Customers);
+exports.createCustomers = factory.createData(Customers);
+exports.deleteCustomers = factory.deleteData(Customers);
+exports.updateCustomers = factory.updateData(Customers);
+exports.getSingleCustomers = factory.getSingle(Customers);
+
+exports.getConsignees = factory.getData(Consignees);
+exports.createConsignees = factory.createData(Consignees);
+exports.deleteConsignees = factory.deleteData(Consignees);
+exports.updateConsignees = factory.updateData(Consignees);
+exports.getSingleConsignees = factory.getSingle(Consignees);
 
 exports.getMasterData = asyncHandler(async (req, res, next) => {
   const masterQuery = await Master.findAll({
@@ -53,6 +69,8 @@ exports.getMasterData = asyncHandler(async (req, res, next) => {
       { model: Financials },
       { model: Customs },
       { model: Conveyance },
+      { model: Customers },
+      { model: Consignees },
     ],
   });
 
@@ -86,6 +104,7 @@ exports.createMasterData = asyncHandler(async (req, res, next) => {
     shipment_file_id: req.body.shipment_file_id,
     users: req.body.users,
     isCurrent: req.body.isCurrent,
+    CustomerId: req.body.CustomerId,
   });
 
   const newId = masterPost.id;

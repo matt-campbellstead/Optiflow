@@ -10,6 +10,8 @@ const AppError = require('../utils/AppError');
 const Conveyance = require('../models/conveyanceModel');
 const Financials = require('../models/financialDetailModel');
 const Customs = require('../models/customsModel');
+const Consignees = require('../models/consigneesModel');
+const Customers = require('../models/customerModel');
 
 exports.homePage = (req, res) => {
   res.status(200).render('home', {
@@ -55,10 +57,14 @@ exports.displayAllShipments = asyncHandler(async (req, res, next) => {
     include: [
       { model: Shippers },
       { model: Timeline },
-      { model: Details },
-      { model: Customs },
+      {
+        model: Details,
+      },
       { model: Financials },
+      { model: Customs },
       { model: Conveyance },
+      { model: Customers },
+      { model: Consignees },
     ],
   });
 
@@ -72,7 +78,7 @@ exports.displayAllShipments = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.displayUsers = asyncHandler(async (req, res, next) => {
+exports.opsFunctions = asyncHandler(async (req, res, next) => {
   const allUsers = await User.find();
 
   if (!allUsers) {
@@ -88,5 +94,64 @@ exports.displayUsers = asyncHandler(async (req, res, next) => {
 exports.submitData = (req, res) => {
   res.status(200).render('adminSubmit', {
     title: 'Admin Data Submission',
+  });
+};
+
+exports.opsOldShipments = asyncHandler(async (req, res, next) => {
+  const oldShipments = await Master.findAll({
+    where: { isCurrent: false },
+    include: [
+      { model: Shippers },
+      { model: Timeline },
+      {
+        model: Details,
+      },
+      { model: Financials },
+      { model: Customs },
+      { model: Conveyance },
+      { model: Customers },
+      { model: Consignees },
+    ],
+  });
+
+  res.status(200).render('adminOld', {
+    title: 'Past Shipments',
+    oldShipments,
+  });
+});
+
+const routing = (type) =>
+  asyncHandler(async (req, res, next) => {
+    const document = await Master.findAll({
+      where: { isCurrent: true },
+      include: [
+        { model: Shippers },
+        { model: Timeline },
+        {
+          model: Details,
+          where: {
+            routing: `${type}`,
+          },
+        },
+        { model: Financials },
+        { model: Customs },
+        { model: Conveyance },
+        { model: Customers },
+        { model: Consignees },
+      ],
+    });
+
+    res.status(200).render(`admin${type}`, {
+      title: `${type} Shipments`,
+      document,
+    });
+  });
+
+exports.opsExports = routing('Export');
+exports.opsImports = routing('Import');
+
+exports.updateShipment = (req, res) => {
+  res.status(200).render('adminUpdate', {
+    title: 'Update data',
   });
 };

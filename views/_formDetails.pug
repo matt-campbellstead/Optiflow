@@ -5,7 +5,7 @@ mixin formInput(id, type, label, placeholder)
 form.form.data-form__details
     h2.heading-secondary Shipment Details table
     p some text
-    +formInput('MasterId', 'number', 'Master ID', 'e.g. 1')
+    +formInput('detailsMasterId', 'number', 'Master ID', 'e.g. 1')
     +formInput('incoterms', 'text', 'Incoterms', 'e.g. EXW')
     +formInput('mode', 'text', 'Mode', 'e.g. AIR')
     +formInput('routing', 'text', 'Routing', 'e.g. Import')

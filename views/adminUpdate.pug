@@ -1,0 +1,28 @@
+extends base
+
+block content
+    h1.heading-primary Welcome to the data update page 
+    h2.heading-secondary Here, you can update data by table in the database (DB).
+    section.dashboard__container
+        section.update__container.first
+            p First, select the DB table you want to edit.
+            select.db-select
+                option Shipment-details
+                option Financials 
+                option Shippers 
+                option Customers
+                option Consignees
+                option Conveyance
+                option Customs
+            p Next, input the document ID for the specific document you want to edit, then click the button.
+            input.document-id(type='number' placeholder='ID?')
+            button.btn.update-select Load data
+        section.update__container.second
+            .shipment-box
+            form.form.update-form
+                //- p Next,  use the buttons to  add fields as needed (max: 10) for your update in your chosen DB table.
+                p Next, select the appropriate fields you want to edit and click the button for each one.
+                select.field-select
+                button.btn.update-add1 Add field
+                .form__group
+                    input.btn.submitUpdate(type='submit')

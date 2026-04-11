@@ -2,7 +2,7 @@
 process.loadEnvFile(`${__dirname}/../config.env`);
 const { Sequelize, DataTypes } = require('sequelize');
 const { Umzug, SequelizeStorage } = require('umzug');
-const mylog = require('../log');
+const mylog = require('../log.js');
 const logging =
   process.env.NODE_ENV === 'production' ? false : (...msg) => mylog.log(msg[0]); //mylog.log.bind(mylog);
 
@@ -32,7 +32,7 @@ const connectToDB = async () => {
 };
 
 const migratorConfig = {
-  migrations: { glob: 'migrations/*.js' },
+  migrations: { glob: './sequelize/migrations/*.js' },
   storage: new SequelizeStorage({ sequelize }),
   context: sequelize.getQueryInterface(),
   logger: mylog,

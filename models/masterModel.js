@@ -7,6 +7,8 @@ const Details = require('./shipDetailModel');
 const Financials = require('./financialDetailModel');
 const Customs = require('./customsModel');
 const Conveyance = require('./conveyanceModel');
+const Customers = require('./customerModel');
+const Consignees = require('./consigneesModel');
 
 class Master extends Model {}
 
@@ -40,23 +42,69 @@ Master.init(
     },
   },
 );
-Master.hasOne(Shippers); //{ foreignKey: { name: 'master_id', allowNull: false },}
-Shippers.belongsTo(Master);
-
-Master.hasOne(Timeline);
-Timeline.belongsTo(Master);
-
-Master.hasOne(Details);
-Details.belongsTo(Master);
-
-Master.hasOne(Financials);
-Financials.belongsTo(Master);
-
-Master.hasOne(Conveyance);
-Conveyance.belongsTo(Master);
-
-Master.hasOne(Customs);
-Customs.belongsTo(Master);
+////////////////////////
+Master.hasOne(Shippers, {
+  foreignKey: { name: 'shippersMasterId', allowNull: false },
+});
+Shippers.belongsTo(Master, {
+  foreignKey: { name: 'shippersMasterId', allowNull: false },
+});
+////////////////////////
+////////////////////////
+Master.hasOne(Timeline, {
+  foreignKey: { name: 'timelineMasterId', allowNull: false },
+});
+Timeline.belongsTo(Master, {
+  foreignKey: { name: 'timelineMasterId', allowNull: false },
+});
+////////////////////////
+////////////////////////
+Master.hasOne(Details, {
+  foreignKey: { name: 'detailsMasterId', allowNull: false },
+});
+Details.belongsTo(Master, {
+  foreignKey: { name: 'detailsMasterId', allowNull: false },
+});
+////////////////////////
+////////////////////////
+Master.hasOne(Financials, {
+  foreignKey: { name: 'financialsMasterId', allowNull: false },
+});
+Financials.belongsTo(Master, {
+  foreignKey: { name: 'financialsMasterId', allowNull: false },
+});
+////////////////////////
+////////////////////////
+Master.hasOne(Conveyance, {
+  foreignKey: { name: 'conveyanceMasterId', allowNull: false },
+});
+Conveyance.belongsTo(Master, {
+  foreignKey: { name: 'conveyanceMasterId', allowNull: false },
+});
+////////////////////////
+////////////////////////
+Master.hasOne(Customs, {
+  foreignKey: { name: 'customsMasterId', allowNull: false },
+});
+Customs.belongsTo(Master, {
+  foreignKey: { name: 'customsMasterId', allowNull: false },
+});
+////////////////////////
+////////////////////////
+Customers.hasMany(Master, {
+  foreignKey: { name: 'CustomerId', allowNull: false },
+});
+Master.belongsTo(Customers, {
+  foreignKey: { name: 'CustomerId', allowNull: false },
+});
+////////////////////////
+////////////////////////
+Master.hasOne(Consignees, {
+  foreignKey: { name: 'consigneesMasterId', allowNull: false },
+});
+Consignees.belongsTo(Master, {
+  foreignKey: { name: 'consigneesMasterId', allowNull: false },
+});
 
 Master.sync();
 

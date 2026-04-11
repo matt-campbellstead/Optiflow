@@ -1,172 +1,24 @@
-App is running on port 8000, at 2026/03/20, 18:11:36
-Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Shippers' AND TABLE_SCHEMA = 'test'
-Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Timelines' AND TABLE_SCHEMA = 'test'
-Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Details' AND TABLE_SCHEMA = 'test'
-Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Financials' AND TABLE_SCHEMA = 'test'
-Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Customs' AND TABLE_SCHEMA = 'test'
-Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Conveyances' AND TABLE_SCHEMA = 'test'
-Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Masters' AND TABLE_SCHEMA = 'test'
-Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'SequelizeMeta' AND TABLE_SCHEMA = 'test'
-Executing (default): SHOW INDEX FROM `Timelines`
-Executing (default): SHOW INDEX FROM `Shippers`
-Executing (default): SHOW INDEX FROM `Details`
-Executing (default): SHOW INDEX FROM `Customs`
-Executing (default): SHOW INDEX FROM `Conveyances`
-Executing (default): SHOW INDEX FROM `Financials`
-Executing (default): SHOW INDEX FROM `Masters`
-Executing (default): SHOW FULL COLUMNS FROM `SequelizeMeta`;
-Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'SequelizeMeta' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='test' AND REFERENCED_TABLE_NAME IS NOT NULL;
-Executing (default): SHOW INDEX FROM `SequelizeMeta`
-Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Masters' AND TABLE_SCHEMA = 'test'
-Executing (default): SHOW FULL COLUMNS FROM `Masters`;
-Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'Masters' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='test' AND REFERENCED_TABLE_NAME IS NOT NULL;
-Executing (default): ALTER TABLE `Masters` CHANGE `shipment_file_id` `shipment_file_id` VARCHAR(255) NOT NULL UNIQUE;
-Executing (default): ALTER TABLE `Masters` CHANGE `users` `users` VARCHAR(255);
-Executing (default): ALTER TABLE `Masters` CHANGE `isCurrent` `isCurrent` TINYINT(1) DEFAULT true;
-MongoDB: database connection succesful! At 18:11:36
-Executing (default): ALTER TABLE `Masters` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
-Executing (default): ALTER TABLE `Masters` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
-Executing (default): SHOW INDEX FROM `Masters`
-Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Shippers' AND TABLE_SCHEMA = 'test'
-Executing (default): SHOW FULL COLUMNS FROM `Shippers`;
-Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'Shippers' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='test' AND REFERENCED_TABLE_NAME IS NOT NULL;
-Executing (default): SELECT CONSTRAINT_CATALOG AS constraintCatalog, CONSTRAINT_NAME AS constraintName, CONSTRAINT_SCHEMA AS constraintSchema, CONSTRAINT_TYPE AS constraintType, TABLE_NAME AS tableName, TABLE_SCHEMA AS tableSchema from INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE table_name='Shippers' AND constraint_name = '1' AND TABLE_SCHEMA = 'test';
-Executing (default): ALTER TABLE `Shippers` DROP FOREIGN KEY `1`;
-Executing (default): ALTER TABLE `Shippers` ADD FOREIGN KEY (`MasterId`) REFERENCES `Masters` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-Executing (default): ALTER TABLE `Shippers` CHANGE `companyName` `companyName` VARCHAR(255);
-Executing (default): ALTER TABLE `Shippers` CHANGE `contactName` `contactName` VARCHAR(255);
-Executing (default): ALTER TABLE `Shippers` CHANGE `phoneLandline` `phoneLandline` VARCHAR(255);
-Executing (default): ALTER TABLE `Shippers` CHANGE `phoneMobile` `phoneMobile` VARCHAR(255);
-Executing (default): ALTER TABLE `Shippers` CHANGE `emailPrimary` `emailPrimary` VARCHAR(255);
-Executing (default): ALTER TABLE `Shippers` CHANGE `emailSecondary` `emailSecondary` VARCHAR(255);
-Executing (default): ALTER TABLE `Shippers` CHANGE `addressLine1` `addressLine1` VARCHAR(255);
-Executing (default): ALTER TABLE `Shippers` CHANGE `addressLine2` `addressLine2` VARCHAR(255);
-Executing (default): ALTER TABLE `Shippers` CHANGE `addressLine3` `addressLine3` VARCHAR(255);
-Executing (default): ALTER TABLE `Shippers` CHANGE `country` `country` VARCHAR(255);
-Executing (default): SHOW INDEX FROM `Shippers`
-Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Timelines' AND TABLE_SCHEMA = 'test'
-Executing (default): SHOW FULL COLUMNS FROM `Timelines`;
-Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'Timelines' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='test' AND REFERENCED_TABLE_NAME IS NOT NULL;
-Executing (default): ALTER TABLE `Timelines` CHANGE `collected` `collected` TINYINT(1) DEFAULT false;
-Executing (default): ALTER TABLE `Timelines` CHANGE `atDepot` `atDepot` TINYINT(1) DEFAULT false;
-Executing (default): ALTER TABLE `Timelines` CHANGE `packed` `packed` TINYINT(1) DEFAULT false;
-Executing (default): ALTER TABLE `Timelines` CHANGE `lrd` `lrd` TINYINT(1) DEFAULT false;
-Executing (default): ALTER TABLE `Timelines` CHANGE `loaded` `loaded` TINYINT(1) DEFAULT false;
-Executing (default): ALTER TABLE `Timelines` CHANGE `departedToPort` `departedToPort` TINYINT(1) DEFAULT false;
-Executing (default): ALTER TABLE `Timelines` CHANGE `obl_awb_received` `obl_awb_received` TINYINT(1) DEFAULT false;
-Executing (default): ALTER TABLE `Timelines` CHANGE `anf_pre_received` `anf_pre_received` TINYINT(1) DEFAULT false;
-Executing (default): ALTER TABLE `Timelines` CHANGE `invoiced` `invoiced` TINYINT(1) DEFAULT false;
-Executing (default): ALTER TABLE `Timelines` CHANGE `payment` `payment` TINYINT(1) DEFAULT false;
-Executing (default): ALTER TABLE `Timelines` CHANGE `lineRelease` `lineRelease` TINYINT(1) DEFAULT false;
-Executing (default): ALTER TABLE `Timelines` CHANGE `instructionClearing` `instructionClearing` TINYINT(1) DEFAULT false;
-Executing (default): ALTER TABLE `Timelines` CHANGE `instructionDelivery` `instructionDelivery` TINYINT(1) DEFAULT false;
-Executing (default): ALTER TABLE `Timelines` CHANGE `signedCi` `signedCi` TINYINT(1) DEFAULT false;
-Executing (default): ALTER TABLE `Timelines` CHANGE `sars` `sars` TINYINT(1) DEFAULT false;
-Executing (default): ALTER TABLE `Timelines` CHANGE `arrivedAtPort` `arrivedAtPort` TINYINT(1) DEFAULT false;
-Executing (default): ALTER TABLE `Timelines` CHANGE `released` `released` TINYINT(1) DEFAULT false;
-Executing (default): ALTER TABLE `Timelines` CHANGE `unpacked` `unpacked` TINYINT(1) DEFAULT false;
-Executing (default): ALTER TABLE `Timelines` CHANGE `delivered` `delivered` TINYINT(1) DEFAULT false;
-Executing (default): ALTER TABLE `Timelines` CHANGE `docSent` `docSent` TINYINT(1) DEFAULT false;
-Executing (default): ALTER TABLE `Timelines` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
-Executing (default): ALTER TABLE `Timelines` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
-Executing (default): SELECT CONSTRAINT_CATALOG AS constraintCatalog, CONSTRAINT_NAME AS constraintName, CONSTRAINT_SCHEMA AS constraintSchema, CONSTRAINT_TYPE AS constraintType, TABLE_NAME AS tableName, TABLE_SCHEMA AS tableSchema from INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE table_name='Timelines' AND constraint_name = '1' AND TABLE_SCHEMA = 'test';
-Executing (default): ALTER TABLE `Timelines` DROP FOREIGN KEY `1`;
-Executing (default): ALTER TABLE `Timelines` ADD FOREIGN KEY (`MasterId`) REFERENCES `Masters` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-Executing (default): SHOW INDEX FROM `Timelines`
-Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Details' AND TABLE_SCHEMA = 'test'
-Executing (default): SHOW FULL COLUMNS FROM `Details`;
-Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'Details' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='test' AND REFERENCED_TABLE_NAME IS NOT NULL;
-Executing (default): ALTER TABLE `Details` CHANGE `routing` `routing` VARCHAR(255) NOT NULL;
-Executing (default): ALTER TABLE `Details` CHANGE `mode` `mode` VARCHAR(255) NOT NULL;
-Executing (default): ALTER TABLE `Details` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
-Executing (default): ALTER TABLE `Details` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
-Executing (default): SELECT CONSTRAINT_CATALOG AS constraintCatalog, CONSTRAINT_NAME AS constraintName, CONSTRAINT_SCHEMA AS constraintSchema, CONSTRAINT_TYPE AS constraintType, TABLE_NAME AS tableName, TABLE_SCHEMA AS tableSchema from INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE table_name='Details' AND constraint_name = '1' AND TABLE_SCHEMA = 'test';
-Executing (default): ALTER TABLE `Details` DROP FOREIGN KEY `1`;
-Executing (default): ALTER TABLE `Details` ADD FOREIGN KEY (`MasterId`) REFERENCES `Masters` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-Executing (default): ALTER TABLE `Details` CHANGE `incoterms` `incoterms` VARCHAR(255);
-Executing (default): ALTER TABLE `Details` CHANGE `goodsDescriptions` `goodsDescriptions` VARCHAR(255);
-Executing (default): ALTER TABLE `Details` CHANGE `packagingType` `packagingType` VARCHAR(255);
-Executing (default): ALTER TABLE `Details` CHANGE `containerSpecs` `containerSpecs` VARCHAR(255);
-Executing (default): ALTER TABLE `Details` CHANGE `containerQty` `containerQty` INTEGER;
-Executing (default): ALTER TABLE `Details` CHANGE `numItems` `numItems` INTEGER;
-Executing (default): ALTER TABLE `Details` CHANGE `grossWeightKg` `grossWeightKg` VARCHAR(255);
-Executing (default): ALTER TABLE `Details` CHANGE `netWeightKg` `netWeightKg` VARCHAR(255);
-Executing (default): ALTER TABLE `Details` CHANGE `cbm` `cbm` VARCHAR(255);
-Executing (default): ALTER TABLE `Details` CHANGE `handlingRequirements` `handlingRequirements` VARCHAR(255);
-Executing (default): ALTER TABLE `Details` CHANGE `dangerousGoods` `dangerousGoods` TINYINT(1);
-Executing (default): ALTER TABLE `Details` CHANGE `codeDrg` `codeDrg` VARCHAR(255);
-Executing (default): SHOW INDEX FROM `Details`
-Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Financials' AND TABLE_SCHEMA = 'test'
-Executing (default): SHOW FULL COLUMNS FROM `Financials`;
-Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'Financials' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='test' AND REFERENCED_TABLE_NAME IS NOT NULL;
-Executing (default): ALTER TABLE `Financials` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
-Executing (default): ALTER TABLE `Financials` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
-Executing (default): ALTER TABLE `Financials` CHANGE `shipperInvoiceNum` `shipperInvoiceNum` VARCHAR(255);
-Executing (default): ALTER TABLE `Financials` CHANGE `invoiceDate` `invoiceDate` DATETIME;
-Executing (default): ALTER TABLE `Financials` CHANGE `invoiceAmount` `invoiceAmount` VARCHAR(255);
-Executing (default): ALTER TABLE `Financials` CHANGE `currency` `currency` VARCHAR(255);
-Executing (default): ALTER TABLE `Financials` CHANGE `tradeRef` `tradeRef` VARCHAR(255);
-Executing (default): ALTER TABLE `Financials` CHANGE `apnNum` `apnNum` VARCHAR(255);
-Executing (default): ALTER TABLE `Financials` CHANGE `bank` `bank` VARCHAR(255);
-Executing (default): ALTER TABLE `Financials` CHANGE `apnDate` `apnDate` DATETIME;
-Executing (default): SELECT CONSTRAINT_CATALOG AS constraintCatalog, CONSTRAINT_NAME AS constraintName, CONSTRAINT_SCHEMA AS constraintSchema, CONSTRAINT_TYPE AS constraintType, TABLE_NAME AS tableName, TABLE_SCHEMA AS tableSchema from INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE table_name='Financials' AND constraint_name = '1' AND TABLE_SCHEMA = 'test';
-Executing (default): ALTER TABLE `Financials` DROP FOREIGN KEY `1`;
-Executing (default): ALTER TABLE `Financials` ADD FOREIGN KEY (`MasterId`) REFERENCES `Masters` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-Executing (default): SHOW INDEX FROM `Financials`
-Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Customs' AND TABLE_SCHEMA = 'test'
-Executing (default): SHOW FULL COLUMNS FROM `Customs`;
-Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'Customs' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='test' AND REFERENCED_TABLE_NAME IS NOT NULL;
-Executing (default): ALTER TABLE `Customs` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
-Executing (default): ALTER TABLE `Customs` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
-Executing (default): ALTER TABLE `Customs` CHANGE `agent` `agent` VARCHAR(255);
-Executing (default): ALTER TABLE `Customs` CHANGE `agentCode` `agentCode` INTEGER;
-Executing (default): ALTER TABLE `Customs` CHANGE `bOeNum` `bOeNum` INTEGER;
-Executing (default): ALTER TABLE `Customs` CHANGE `bOeReleaseDate` `bOeReleaseDate` DATETIME;
-Executing (default): ALTER TABLE `Customs` CHANGE `bOeAssessDate` `bOeAssessDate` DATETIME;
-Executing (default): ALTER TABLE `Customs` CHANGE `releaseDepot` `releaseDepot` VARCHAR(255);
-Executing (default): ALTER TABLE `Customs` CHANGE `lrnNum` `lrnNum` VARCHAR(255);
-Executing (default): ALTER TABLE `Customs` CHANGE `mrnNum` `mrnNum` VARCHAR(255);
-Executing (default): SELECT CONSTRAINT_CATALOG AS constraintCatalog, CONSTRAINT_NAME AS constraintName, CONSTRAINT_SCHEMA AS constraintSchema, CONSTRAINT_TYPE AS constraintType, TABLE_NAME AS tableName, TABLE_SCHEMA AS tableSchema from INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE table_name='Customs' AND constraint_name = '1' AND TABLE_SCHEMA = 'test';
-Executing (default): ALTER TABLE `Customs` DROP FOREIGN KEY `1`;
-Executing (default): ALTER TABLE `Customs` ADD FOREIGN KEY (`MasterId`) REFERENCES `Masters` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-Executing (default): SHOW INDEX FROM `Customs`
-Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Conveyances' AND TABLE_SCHEMA = 'test'
-Executing (default): SHOW FULL COLUMNS FROM `Conveyances`;
-Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'Conveyances' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='test' AND REFERENCED_TABLE_NAME IS NOT NULL;
-Executing (default): ALTER TABLE `Conveyances` CHANGE `createdAt` `createdAt` DATETIME NOT NULL;
-Executing (default): ALTER TABLE `Conveyances` CHANGE `updatedAt` `updatedAt` DATETIME NOT NULL;
-Executing (default): SELECT CONSTRAINT_CATALOG AS constraintCatalog, CONSTRAINT_NAME AS constraintName, CONSTRAINT_SCHEMA AS constraintSchema, CONSTRAINT_TYPE AS constraintType, TABLE_NAME AS tableName, TABLE_SCHEMA AS tableSchema from INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE table_name='Conveyances' AND constraint_name = '1' AND TABLE_SCHEMA = 'test';
-Executing (default): ALTER TABLE `Conveyances` DROP FOREIGN KEY `1`;
-Executing (default): ALTER TABLE `Conveyances` ADD FOREIGN KEY (`MasterId`) REFERENCES `Masters` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-Executing (default): ALTER TABLE `Conveyances` CHANGE `loadPort` `loadPort` VARCHAR(255);
-Executing (default): ALTER TABLE `Conveyances` CHANGE `portTransShip` `portTransShip` VARCHAR(255);
-Executing (default): ALTER TABLE `Conveyances` CHANGE `portDischarge` `portDischarge` VARCHAR(255);
-Executing (default): ALTER TABLE `Conveyances` CHANGE `inlandDestination` `inlandDestination` VARCHAR(255);
-Executing (default): ALTER TABLE `Conveyances` CHANGE `finalDelivery` `finalDelivery` VARCHAR(255);
-Executing (default): ALTER TABLE `Conveyances` CHANGE `airlineName` `airlineName` VARCHAR(255);
-Executing (default): ALTER TABLE `Conveyances` CHANGE `billMasterAirway` `billMasterAirway` VARCHAR(255);
-Executing (default): ALTER TABLE `Conveyances` CHANGE `billHouseAirway` `billHouseAirway` VARCHAR(255);
-Executing (default): ALTER TABLE `Conveyances` CHANGE `flightNum1` `flightNum1` VARCHAR(255);
-Executing (default): ALTER TABLE `Conveyances` CHANGE `flightDate1` `flightDate1` DATETIME;
-Executing (default): ALTER TABLE `Conveyances` CHANGE `flightNum2` `flightNum2` VARCHAR(255);
-Executing (default): ALTER TABLE `Conveyances` CHANGE `flightDate2` `flightDate2` DATETIME;
-Executing (default): ALTER TABLE `Conveyances` CHANGE `etd` `etd` DATETIME;
-Executing (default): ALTER TABLE `Conveyances` CHANGE `eta` `eta` DATETIME;
-Executing (default): ALTER TABLE `Conveyances` CHANGE `shippingLineName` `shippingLineName` VARCHAR(255);
-Executing (default): ALTER TABLE `Conveyances` CHANGE `vesselName` `vesselName` VARCHAR(255);
-Executing (default): ALTER TABLE `Conveyances` CHANGE `voyageNum` `voyageNum` VARCHAR(255);
-Executing (default): ALTER TABLE `Conveyances` CHANGE `oceanBoLnum` `oceanBoLnum` VARCHAR(255);
-Executing (default): ALTER TABLE `Conveyances` CHANGE `houseBoLnum` `houseBoLnum` VARCHAR(255);
-Executing (default): ALTER TABLE `Conveyances` CHANGE `containerNum` `containerNum` VARCHAR(255);
-Executing (default): ALTER TABLE `Conveyances` CHANGE `sealNum` `sealNum` VARCHAR(255);
-Executing (default): ALTER TABLE `Conveyances` CHANGE `shippedOnboardDate` `shippedOnboardDate` DATETIME;
-Executing (default): ALTER TABLE `Conveyances` CHANGE `etaFinalPort` `etaFinalPort` DATETIME;
-Executing (default): ALTER TABLE `Conveyances` CHANGE `truckRegNo` `truckRegNo` VARCHAR(255);
-Executing (default): ALTER TABLE `Conveyances` CHANGE `truckType` `truckType` VARCHAR(255);
-Executing (default): SHOW INDEX FROM `Conveyances`
-MariaDB connection successful! At 18:11:40
-////////////////18:11:55
-////////////////18:11:55
+App is running on port 8000, at 2026/04/11, 09:40:30
+MariaDB: database connection established successfully. At 09:40:30.
+MongoDB: database connection succesful! At 09:40:31
+////////////////09:46:48
+////////////////09:47:15
+////////////////09:47:23
+////////////////09:47:25
+////////////////09:49:26
+////////////////09:49:56
+////////////////09:50:19
+////////////////09:50:48
+////////////////09:50:56
+////////////////09:51:41
+////////////////10:09:43
+////////////////10:13:48
+////////////////10:14:52
+////////////////10:14:58
+////////////////10:16:41
+////////////////10:16:57
+////////////////10:18:24
+////////////////10:18:24
 JsonWebTokenError: jwt malformed
     at module.exports (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/jsonwebtoken/verify.js:70:17)
     at node:internal/util:496:21
@@ -178,71 +30,3 @@ JsonWebTokenError: jwt malformed
     at Route.dispatch (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/lib/route.js:117:3)
     at handle (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/index.js:435:11)
     at Layer.handleRequest (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/lib/layer.js:152:17)
-////////////////18:11:55
-////////////////18:11:57
-JsonWebTokenError: jwt malformed
-    at module.exports (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/jsonwebtoken/verify.js:70:17)
-    at node:internal/util:496:21
-    at new Promise (<anonymous>)
-    at node:internal/util:482:12
-    at exports.isLoggedIn (/Users/matthewstead/Desktop/Node-Express-Sequelize/controllers/authController.js:143:50)
-    at Layer.handleRequest (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/lib/layer.js:152:17)
-    at next (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/lib/route.js:157:13)
-    at Route.dispatch (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/lib/route.js:117:3)
-    at handle (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/index.js:435:11)
-    at Layer.handleRequest (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/lib/layer.js:152:17)
-////////////////18:11:57
-////////////////18:12:03
-////////////////18:12:04
-////////////////18:12:04
-////////////////18:12:13
-////////////////18:12:13
-////////////////18:13:03
-////////////////18:13:03
-////////////////18:18:23
-////////////////18:18:23
-////////////////18:18:24
-Executing (default): SELECT `Master`.`id`, `Master`.`shipment_file_id`, `Master`.`users`, `Master`.`isCurrent`, `Shipper`.`id` AS `Shipper.id`, `Shipper`.`companyName` AS `Shipper.companyName`, `Shipper`.`contactName` AS `Shipper.contactName`, `Shipper`.`phoneLandline` AS `Shipper.phoneLandline`, `Shipper`.`phoneMobile` AS `Shipper.phoneMobile`, `Shipper`.`emailPrimary` AS `Shipper.emailPrimary`, `Shipper`.`emailSecondary` AS `Shipper.emailSecondary`, `Shipper`.`addressLine1` AS `Shipper.addressLine1`, `Shipper`.`addressLine2` AS `Shipper.addressLine2`, `Shipper`.`addressLine3` AS `Shipper.addressLine3`, `Shipper`.`country` AS `Shipper.country`, `Shipper`.`MasterId` AS `Shipper.MasterId`, `Timeline`.`id` AS `Timeline.id`, `Timeline`.`collected` AS `Timeline.collected`, `Timeline`.`atDepot` AS `Timeline.atDepot`, `Timeline`.`packed` AS `Timeline.packed`, `Timeline`.`lrd` AS `Timeline.lrd`, `Timeline`.`loaded` AS `Timeline.loaded`, `Timeline`.`departedToPort` AS `Timeline.departedToPort`, `Timeline`.`obl_awb_received` AS `Timeline.obl_awb_received`, `Timeline`.`anf_pre_received` AS `Timeline.anf_pre_received`, `Timeline`.`invoiced` AS `Timeline.invoiced`, `Timeline`.`payment` AS `Timeline.payment`, `Timeline`.`lineRelease` AS `Timeline.lineRelease`, `Timeline`.`instructionClearing` AS `Timeline.instructionClearing`, `Timeline`.`instructionDelivery` AS `Timeline.instructionDelivery`, `Timeline`.`signedCi` AS `Timeline.signedCi`, `Timeline`.`sars` AS `Timeline.sars`, `Timeline`.`arrivedAtPort` AS `Timeline.arrivedAtPort`, `Timeline`.`released` AS `Timeline.released`, `Timeline`.`unpacked` AS `Timeline.unpacked`, `Timeline`.`delivered` AS `Timeline.delivered`, `Timeline`.`docSent` AS `Timeline.docSent`, `Timeline`.`createdAt` AS `Timeline.createdAt`, `Timeline`.`updatedAt` AS `Timeline.updatedAt`, `Timeline`.`MasterId` AS `Timeline.MasterId`, `Detail`.`id` AS `Detail.id`, `Detail`.`incoterms` AS `Detail.incoterms`, `Detail`.`mode` AS `Detail.mode`, `Detail`.`routing` AS `Detail.routing`, `Detail`.`goodsDescriptions` AS `Detail.goodsDescriptions`, `Detail`.`packagingType` AS `Detail.packagingType`, `Detail`.`containerSpecs` AS `Detail.containerSpecs`, `Detail`.`containerQty` AS `Detail.containerQty`, `Detail`.`numItems` AS `Detail.numItems`, `Detail`.`grossWeightKg` AS `Detail.grossWeightKg`, `Detail`.`netWeightKg` AS `Detail.netWeightKg`, `Detail`.`cbm` AS `Detail.cbm`, `Detail`.`handlingRequirements` AS `Detail.handlingRequirements`, `Detail`.`dangerousGoods` AS `Detail.dangerousGoods`, `Detail`.`codeDrg` AS `Detail.codeDrg`, `Detail`.`createdAt` AS `Detail.createdAt`, `Detail`.`updatedAt` AS `Detail.updatedAt`, `Detail`.`MasterId` AS `Detail.MasterId`, `Custom`.`id` AS `Custom.id`, `Custom`.`agent` AS `Custom.agent`, `Custom`.`agentCode` AS `Custom.agentCode`, `Custom`.`bOeNum` AS `Custom.bOeNum`, `Custom`.`bOeReleaseDate` AS `Custom.bOeReleaseDate`, `Custom`.`bOeAssessDate` AS `Custom.bOeAssessDate`, `Custom`.`releaseDepot` AS `Custom.releaseDepot`, `Custom`.`lrnNum` AS `Custom.lrnNum`, `Custom`.`mrnNum` AS `Custom.mrnNum`, `Custom`.`createdAt` AS `Custom.createdAt`, `Custom`.`updatedAt` AS `Custom.updatedAt`, `Custom`.`MasterId` AS `Custom.MasterId`, `Financial`.`id` AS `Financial.id`, `Financial`.`shipperInvoiceNum` AS `Financial.shipperInvoiceNum`, `Financial`.`invoiceDate` AS `Financial.invoiceDate`, `Financial`.`invoiceAmount` AS `Financial.invoiceAmount`, `Financial`.`currency` AS `Financial.currency`, `Financial`.`tradeRef` AS `Financial.tradeRef`, `Financial`.`apnNum` AS `Financial.apnNum`, `Financial`.`bank` AS `Financial.bank`, `Financial`.`apnDate` AS `Financial.apnDate`, `Financial`.`createdAt` AS `Financial.createdAt`, `Financial`.`updatedAt` AS `Financial.updatedAt`, `Financial`.`MasterId` AS `Financial.MasterId`, `Conveyance`.`id` AS `Conveyance.id`, `Conveyance`.`loadPort` AS `Conveyance.loadPort`, `Conveyance`.`portTransShip` AS `Conveyance.portTransShip`, `Conveyance`.`portDischarge` AS `Conveyance.portDischarge`, `Conveyance`.`inlandDestination` AS `Conveyance.inlandDestination`, `Conveyance`.`finalDelivery` AS `Conveyance.finalDelivery`, `Conveyance`.`airlineName` AS `Conveyance.airlineName`, `Conveyance`.`billMasterAirway` AS `Conveyance.billMasterAirway`, `Conveyance`.`billHouseAirway` AS `Conveyance.billHouseAirway`, `Conveyance`.`flightNum1` AS `Conveyance.flightNum1`, `Conveyance`.`flightDate1` AS `Conveyance.flightDate1`, `Conveyance`.`flightNum2` AS `Conveyance.flightNum2`, `Conveyance`.`flightDate2` AS `Conveyance.flightDate2`, `Conveyance`.`etd` AS `Conveyance.etd`, `Conveyance`.`eta` AS `Conveyance.eta`, `Conveyance`.`shippingLineName` AS `Conveyance.shippingLineName`, `Conveyance`.`vesselName` AS `Conveyance.vesselName`, `Conveyance`.`voyageNum` AS `Conveyance.voyageNum`, `Conveyance`.`oceanBoLnum` AS `Conveyance.oceanBoLnum`, `Conveyance`.`houseBoLnum` AS `Conveyance.houseBoLnum`, `Conveyance`.`containerNum` AS `Conveyance.containerNum`, `Conveyance`.`sealNum` AS `Conveyance.sealNum`, `Conveyance`.`shippedOnboardDate` AS `Conveyance.shippedOnboardDate`, `Conveyance`.`etaFinalPort` AS `Conveyance.etaFinalPort`, `Conveyance`.`truckRegNo` AS `Conveyance.truckRegNo`, `Conveyance`.`truckType` AS `Conveyance.truckType`, `Conveyance`.`createdAt` AS `Conveyance.createdAt`, `Conveyance`.`updatedAt` AS `Conveyance.updatedAt`, `Conveyance`.`MasterId` AS `Conveyance.MasterId` FROM `Masters` AS `Master` LEFT OUTER JOIN `Shippers` AS `Shipper` ON `Master`.`id` = `Shipper`.`MasterId` LEFT OUTER JOIN `Timelines` AS `Timeline` ON `Master`.`id` = `Timeline`.`MasterId` LEFT OUTER JOIN `Details` AS `Detail` ON `Master`.`id` = `Detail`.`MasterId` LEFT OUTER JOIN `Customs` AS `Custom` ON `Master`.`id` = `Custom`.`MasterId` LEFT OUTER JOIN `Financials` AS `Financial` ON `Master`.`id` = `Financial`.`MasterId` LEFT OUTER JOIN `Conveyances` AS `Conveyance` ON `Master`.`id` = `Conveyance`.`MasterId` WHERE `Master`.`isCurrent` = true ORDER BY `Master`.`id` DESC;
-////////////////18:18:24
-////////////////18:18:51
-Executing (default): SELECT `Master`.`id`, `Master`.`shipment_file_id`, `Master`.`users`, `Master`.`isCurrent`, `Shipper`.`id` AS `Shipper.id`, `Shipper`.`companyName` AS `Shipper.companyName`, `Shipper`.`contactName` AS `Shipper.contactName`, `Shipper`.`phoneLandline` AS `Shipper.phoneLandline`, `Shipper`.`phoneMobile` AS `Shipper.phoneMobile`, `Shipper`.`emailPrimary` AS `Shipper.emailPrimary`, `Shipper`.`emailSecondary` AS `Shipper.emailSecondary`, `Shipper`.`addressLine1` AS `Shipper.addressLine1`, `Shipper`.`addressLine2` AS `Shipper.addressLine2`, `Shipper`.`addressLine3` AS `Shipper.addressLine3`, `Shipper`.`country` AS `Shipper.country`, `Shipper`.`MasterId` AS `Shipper.MasterId`, `Timeline`.`id` AS `Timeline.id`, `Timeline`.`collected` AS `Timeline.collected`, `Timeline`.`atDepot` AS `Timeline.atDepot`, `Timeline`.`packed` AS `Timeline.packed`, `Timeline`.`lrd` AS `Timeline.lrd`, `Timeline`.`loaded` AS `Timeline.loaded`, `Timeline`.`departedToPort` AS `Timeline.departedToPort`, `Timeline`.`obl_awb_received` AS `Timeline.obl_awb_received`, `Timeline`.`anf_pre_received` AS `Timeline.anf_pre_received`, `Timeline`.`invoiced` AS `Timeline.invoiced`, `Timeline`.`payment` AS `Timeline.payment`, `Timeline`.`lineRelease` AS `Timeline.lineRelease`, `Timeline`.`instructionClearing` AS `Timeline.instructionClearing`, `Timeline`.`instructionDelivery` AS `Timeline.instructionDelivery`, `Timeline`.`signedCi` AS `Timeline.signedCi`, `Timeline`.`sars` AS `Timeline.sars`, `Timeline`.`arrivedAtPort` AS `Timeline.arrivedAtPort`, `Timeline`.`released` AS `Timeline.released`, `Timeline`.`unpacked` AS `Timeline.unpacked`, `Timeline`.`delivered` AS `Timeline.delivered`, `Timeline`.`docSent` AS `Timeline.docSent`, `Timeline`.`createdAt` AS `Timeline.createdAt`, `Timeline`.`updatedAt` AS `Timeline.updatedAt`, `Timeline`.`MasterId` AS `Timeline.MasterId`, `Detail`.`id` AS `Detail.id`, `Detail`.`incoterms` AS `Detail.incoterms`, `Detail`.`mode` AS `Detail.mode`, `Detail`.`routing` AS `Detail.routing`, `Detail`.`goodsDescriptions` AS `Detail.goodsDescriptions`, `Detail`.`packagingType` AS `Detail.packagingType`, `Detail`.`containerSpecs` AS `Detail.containerSpecs`, `Detail`.`containerQty` AS `Detail.containerQty`, `Detail`.`numItems` AS `Detail.numItems`, `Detail`.`grossWeightKg` AS `Detail.grossWeightKg`, `Detail`.`netWeightKg` AS `Detail.netWeightKg`, `Detail`.`cbm` AS `Detail.cbm`, `Detail`.`handlingRequirements` AS `Detail.handlingRequirements`, `Detail`.`dangerousGoods` AS `Detail.dangerousGoods`, `Detail`.`codeDrg` AS `Detail.codeDrg`, `Detail`.`createdAt` AS `Detail.createdAt`, `Detail`.`updatedAt` AS `Detail.updatedAt`, `Detail`.`MasterId` AS `Detail.MasterId`, `Custom`.`id` AS `Custom.id`, `Custom`.`agent` AS `Custom.agent`, `Custom`.`agentCode` AS `Custom.agentCode`, `Custom`.`bOeNum` AS `Custom.bOeNum`, `Custom`.`bOeReleaseDate` AS `Custom.bOeReleaseDate`, `Custom`.`bOeAssessDate` AS `Custom.bOeAssessDate`, `Custom`.`releaseDepot` AS `Custom.releaseDepot`, `Custom`.`lrnNum` AS `Custom.lrnNum`, `Custom`.`mrnNum` AS `Custom.mrnNum`, `Custom`.`createdAt` AS `Custom.createdAt`, `Custom`.`updatedAt` AS `Custom.updatedAt`, `Custom`.`MasterId` AS `Custom.MasterId`, `Financial`.`id` AS `Financial.id`, `Financial`.`shipperInvoiceNum` AS `Financial.shipperInvoiceNum`, `Financial`.`invoiceDate` AS `Financial.invoiceDate`, `Financial`.`invoiceAmount` AS `Financial.invoiceAmount`, `Financial`.`currency` AS `Financial.currency`, `Financial`.`tradeRef` AS `Financial.tradeRef`, `Financial`.`apnNum` AS `Financial.apnNum`, `Financial`.`bank` AS `Financial.bank`, `Financial`.`apnDate` AS `Financial.apnDate`, `Financial`.`createdAt` AS `Financial.createdAt`, `Financial`.`updatedAt` AS `Financial.updatedAt`, `Financial`.`MasterId` AS `Financial.MasterId`, `Conveyance`.`id` AS `Conveyance.id`, `Conveyance`.`loadPort` AS `Conveyance.loadPort`, `Conveyance`.`portTransShip` AS `Conveyance.portTransShip`, `Conveyance`.`portDischarge` AS `Conveyance.portDischarge`, `Conveyance`.`inlandDestination` AS `Conveyance.inlandDestination`, `Conveyance`.`finalDelivery` AS `Conveyance.finalDelivery`, `Conveyance`.`airlineName` AS `Conveyance.airlineName`, `Conveyance`.`billMasterAirway` AS `Conveyance.billMasterAirway`, `Conveyance`.`billHouseAirway` AS `Conveyance.billHouseAirway`, `Conveyance`.`flightNum1` AS `Conveyance.flightNum1`, `Conveyance`.`flightDate1` AS `Conveyance.flightDate1`, `Conveyance`.`flightNum2` AS `Conveyance.flightNum2`, `Conveyance`.`flightDate2` AS `Conveyance.flightDate2`, `Conveyance`.`etd` AS `Conveyance.etd`, `Conveyance`.`eta` AS `Conveyance.eta`, `Conveyance`.`shippingLineName` AS `Conveyance.shippingLineName`, `Conveyance`.`vesselName` AS `Conveyance.vesselName`, `Conveyance`.`voyageNum` AS `Conveyance.voyageNum`, `Conveyance`.`oceanBoLnum` AS `Conveyance.oceanBoLnum`, `Conveyance`.`houseBoLnum` AS `Conveyance.houseBoLnum`, `Conveyance`.`containerNum` AS `Conveyance.containerNum`, `Conveyance`.`sealNum` AS `Conveyance.sealNum`, `Conveyance`.`shippedOnboardDate` AS `Conveyance.shippedOnboardDate`, `Conveyance`.`etaFinalPort` AS `Conveyance.etaFinalPort`, `Conveyance`.`truckRegNo` AS `Conveyance.truckRegNo`, `Conveyance`.`truckType` AS `Conveyance.truckType`, `Conveyance`.`createdAt` AS `Conveyance.createdAt`, `Conveyance`.`updatedAt` AS `Conveyance.updatedAt`, `Conveyance`.`MasterId` AS `Conveyance.MasterId` FROM `Masters` AS `Master` LEFT OUTER JOIN `Shippers` AS `Shipper` ON `Master`.`id` = `Shipper`.`MasterId` LEFT OUTER JOIN `Timelines` AS `Timeline` ON `Master`.`id` = `Timeline`.`MasterId` LEFT OUTER JOIN `Details` AS `Detail` ON `Master`.`id` = `Detail`.`MasterId` LEFT OUTER JOIN `Customs` AS `Custom` ON `Master`.`id` = `Custom`.`MasterId` LEFT OUTER JOIN `Financials` AS `Financial` ON `Master`.`id` = `Financial`.`MasterId` LEFT OUTER JOIN `Conveyances` AS `Conveyance` ON `Master`.`id` = `Conveyance`.`MasterId` WHERE `Master`.`isCurrent` = true ORDER BY `Master`.`id` DESC;
-////////////////18:18:51
-////////////////18:19:16
-Executing (default): SELECT `Master`.`id`, `Master`.`shipment_file_id`, `Master`.`users`, `Master`.`isCurrent`, `Shipper`.`id` AS `Shipper.id`, `Shipper`.`companyName` AS `Shipper.companyName`, `Shipper`.`contactName` AS `Shipper.contactName`, `Shipper`.`phoneLandline` AS `Shipper.phoneLandline`, `Shipper`.`phoneMobile` AS `Shipper.phoneMobile`, `Shipper`.`emailPrimary` AS `Shipper.emailPrimary`, `Shipper`.`emailSecondary` AS `Shipper.emailSecondary`, `Shipper`.`addressLine1` AS `Shipper.addressLine1`, `Shipper`.`addressLine2` AS `Shipper.addressLine2`, `Shipper`.`addressLine3` AS `Shipper.addressLine3`, `Shipper`.`country` AS `Shipper.country`, `Shipper`.`MasterId` AS `Shipper.MasterId`, `Timeline`.`id` AS `Timeline.id`, `Timeline`.`collected` AS `Timeline.collected`, `Timeline`.`atDepot` AS `Timeline.atDepot`, `Timeline`.`packed` AS `Timeline.packed`, `Timeline`.`lrd` AS `Timeline.lrd`, `Timeline`.`loaded` AS `Timeline.loaded`, `Timeline`.`departedToPort` AS `Timeline.departedToPort`, `Timeline`.`obl_awb_received` AS `Timeline.obl_awb_received`, `Timeline`.`anf_pre_received` AS `Timeline.anf_pre_received`, `Timeline`.`invoiced` AS `Timeline.invoiced`, `Timeline`.`payment` AS `Timeline.payment`, `Timeline`.`lineRelease` AS `Timeline.lineRelease`, `Timeline`.`instructionClearing` AS `Timeline.instructionClearing`, `Timeline`.`instructionDelivery` AS `Timeline.instructionDelivery`, `Timeline`.`signedCi` AS `Timeline.signedCi`, `Timeline`.`sars` AS `Timeline.sars`, `Timeline`.`arrivedAtPort` AS `Timeline.arrivedAtPort`, `Timeline`.`released` AS `Timeline.released`, `Timeline`.`unpacked` AS `Timeline.unpacked`, `Timeline`.`delivered` AS `Timeline.delivered`, `Timeline`.`docSent` AS `Timeline.docSent`, `Timeline`.`createdAt` AS `Timeline.createdAt`, `Timeline`.`updatedAt` AS `Timeline.updatedAt`, `Timeline`.`MasterId` AS `Timeline.MasterId`, `Detail`.`id` AS `Detail.id`, `Detail`.`incoterms` AS `Detail.incoterms`, `Detail`.`mode` AS `Detail.mode`, `Detail`.`routing` AS `Detail.routing`, `Detail`.`goodsDescriptions` AS `Detail.goodsDescriptions`, `Detail`.`packagingType` AS `Detail.packagingType`, `Detail`.`containerSpecs` AS `Detail.containerSpecs`, `Detail`.`containerQty` AS `Detail.containerQty`, `Detail`.`numItems` AS `Detail.numItems`, `Detail`.`grossWeightKg` AS `Detail.grossWeightKg`, `Detail`.`netWeightKg` AS `Detail.netWeightKg`, `Detail`.`cbm` AS `Detail.cbm`, `Detail`.`handlingRequirements` AS `Detail.handlingRequirements`, `Detail`.`dangerousGoods` AS `Detail.dangerousGoods`, `Detail`.`codeDrg` AS `Detail.codeDrg`, `Detail`.`createdAt` AS `Detail.createdAt`, `Detail`.`updatedAt` AS `Detail.updatedAt`, `Detail`.`MasterId` AS `Detail.MasterId`, `Custom`.`id` AS `Custom.id`, `Custom`.`agent` AS `Custom.agent`, `Custom`.`agentCode` AS `Custom.agentCode`, `Custom`.`bOeNum` AS `Custom.bOeNum`, `Custom`.`bOeReleaseDate` AS `Custom.bOeReleaseDate`, `Custom`.`bOeAssessDate` AS `Custom.bOeAssessDate`, `Custom`.`releaseDepot` AS `Custom.releaseDepot`, `Custom`.`lrnNum` AS `Custom.lrnNum`, `Custom`.`mrnNum` AS `Custom.mrnNum`, `Custom`.`createdAt` AS `Custom.createdAt`, `Custom`.`updatedAt` AS `Custom.updatedAt`, `Custom`.`MasterId` AS `Custom.MasterId`, `Financial`.`id` AS `Financial.id`, `Financial`.`shipperInvoiceNum` AS `Financial.shipperInvoiceNum`, `Financial`.`invoiceDate` AS `Financial.invoiceDate`, `Financial`.`invoiceAmount` AS `Financial.invoiceAmount`, `Financial`.`currency` AS `Financial.currency`, `Financial`.`tradeRef` AS `Financial.tradeRef`, `Financial`.`apnNum` AS `Financial.apnNum`, `Financial`.`bank` AS `Financial.bank`, `Financial`.`apnDate` AS `Financial.apnDate`, `Financial`.`createdAt` AS `Financial.createdAt`, `Financial`.`updatedAt` AS `Financial.updatedAt`, `Financial`.`MasterId` AS `Financial.MasterId`, `Conveyance`.`id` AS `Conveyance.id`, `Conveyance`.`loadPort` AS `Conveyance.loadPort`, `Conveyance`.`portTransShip` AS `Conveyance.portTransShip`, `Conveyance`.`portDischarge` AS `Conveyance.portDischarge`, `Conveyance`.`inlandDestination` AS `Conveyance.inlandDestination`, `Conveyance`.`finalDelivery` AS `Conveyance.finalDelivery`, `Conveyance`.`airlineName` AS `Conveyance.airlineName`, `Conveyance`.`billMasterAirway` AS `Conveyance.billMasterAirway`, `Conveyance`.`billHouseAirway` AS `Conveyance.billHouseAirway`, `Conveyance`.`flightNum1` AS `Conveyance.flightNum1`, `Conveyance`.`flightDate1` AS `Conveyance.flightDate1`, `Conveyance`.`flightNum2` AS `Conveyance.flightNum2`, `Conveyance`.`flightDate2` AS `Conveyance.flightDate2`, `Conveyance`.`etd` AS `Conveyance.etd`, `Conveyance`.`eta` AS `Conveyance.eta`, `Conveyance`.`shippingLineName` AS `Conveyance.shippingLineName`, `Conveyance`.`vesselName` AS `Conveyance.vesselName`, `Conveyance`.`voyageNum` AS `Conveyance.voyageNum`, `Conveyance`.`oceanBoLnum` AS `Conveyance.oceanBoLnum`, `Conveyance`.`houseBoLnum` AS `Conveyance.houseBoLnum`, `Conveyance`.`containerNum` AS `Conveyance.containerNum`, `Conveyance`.`sealNum` AS `Conveyance.sealNum`, `Conveyance`.`shippedOnboardDate` AS `Conveyance.shippedOnboardDate`, `Conveyance`.`etaFinalPort` AS `Conveyance.etaFinalPort`, `Conveyance`.`truckRegNo` AS `Conveyance.truckRegNo`, `Conveyance`.`truckType` AS `Conveyance.truckType`, `Conveyance`.`createdAt` AS `Conveyance.createdAt`, `Conveyance`.`updatedAt` AS `Conveyance.updatedAt`, `Conveyance`.`MasterId` AS `Conveyance.MasterId` FROM `Masters` AS `Master` LEFT OUTER JOIN `Shippers` AS `Shipper` ON `Master`.`id` = `Shipper`.`MasterId` LEFT OUTER JOIN `Timelines` AS `Timeline` ON `Master`.`id` = `Timeline`.`MasterId` LEFT OUTER JOIN `Details` AS `Detail` ON `Master`.`id` = `Detail`.`MasterId` LEFT OUTER JOIN `Customs` AS `Custom` ON `Master`.`id` = `Custom`.`MasterId` LEFT OUTER JOIN `Financials` AS `Financial` ON `Master`.`id` = `Financial`.`MasterId` LEFT OUTER JOIN `Conveyances` AS `Conveyance` ON `Master`.`id` = `Conveyance`.`MasterId` WHERE `Master`.`isCurrent` = true ORDER BY `Master`.`id` DESC;
-////////////////18:19:16
-////////////////18:19:53
-////////////////18:19:53
-JsonWebTokenError: jwt malformed
-    at module.exports (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/jsonwebtoken/verify.js:70:17)
-    at node:internal/util:496:21
-    at new Promise (<anonymous>)
-    at node:internal/util:482:12
-    at exports.isLoggedIn (/Users/matthewstead/Desktop/Node-Express-Sequelize/controllers/authController.js:143:50)
-    at Layer.handleRequest (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/lib/layer.js:152:17)
-    at next (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/lib/route.js:157:13)
-    at Route.dispatch (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/lib/route.js:117:3)
-    at handle (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/index.js:435:11)
-    at Layer.handleRequest (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/lib/layer.js:152:17)
-////////////////18:19:53
-////////////////18:20:10
-////////////////18:20:10
-////////////////18:20:22
-////////////////18:20:24
-////////////////18:20:24
-////////////////18:21:03
-Executing (default): SELECT `Master`.`id`, `Master`.`shipment_file_id`, `Master`.`users`, `Master`.`isCurrent`, `Shipper`.`id` AS `Shipper.id`, `Shipper`.`companyName` AS `Shipper.companyName`, `Shipper`.`contactName` AS `Shipper.contactName`, `Shipper`.`phoneLandline` AS `Shipper.phoneLandline`, `Shipper`.`phoneMobile` AS `Shipper.phoneMobile`, `Shipper`.`emailPrimary` AS `Shipper.emailPrimary`, `Shipper`.`emailSecondary` AS `Shipper.emailSecondary`, `Shipper`.`addressLine1` AS `Shipper.addressLine1`, `Shipper`.`addressLine2` AS `Shipper.addressLine2`, `Shipper`.`addressLine3` AS `Shipper.addressLine3`, `Shipper`.`country` AS `Shipper.country`, `Shipper`.`MasterId` AS `Shipper.MasterId`, `Timeline`.`id` AS `Timeline.id`, `Timeline`.`collected` AS `Timeline.collected`, `Timeline`.`atDepot` AS `Timeline.atDepot`, `Timeline`.`packed` AS `Timeline.packed`, `Timeline`.`lrd` AS `Timeline.lrd`, `Timeline`.`loaded` AS `Timeline.loaded`, `Timeline`.`departedToPort` AS `Timeline.departedToPort`, `Timeline`.`obl_awb_received` AS `Timeline.obl_awb_received`, `Timeline`.`anf_pre_received` AS `Timeline.anf_pre_received`, `Timeline`.`invoiced` AS `Timeline.invoiced`, `Timeline`.`payment` AS `Timeline.payment`, `Timeline`.`lineRelease` AS `Timeline.lineRelease`, `Timeline`.`instructionClearing` AS `Timeline.instructionClearing`, `Timeline`.`instructionDelivery` AS `Timeline.instructionDelivery`, `Timeline`.`signedCi` AS `Timeline.signedCi`, `Timeline`.`sars` AS `Timeline.sars`, `Timeline`.`arrivedAtPort` AS `Timeline.arrivedAtPort`, `Timeline`.`released` AS `Timeline.released`, `Timeline`.`unpacked` AS `Timeline.unpacked`, `Timeline`.`delivered` AS `Timeline.delivered`, `Timeline`.`docSent` AS `Timeline.docSent`, `Timeline`.`createdAt` AS `Timeline.createdAt`, `Timeline`.`updatedAt` AS `Timeline.updatedAt`, `Timeline`.`MasterId` AS `Timeline.MasterId`, `Detail`.`id` AS `Detail.id`, `Detail`.`incoterms` AS `Detail.incoterms`, `Detail`.`mode` AS `Detail.mode`, `Detail`.`routing` AS `Detail.routing`, `Detail`.`goodsDescriptions` AS `Detail.goodsDescriptions`, `Detail`.`packagingType` AS `Detail.packagingType`, `Detail`.`containerSpecs` AS `Detail.containerSpecs`, `Detail`.`containerQty` AS `Detail.containerQty`, `Detail`.`numItems` AS `Detail.numItems`, `Detail`.`grossWeightKg` AS `Detail.grossWeightKg`, `Detail`.`netWeightKg` AS `Detail.netWeightKg`, `Detail`.`cbm` AS `Detail.cbm`, `Detail`.`handlingRequirements` AS `Detail.handlingRequirements`, `Detail`.`dangerousGoods` AS `Detail.dangerousGoods`, `Detail`.`codeDrg` AS `Detail.codeDrg`, `Detail`.`createdAt` AS `Detail.createdAt`, `Detail`.`updatedAt` AS `Detail.updatedAt`, `Detail`.`MasterId` AS `Detail.MasterId`, `Custom`.`id` AS `Custom.id`, `Custom`.`agent` AS `Custom.agent`, `Custom`.`agentCode` AS `Custom.agentCode`, `Custom`.`bOeNum` AS `Custom.bOeNum`, `Custom`.`bOeReleaseDate` AS `Custom.bOeReleaseDate`, `Custom`.`bOeAssessDate` AS `Custom.bOeAssessDate`, `Custom`.`releaseDepot` AS `Custom.releaseDepot`, `Custom`.`lrnNum` AS `Custom.lrnNum`, `Custom`.`mrnNum` AS `Custom.mrnNum`, `Custom`.`createdAt` AS `Custom.createdAt`, `Custom`.`updatedAt` AS `Custom.updatedAt`, `Custom`.`MasterId` AS `Custom.MasterId`, `Financial`.`id` AS `Financial.id`, `Financial`.`shipperInvoiceNum` AS `Financial.shipperInvoiceNum`, `Financial`.`invoiceDate` AS `Financial.invoiceDate`, `Financial`.`invoiceAmount` AS `Financial.invoiceAmount`, `Financial`.`currency` AS `Financial.currency`, `Financial`.`tradeRef` AS `Financial.tradeRef`, `Financial`.`apnNum` AS `Financial.apnNum`, `Financial`.`bank` AS `Financial.bank`, `Financial`.`apnDate` AS `Financial.apnDate`, `Financial`.`createdAt` AS `Financial.createdAt`, `Financial`.`updatedAt` AS `Financial.updatedAt`, `Financial`.`MasterId` AS `Financial.MasterId`, `Conveyance`.`id` AS `Conveyance.id`, `Conveyance`.`loadPort` AS `Conveyance.loadPort`, `Conveyance`.`portTransShip` AS `Conveyance.portTransShip`, `Conveyance`.`portDischarge` AS `Conveyance.portDischarge`, `Conveyance`.`inlandDestination` AS `Conveyance.inlandDestination`, `Conveyance`.`finalDelivery` AS `Conveyance.finalDelivery`, `Conveyance`.`airlineName` AS `Conveyance.airlineName`, `Conveyance`.`billMasterAirway` AS `Conveyance.billMasterAirway`, `Conveyance`.`billHouseAirway` AS `Conveyance.billHouseAirway`, `Conveyance`.`flightNum1` AS `Conveyance.flightNum1`, `Conveyance`.`flightDate1` AS `Conveyance.flightDate1`, `Conveyance`.`flightNum2` AS `Conveyance.flightNum2`, `Conveyance`.`flightDate2` AS `Conveyance.flightDate2`, `Conveyance`.`etd` AS `Conveyance.etd`, `Conveyance`.`eta` AS `Conveyance.eta`, `Conveyance`.`shippingLineName` AS `Conveyance.shippingLineName`, `Conveyance`.`vesselName` AS `Conveyance.vesselName`, `Conveyance`.`voyageNum` AS `Conveyance.voyageNum`, `Conveyance`.`oceanBoLnum` AS `Conveyance.oceanBoLnum`, `Conveyance`.`houseBoLnum` AS `Conveyance.houseBoLnum`, `Conveyance`.`containerNum` AS `Conveyance.containerNum`, `Conveyance`.`sealNum` AS `Conveyance.sealNum`, `Conveyance`.`shippedOnboardDate` AS `Conveyance.shippedOnboardDate`, `Conveyance`.`etaFinalPort` AS `Conveyance.etaFinalPort`, `Conveyance`.`truckRegNo` AS `Conveyance.truckRegNo`, `Conveyance`.`truckType` AS `Conveyance.truckType`, `Conveyance`.`createdAt` AS `Conveyance.createdAt`, `Conveyance`.`updatedAt` AS `Conveyance.updatedAt`, `Conveyance`.`MasterId` AS `Conveyance.MasterId` FROM `Masters` AS `Master` LEFT OUTER JOIN `Shippers` AS `Shipper` ON `Master`.`id` = `Shipper`.`MasterId` LEFT OUTER JOIN `Timelines` AS `Timeline` ON `Master`.`id` = `Timeline`.`MasterId` LEFT OUTER JOIN `Details` AS `Detail` ON `Master`.`id` = `Detail`.`MasterId` LEFT OUTER JOIN `Customs` AS `Custom` ON `Master`.`id` = `Custom`.`MasterId` LEFT OUTER JOIN `Financials` AS `Financial` ON `Master`.`id` = `Financial`.`MasterId` LEFT OUTER JOIN `Conveyances` AS `Conveyance` ON `Master`.`id` = `Conveyance`.`MasterId` WHERE `Master`.`isCurrent` = true ORDER BY `Master`.`id` DESC;
-////////////////18:21:03
-////////////////18:21:42
-////////////////18:21:42
-JsonWebTokenError: jwt malformed
-    at module.exports (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/jsonwebtoken/verify.js:70:17)
-    at node:internal/util:496:21
-    at new Promise (<anonymous>)
-    at node:internal/util:482:12
-    at exports.isLoggedIn (/Users/matthewstead/Desktop/Node-Express-Sequelize/controllers/authController.js:143:50)
-    at Layer.handleRequest (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/lib/layer.js:152:17)
-    at next (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/lib/route.js:157:13)
-    at Route.dispatch (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/lib/route.js:117:3)
-    at handle (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/index.js:435:11)
-    at Layer.handleRequest (/Users/matthewstead/Desktop/Node-Express-Sequelize/node_modules/router/lib/layer.js:152:17)
-////////////////18:21:42

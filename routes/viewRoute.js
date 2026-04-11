@@ -12,7 +12,15 @@ router.get(
   authController.protect,
   controller.displayAllShipments,
 );
-router.get('/ops-functions', authController.protect, controller.displayUsers);
+router.get('/ops-functions', authController.protect, controller.opsFunctions);
 router.get('/ops-data', authController.protect, controller.submitData);
+router.get(
+  '/ops-past-shipments',
+  authController.protect,
+  controller.opsOldShipments,
+);
+router.get('/ops-exports', authController.protect, controller.opsExports);
+router.get('/ops-imports', authController.protect, controller.opsImports);
+router.get('/ops-update', authController.protect, controller.updateShipment);
 
 module.exports = router;

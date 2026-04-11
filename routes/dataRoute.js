@@ -48,7 +48,17 @@ router
   .get(controller.getFinancials)
   .post(controller.createFinancials)
   .delete(authController.restrictToAdmin(), controller.deleteFinancials);
+router
+  .route('/customers')
+  .get(controller.getCustomers)
+  .post(controller.createCustomers)
+  .delete(controller.deleteCustomers);
 
+router
+  .route('/consignees')
+  .get(controller.getConsignees)
+  .post(controller.createConsignees)
+  .delete(controller.deleteConsignees);
 router
   .route('/:id')
   .get(
@@ -62,8 +72,19 @@ router.use(authController.restrictToAdmin());
 router.route('/customs/:id').patch(controller.updateCustoms);
 router.route('/financials/:id').patch(controller.updateFinancials);
 router.route('/conveyance/:id').patch(controller.updateConveyance);
-router.route('/shipment-details/:id').patch(controller.updateDetails);
+router
+  .route('/shipment-details/:id')
+  .patch(controller.updateDetails)
+  .get(controller.getSingleDetails);
 router.route('/timeline/:id').patch(controller.updateTimeline);
 router.route('/shippers/:id').patch(controller.updateShippers);
+router
+  .route('/customers/:id')
+  .patch(controller.updateCustomers)
+  .get(controller.getSingleCustomers);
+router
+  .route('/consignees/:id')
+  .patch(controller.updateConsignees)
+  .get(controller.getSingleConsignees);
 
 module.exports = router;

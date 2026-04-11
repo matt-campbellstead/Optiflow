@@ -7,33 +7,42 @@ extends base
 
 block content
     h1.heading-primary Welcome to the data submission page 
-        h2.heading-secondary Here, you can submit data into the database.
-            form.form.data-form__master
-                h2.heading-secondary Master table 
-                p 'isCurrent' default setting is 'true', and 'MasterId' is set automatically. All that is required here is the Shipment File number and the ID of the customer's user profile.
-                .form__group
-                    label.form__label(for="shipment_file_id") Shipment file no.
-                    input#shipment_file_id.form__input(type='text', placeholder='1234567ABC', required)
-                .form__group
-                    label.form__label(for="users") User ID string
-                    input#users.form__input(type='text', placeholder='userid', required)
-                .form__group 
-                    input.btn.submit(type="submit")
-            include _formShipper
-            include _formDetails
-            include _formFinancials
-            include _formConveyance
-            include _formCustoms
-
-            //- select(id="simple" name="simple")
-            //-     option Banana
-            //-     option Cherry
-            //-     option Lemon
+    h2.heading-secondary Here, you can submit data into the database.
+    form.form.data-form__master
+        h2.heading-secondary Master table 
+        p 'isCurrent' default setting is 'true', and 'MasterId' is set automatically. All that is required here is the Shipment File number and the ID of the customer's database record.
+            .form__group
+                label.form__label(for="shipment_file_id") Shipment file no.
+                input#shipment_file_id.form__input(type='text', placeholder='1234567ABC', required)
+            .form__group
+                label.form__label(for="users") User ID string
+                input#users.form__input(type='text', placeholder='to be changed', required)
+            .form__group
+                input.btn.submit(type="submit")
+    button.btn.next1 Next 
+    include _formShipper
+    button.btn.next2 Next
+    include _formDetails
+    button.btn.next3 Next
+    include _formFinancials
+    button.btn.next4 Next
+    include _formCustoms
+    button.btn.next5 Next
+    include _formConveyance
+    button.btn.next6 Next
+    form.form.data-form__timeline
+        h2.heading-secondary Timeline table
+        p Enter the Master document ID below, then click 'submit' to initialise a Timeline table. All values will be false: they can then be updated as needed in the Ops Dashboard. 
+            .form__group 
+                label.form__label(for="timelineMasterId") Master ID number
+                input.form__input(id="timelineMasterId", type="number", placeholder="e.g. 5")
+            .form__group 
+                input.btn.submit(type='submit')
+    button.btn.next7 Next 
+    include _formCustomers
+    button.btn.next8 Next
+    include _formConsignees
             
-            
-                
-
-    
-        h2.heading-seconday Your data entry: 
-            section.dashboard__container
-                p.data-preview
+    h2.heading-seconday Your data entry: 
+        section.dashboard__container
+            p.data-preview

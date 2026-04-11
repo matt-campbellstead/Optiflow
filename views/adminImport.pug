@@ -1,0 +1,27 @@
+extends base
+
+mixin shipmentFunction(data)
+    h3= `Master ID: ${data.id})`
+        .shipment-box-detail 
+            span.shipment-box_label= `Customer: ${data.users}`
+        .shipment-box-detail
+            span.shipment-box_label= `File number: ${data.shipment_file_id}`
+        .shipment-box-detail 
+            span.shipment-box_label= `Shipment Details: ${JSON.stringify(data.Detail, null, 4).replaceAll('"', '')}`
+        .shipment-box-detail 
+            span.shipment-box_label= `Shipper: ${JSON.stringify(data.Shipper, null, 4).replaceAll('"', '')}`
+        .shipment-box-detail 
+            span.shipment-box_label= `Financial Details: ${JSON.stringify(data.Financial, null, 4).replaceAll('"', '')}`
+        .shipment-box-detail 
+            span.shipment-box_label= `Conveyance: ${JSON.stringify(data.Conveyance, null, 4).replaceAll('"', '')}`
+        .shipment-box-detail 
+            span.shipment-box_label= `Customs Details: ${JSON.stringify(data.Custom, null, 4).replaceAll('"', '')}`
+        .shipment-box-detail 
+            span.shipment-box_label= `Voilà!`
+
+block content
+    h1.heading-primary View your current import shipments.
+    section.dashboard__container
+        each shipment in document
+            .shipment-box
+                +shipmentFunction(shipment)
