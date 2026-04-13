@@ -155,7 +155,7 @@ if (submitFinancialsForm)
       object[key] = node.value;
     });
 
-    console.log(object);
+    // console.log(object);
 
     submit(object, 'financials');
   });
@@ -397,7 +397,7 @@ if (fieldSelector)
   fieldAddBtn.addEventListener('click', (e) => {
     e.preventDefault();
     const selection = fieldSelector.value;
-    console.log(selection);
+    //console.log(selection);
     const markup = `<div class="form__group">
   <label class="form__label" for="${selection}">
     ${selection.toUpperCase()}
@@ -416,7 +416,7 @@ if (updateForm)
 
     metaArray.forEach((obj) => {
       if (tableSelection === obj.name) {
-        console.log(obj.name, obj.array);
+        //console.log(obj.name, obj.array);
         obj.array.forEach((el) => {
           const node = document.getElementById(el);
           if (!node) return;
@@ -428,6 +428,6 @@ if (updateForm)
     });
     const route = tableSelection.toLowerCase();
     const id = dbUpdateId.value;
-    console.log(object);
+    //console.log(object);
     update(object, route, id);
   });

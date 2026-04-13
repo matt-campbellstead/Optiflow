@@ -32,6 +32,8 @@ const handleSqlzeValidationErr = (err) => {
   return new AppError(message, 400);
 };
 
+const handleCsrfTokenError = () => new AppError('CSRF validation error', 403);
+
 const sendDevErr = (err, req, res) => {
   // API
   if (req.originalUrl.startsWith('/api')) {
@@ -100,6 +102,7 @@ module.exports = (err, req, res, next) => {
     if (error.name === 'TokenExpiredError') error = handleJWTExpiredErr();
     if (error.name === 'SequelizeValidationError')
       error = handleSqlzeValidationErr(error);
+    if (error.name === 'invalidCsrfTokenError') error = handleCsrfTokenError();
 
     sendProdErr(error, req, res);
   }

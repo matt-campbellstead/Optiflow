@@ -22,7 +22,9 @@ const fs = require('fs');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 
+///////////////STAGING REMOVE
 process.loadEnvFile('./config.env');
+
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -41,12 +43,27 @@ const DB = process.env.MONGO_DATABASE.replace(
   process.env.MONGO_PASSWORD,
 );
 
-mongoose.connect(DB).then((con) => {
+// mongoose.connect(DB).then((con) => {
+//   const date = new Date().toLocaleString('en-ZA');
+//   mylog.log(
+//     `MongoDB: database connection succesful! At ${date.split(', ')[1]}`,
+//   );
+// });
+
+const connectDB = async () => {
   const date = new Date().toLocaleString('en-ZA');
-  mylog.log(
-    `MongoDB: database connection succesful! At ${date.split(', ')[1]}`,
-  );
-});
+  try {
+    await mongoose.connect(DB);
+    mylog.log(
+      `MongoDB: database connection succesful! At ${date.split(', ')[1]}`,
+    );
+  } catch (err) {
+    mylog.log('MongoDB connection failed!');
+    mylog.log(err.name, err.message);
+  }
+};
+
+connectDB();
 
 // Sequelize
 if (process.env.NODE_ENV === 'development') {
@@ -114,6 +131,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/', viewRouter);
+//app.use(doubleCsrfProtection());
 app.use('/api/v1/data', dataRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/dbx', dbcrossoverRouter);

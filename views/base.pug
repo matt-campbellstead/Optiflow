@@ -8,7 +8,7 @@ html
         link(rel='stylesheet' href='style.css')
 
     body 
-   
+        input(type='hidden' name='_csrf' id='_csrf' value=csrfToken)
         header.header
             nav.nav.nav--home 
                     a.nav__el(href='/') Home

@@ -1,7 +1,23 @@
 const express = require('express');
+const { doubleCsrf } = require('csrf-csrf');
 const controller = require('../controllers/viewController');
 const authController = require('../controllers/authController');
 const router = express.Router();
+
+const { doubleCsrfProtection } = doubleCsrf({
+  getSecret: () => process.env.CSRF_SECRET || 'default-csrf-secret',
+  getSessionIdentifier: (req) => 'This is an identifier!',
+  cookieName: 'my-csrf-token', //CHANGE TO '__Secure-my-csrf-token',
+  cookieOptions: {
+    httpOnly: true,
+    sameSite: 'strict',
+    secure: process.env.NODE_ENV === 'production',
+  },
+  size: 64,
+  ignoredMethods: ['GET', 'HEAD', 'OPTIONS'],
+});
+
+router.use(doubleCsrfProtection);
 
 router.get('/', authController.isLoggedIn, controller.homePage);
 router.get('/login', authController.isLoggedIn, controller.logInUser);

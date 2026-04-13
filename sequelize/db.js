@@ -1,4 +1,5 @@
 'use strict';
+///////////////STAGING REMOVE
 process.loadEnvFile(`${__dirname}/../config.env`);
 const { Sequelize, DataTypes } = require('sequelize');
 const { Umzug, SequelizeStorage } = require('umzug');
