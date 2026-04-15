@@ -120,6 +120,7 @@ if (submitDataForm)
 
     object.shipment_file_id = fileId;
     object.users = userId;
+    object.CustomerId = document.getElementById('CustomerId').value;
 
     submit(object, 'master');
   });

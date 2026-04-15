@@ -104,13 +104,19 @@ exports.opsFunctions = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.submitData = (req, res) => {
+exports.submitData = asyncHandler(async (req, res, next) => {
   const token = req.csrfToken();
+
+  const customers = await User.find({
+    $and: [{ name: { $ne: 'Barry' } }, { name: { $ne: 'Matt' } }],
+  });
+
   res.status(200).render('adminSubmit', {
     title: 'Admin Data Submission',
     csrfToken: token,
+    customers,
   });
-};
+});
 
 exports.opsOldShipments = asyncHandler(async (req, res, next) => {
   const token = req.csrfToken;

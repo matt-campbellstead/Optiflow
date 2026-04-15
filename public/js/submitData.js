@@ -8,8 +8,8 @@ export const submit = async (dataObj, type) => {
   const token = getCsrf();
   const url =
     type === 'master'
-      ? 'http://127.0.0.1:8000/api/v1/data' // `https://test.matthewcampbellstead.com/api/v1/data`
-      : `http://127.0.0.1:8000/api/v1/data/${type}`; // `https://test.matthewcampbellstead.com/api/v1/data/${type}`
+      ? `${process.env.API_CALL_URL}/api/v1/data`
+      : `${process.env.API_CALL_URL}/api/v1/data/${type}`;
   const localObj = { ...dataObj };
   try {
     const res = await axios({
@@ -36,7 +36,7 @@ export const submit = async (dataObj, type) => {
 export const update = async (dataObj, table, id) => {
   const token = getCsrf();
   const localObj = { ...dataObj };
-  const url = `http://127.0.0.1:8000/api/v1/data/${table}/${id}`; // `https://test.matthewcampbellstead.com/api/v1/data/${table}/${id}`
+  const url = `${process.env.API_CALL_URL}/api/v1/data/${table}/${id}`;
 
   try {
     const res = await axios({
@@ -56,3 +56,8 @@ export const update = async (dataObj, table, id) => {
     showAlert('error', err.response.data.message);
   }
 };
+
+//'http://127.0.0.1:8000/api/v1/data'
+// `http://127.0.0.1:8000/api/v1/data/${type}`;
+//  `http://127.0.0.1:8000/api/v1/data/${table}/${id}`;
+//

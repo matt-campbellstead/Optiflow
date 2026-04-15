@@ -8,17 +8,29 @@ extends base
 block content
     h1.heading-primary Welcome to the data submission page 
     h2.heading-secondary Here, you can submit data into the database.
-    form.form.data-form__master
-        h2.heading-secondary Master table 
-        p 'isCurrent' default setting is 'true', and 'MasterId' is set automatically. All that is required here is the Shipment File number and the ID of the customer's database record.
-            .form__group
-                label.form__label(for="shipment_file_id") Shipment file no.
-                input#shipment_file_id.form__input(type='text', placeholder='1234567ABC', required)
-            .form__group
-                label.form__label(for="users") User ID string
-                input#users.form__input(type='text', placeholder='to be changed', required)
-            .form__group
-                input.btn.submit(type="submit")
+    section.dashboard__container
+        section.update__container.first
+            p See the drop-down menu for a list of current users
+            select.db-select
+                each customer of customers 
+                    option=`${customer.name} ${customer._id}`
+        section.update__container.second
+            form.form.data-form__master
+                h2.heading-secondary Master table
+                p  NOTE: If you have not yet created a DB entry for the customer, do that first, then come back with the ID for that database entry.
+                p  Enter the Shipment File number and the ID of the customer's user profile, then the ID of the customer's DB entry. The Master ID is set automatically.
+                    .form__group
+                        label.form__label(for="shipment_file_id") Shipment file no.
+                        input#shipment_file_id.form__input(type='text', placeholder='1234567ABC', required)
+                    .form__group
+                        label.form__label(for="users") Customer's user ID string 
+                        input#users.form__input(type='text', placeholder='e.g. 12a12345bc678de9101f2233 ', required)
+                    .form__group
+                        label.form__label(for='CustomerId') Customer's DB ID number
+                        input#CustomerId.form__input(type='text', placeholder='e.g. "1"', required)
+                    .form__group
+                        input.btn.submit(type="submit")
+
     button.btn.next1 Next 
     include _formShipper
     button.btn.next2 Next

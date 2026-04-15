@@ -8,14 +8,14 @@ export const viewShipmentLogs = async (id) => {
   try {
     const res = await axios({
       method: 'GET',
-      url: `http://127.0.0.1:8000/api/v1/users/${userid}/shipmentlogs`, // 'https://test.matthewcampbellstead.com/api/v1/users/${userid}/shipmentlogs
+      url: `${process.env.API_CALL_URL}/api/v1/users/${userid}/shipmentlogs`,
     });
 
     if (res.data.status === 'success') {
       showAlert('success', 'User shipments loaded');
       //console.log(res.data.data.data);
 
-      let data = JSON.stringify(res.data.data.data, null, 4);
+      const data = JSON.stringify(res.data.data.data, null, 4);
 
       document.querySelector('.shipment-logs').textContent = data;
     }
@@ -32,7 +32,7 @@ export const updateTimeline = async (docId, data) => {
   try {
     const res = await axios({
       method: 'PATCH',
-      url: `http://127.0.0.1:8000/api/v1/data/timeline/${id}`, // `https://test.matthewcampbellstead.com/api/v1/data/timeline/${id}`
+      url: `${process.env.API_CALL_URL}/api/v1/data/timeline/${id}`,
       data: newData,
       headers: {
         'x-csrf-token': token,
@@ -60,7 +60,7 @@ export const getTable = async (name, id) => {
   try {
     const res = await axios({
       method: 'GET',
-      url: `http://127.0.0.1:8000/api/v1/data/${selection}/${id}`, // `https://test.matthewcampbellstead.com/api/v1/data/${selection}/${id}`
+      url: `${process.env.API_CALL_URL}/api/v1/data/${selection}/${id}`,
     });
 
     if (res.data.status === 'success') {
@@ -80,3 +80,6 @@ export const getTable = async (name, id) => {
     showAlert('error', err.response);
   }
 };
+//`http://127.0.0.1:8000/api/v1/users/${userid}/shipmentlogs`,
+// `http://127.0.0.1:8000/api/v1/data/timeline/${id}`
+// `http://127.0.0.1:8000/api/v1/data/${selection}/${id}`

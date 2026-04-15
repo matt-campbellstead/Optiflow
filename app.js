@@ -43,13 +43,6 @@ const DB = process.env.MONGO_DATABASE.replace(
   process.env.MONGO_PASSWORD,
 );
 
-// mongoose.connect(DB).then((con) => {
-//   const date = new Date().toLocaleString('en-ZA');
-//   mylog.log(
-//     `MongoDB: database connection succesful! At ${date.split(', ')[1]}`,
-//   );
-// });
-
 const connectDB = async () => {
   const date = new Date().toLocaleString('en-ZA');
   try {
@@ -131,7 +124,6 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/', viewRouter);
-//app.use(doubleCsrfProtection());
 app.use('/api/v1/data', dataRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/dbx', dbcrossoverRouter);
@@ -140,7 +132,6 @@ app.use('/api/v1/dbx', dbcrossoverRouter);
 const port = process.env.PORT || 3000;
 
 const server = app.listen(port, '127.0.0.1', () => {
-  //const time = new Date().toISOString();
   const date = new Date().toLocaleString('en-ZA');
   mylog.log(`App is running on port ${port}, at ${date}`);
 });
