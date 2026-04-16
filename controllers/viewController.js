@@ -111,15 +111,20 @@ exports.submitData = asyncHandler(async (req, res, next) => {
     $and: [{ name: { $ne: 'Barry' } }, { name: { $ne: 'Matt' } }],
   });
 
+  const data = await Customers.findAll({
+    order: [['id', 'DESC']],
+  });
+
   res.status(200).render('adminSubmit', {
     title: 'Admin Data Submission',
     csrfToken: token,
     customers,
+    data,
   });
 });
 
 exports.opsOldShipments = asyncHandler(async (req, res, next) => {
-  const token = req.csrfToken;
+  const token = req.csrfToken();
   const oldShipments = await Master.findAll({
     where: { isCurrent: false },
     include: [

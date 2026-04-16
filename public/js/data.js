@@ -153,7 +153,7 @@ export const iterator = (obj, str) => {
 //   }
 // };
 
-export const addRemoveClasslist = (el) => {
+export const toggleHidden = (el) => {
   const [a, b, c, d] = el;
   a.classList.add('hidden');
   b.classList.add('hidden');
@@ -165,6 +165,19 @@ export const initialize = (el) => {
   el.classList.add('hidden');
 };
 
+export const setObject = (arr) => {
+  const object = {};
+  for (const key of arr) {
+    object[key] = null;
+  }
+  arr.forEach((el) => {
+    const node = document.getElementById(el);
+    if (!node) return;
+    let key = iterator(object, el);
+    object[key] = node.value;
+  });
+  return object;
+};
 export const timelineKeysArr = [
   'cargo_collected',
   'received',

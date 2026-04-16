@@ -4,6 +4,16 @@ extends base
 //-     .form__group
 //-         label.form__label(for=`${class}`)= `${text}`
 //-         input`#{class}`.form__input(type='text', placeholder='EXW', `${required}`)
+mixin customerData(data)
+        .shipment-box-detail 
+            span.shipment-box_label= `Customer ID: ${data.id}`
+        .shipment-box-detail
+            span.shipment-box_label= `Customer user ID string: ${data.userId}`
+        .shipment-box-detail 
+            span.shipment-box_label= `Company name: ${data.companyName}`
+        
+      
+
 
 block content
     h1.heading-primary Welcome to the data submission page 
@@ -14,11 +24,16 @@ block content
             select.db-select
                 each customer of customers 
                     option=`${customer.name} ${customer._id}`
+            p All DB entries in the Customer table:
+            .shipment-box
+                each entry of data
+                    +customerData(entry)
         section.update__container.second
             form.form.data-form__master
                 h2.heading-secondary Master table
                 p  NOTE: If you have not yet created a DB entry for the customer, do that first, then come back with the ID for that database entry.
-                p  Enter the Shipment File number and the ID of the customer's user profile, then the ID of the customer's DB entry. The Master ID is set automatically.
+                p  Use the DB information above to get the ID string of the customer's user profile and the ID number of the customer's DB entry.
+                p Then, enter those below along with a new Shipment File number. The Master ID will be set automatically.
                     .form__group
                         label.form__label(for="shipment_file_id") Shipment file no.
                         input#shipment_file_id.form__input(type='text', placeholder='1234567ABC', required)
@@ -51,9 +66,11 @@ block content
             .form__group 
                 input.btn.submit(type='submit')
     button.btn.next7 Next 
-    include _formCustomers
-    button.btn.next8 Next
     include _formConsignees
+    button.btn.back Back to start
+    
+    button.btn.show-form Show/hide Customer Details form
+    include _formCustomers
             
     h2.heading-seconday Your data entry: 
         section.dashboard__container

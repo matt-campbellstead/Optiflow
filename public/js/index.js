@@ -9,7 +9,7 @@ import {
   financialsArray,
   shipperArray,
   iterator,
-  addRemoveClasslist,
+  toggleHidden,
   initialize,
   timelineKeysArr,
   customerIdArray,
@@ -17,6 +17,7 @@ import {
   consigneesIdArray,
   consigneesKeyArray,
   metaArray,
+  setObject,
 } from './data';
 
 const currentTheme = localStorage.getItem('theme');
@@ -46,13 +47,16 @@ const nextBtn4 = document.querySelector('.next4');
 const nextBtn5 = document.querySelector('.next5');
 const nextBtn6 = document.querySelector('.next6');
 const nextBtn7 = document.querySelector('.next7');
-const nextBtn8 = document.querySelector('.next8');
+const backBtn = document.querySelector('.back');
+const showCustomerFormBtn = document.querySelector('.show-form');
+
 const dbUpdateSelect1 = document.querySelector('.db-select');
 const dbUpdateBtn1 = document.querySelector('.update-select');
 const dbUpdateId = document.querySelector('.document-id');
 const fieldAddBtn = document.querySelector('.update-add1');
 const fieldSelector = document.querySelector('.field-select');
 const updateForm = document.querySelector('.update-form');
+const updateContainer = document.querySelector('.dashboard__container');
 
 const formElements = [];
 formElements.push(
@@ -70,7 +74,7 @@ formElements.push(
   nextBtn5,
   nextBtn6,
   nextBtn7,
-  nextBtn8,
+  backBtn,
 );
 
 for (const el of formElements) if (el) initialize(el);
@@ -112,14 +116,9 @@ if (viewDbxBtn) {
 if (submitDataForm)
   submitDataForm.addEventListener('submit', (e) => {
     e.preventDefault();
-
     const object = {};
-
-    const fileId = document.getElementById('shipment_file_id').value;
-    const userId = document.getElementById('users').value;
-
-    object.shipment_file_id = fileId;
-    object.users = userId;
+    object.shipment_file_id = document.getElementById('shipment_file_id').value;
+    object.users = document.getElementById('users').value;
     object.CustomerId = document.getElementById('CustomerId').value;
 
     submit(object, 'master');
@@ -128,99 +127,43 @@ if (submitDataForm)
 if (submitShipperForm)
   submitShipperForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const object = {};
-    for (const key of shipperArray) {
-      object[key] = null;
-    }
-    shipperArray.forEach((el) => {
-      const node = document.getElementById(el);
-      if (!node) return;
-      let key = iterator(object, el);
-      object[key] = node.value;
-    });
-
-    submit(object, 'shippers');
+    const shipperObj = setObject(shipperArray);
+    submit(shipperObj, 'shippers');
   });
 
 if (submitFinancialsForm)
   submitFinancialsForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const object = {};
-    for (const key of financialsArray) {
-      object[key] = null;
-    }
-    financialsArray.forEach((el) => {
-      const node = document.getElementById(el);
-      if (!node) return;
-      let key = iterator(object, el);
-      object[key] = node.value;
-    });
-
-    // console.log(object);
-
-    submit(object, 'financials');
+    const financialsObj = setObject(financialsArray);
+    submit(financialsObj, 'financials');
   });
 
 if (submitCustomsForm)
   submitCustomsForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const object = {};
-    for (const key of customsArray) {
-      object[key] = null;
-    }
-    customsArray.forEach((el) => {
-      const node = document.getElementById(el);
-      if (!node) return;
-      let key = iterator(object, el);
-      object[key] = node.value;
-    });
-
-    submit(object, 'customs');
+    const customsObj = setObject(customsArray);
+    submit(customsObj, 'customs');
   });
 
 if (submitDetailsForm)
   submitDetailsForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    let object = {};
-    for (const key of detailsArray) {
-      object[key] = null;
-    }
-    detailsArray.forEach((el) => {
-      const node = document.getElementById(el);
-      if (!node) return;
-      let key = iterator(object, el);
-      object[key] = node.value;
-    });
-    // if (object.dangerousGoods === 'true') {
-    //   object.dangerousGoods = true;
-    // } else if (object.dangerousGoods === 'false') {
-    //   object.dangerousGoods = false;
-    // }
-    submit(object, 'shipment-details');
+    const detailsObj = setObject(detailsArray);
+    submit(detailsObj, 'shipment-details');
   });
 
 if (submitConveyanceForm)
   submitConveyanceForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    let object = {};
-    for (const key of conveyanceArray) {
-      object[key] = null;
-    }
-    conveyanceArray.forEach((el) => {
-      const node = document.getElementById(el);
-      if (!node) return;
-      let key = iterator(object, el);
-      object[key] = node.value;
-    });
-    submit(object, 'conveyance');
+    const conveyanceObj = setObject(conveyanceArray);
+    submit(conveyanceObj, 'conveyance');
   });
 
 if (timelineForm)
   timelineForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    let object = {};
+    const object = {};
     object.timelineMasterId = document.getElementById('timelineMasterId').value;
-
     submit(object, 'timeline');
   });
 
@@ -262,72 +205,58 @@ if (consigneesForm)
 
 if (nextBtn1)
   nextBtn1.addEventListener('click', () => {
-    addRemoveClasslist([nextBtn1, submitDataForm, submitShipperForm, nextBtn2]);
+    toggleHidden([nextBtn1, submitDataForm, submitShipperForm, nextBtn2]);
+    updateContainer.classList.add('hidden');
   });
 
 if (nextBtn2)
-  nextBtn2.addEventListener('click', () => {
-    addRemoveClasslist([
-      nextBtn2,
-      submitShipperForm,
-      submitDetailsForm,
-      nextBtn3,
-    ]);
-  });
+  nextBtn2.addEventListener('click', () =>
+    toggleHidden([nextBtn2, submitShipperForm, submitDetailsForm, nextBtn3]),
+  );
 
 if (nextBtn3)
-  nextBtn3.addEventListener('click', () => {
-    addRemoveClasslist([
-      nextBtn3,
-      submitDetailsForm,
-      submitFinancialsForm,
-      nextBtn4,
-    ]);
-  });
+  nextBtn3.addEventListener('click', () =>
+    toggleHidden([nextBtn3, submitDetailsForm, submitFinancialsForm, nextBtn4]),
+  );
 
 if (nextBtn4)
-  nextBtn4.addEventListener('click', () => {
-    addRemoveClasslist([
-      nextBtn4,
-      submitFinancialsForm,
-      submitCustomsForm,
-      nextBtn5,
-    ]);
-  });
+  nextBtn4.addEventListener('click', () =>
+    toggleHidden([nextBtn4, submitFinancialsForm, submitCustomsForm, nextBtn5]),
+  );
 
 if (nextBtn5)
-  nextBtn5.addEventListener('click', () => {
-    addRemoveClasslist([
-      nextBtn5,
-      submitCustomsForm,
-      submitConveyanceForm,
-      nextBtn6,
-    ]);
-  });
+  nextBtn5.addEventListener('click', () =>
+    toggleHidden([nextBtn5, submitCustomsForm, submitConveyanceForm, nextBtn6]),
+  );
 
 if (nextBtn6)
-  nextBtn6.addEventListener('click', () => {
-    addRemoveClasslist([
-      nextBtn6,
-      submitConveyanceForm,
-      timelineForm,
-      nextBtn7,
-    ]);
-  });
+  nextBtn6.addEventListener('click', () =>
+    toggleHidden([nextBtn6, submitConveyanceForm, timelineForm, nextBtn7]),
+  );
 
 if (nextBtn7)
-  nextBtn7.addEventListener('click', () => {
-    timelineForm.classList.add('hidden');
-    nextBtn7.classList.add('hidden');
-    customersForm.classList.remove('hidden');
-    nextBtn8.classList.remove('hidden');
+  nextBtn7.addEventListener('click', () =>
+    toggleHidden([nextBtn7, timelineForm, consigneesForm, backBtn]),
+  );
+
+if (backBtn)
+  backBtn.addEventListener('click', () => {
+    formElements.forEach((el) => initialize(el));
+    nextBtn1.classList.remove('hidden');
+    updateContainer.classList.remove('hidden');
+    submitDataForm.classList.remove('hidden');
   });
 
-if (nextBtn8)
-  nextBtn8.addEventListener('click', () => {
-    customersForm.classList.add('hidden');
-    nextBtn8.classList.add('hidden');
-    consigneesForm.classList.remove('hidden');
+let hidden = true;
+if (showCustomerFormBtn)
+  showCustomerFormBtn.addEventListener('click', () => {
+    if (hidden) {
+      customersForm.classList.remove('hidden');
+      hidden = false;
+    } else if (!hidden) {
+      customersForm.classList.add('hidden');
+      hidden = true;
+    }
   });
 
 const milestoneBool = document.querySelectorAll('td');
@@ -386,7 +315,7 @@ if (document.querySelector('.timeline-select'))
       // Call the update function with the ID and object as arguments
       updateTimeline(timelineId, object);
     });
-if (dbUpdateSelect1)
+if (dbUpdateBtn1)
   dbUpdateBtn1.addEventListener('click', () => {
     const selection = dbUpdateSelect1.value;
     const id = dbUpdateId.value;
@@ -394,7 +323,7 @@ if (dbUpdateSelect1)
     getTable(selection, id);
   });
 
-if (fieldSelector)
+if (fieldAddBtn)
   fieldAddBtn.addEventListener('click', (e) => {
     e.preventDefault();
     const selection = fieldSelector.value;
@@ -409,6 +338,7 @@ if (fieldSelector)
       .querySelector('.update-form')
       .insertAdjacentHTML('afterbegin', markup);
   });
+
 if (updateForm)
   updateForm.addEventListener('submit', (e) => {
     e.preventDefault();

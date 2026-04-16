@@ -3,12 +3,10 @@ const mylog = require('../log');
 const asyncHandler = require('../utils/asyncHandler');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const authLimiter = require('../utils/rateLimit');
-//const rateLimit = require('express-rate-limit');
 const { promisify } = require('util');
 const User = require('../models/mongooseModel');
 const AppError = require('../utils/AppError');
-const sendEmail = require('../utils/email');
+const Email = require('../utils/email');
 const Master = require('../models/masterModel');
 
 const createSendToken = (user, statusCode, res) => {
@@ -52,6 +50,10 @@ exports.signUp = asyncHandler(async (req, res, next) => {
   newUser.password = undefined;
   newUser.passwordConfirm = undefined;
 
+  const url = `${req.protocol}://${req.get('host')}/dashboard`;
+  console.log(url);
+  await new Email(newUser, url).sendWelcome();
+
   res.status(200).json({
     status: 'success',
     token,
@@ -76,16 +78,9 @@ exports.logIn = asyncHandler(async (req, res, next) => {
       new AppError('Email or password is incorrect! Please try again.', 401),
     );
 
-  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES,
-  });
-
   user.password = undefined;
   user.passwordConfirm = undefined;
 
-  //authLimiter();
-
-  //console.log(user);
   createSendToken(user, 200, res);
 });
 
