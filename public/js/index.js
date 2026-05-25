@@ -1,21 +1,18 @@
 import { login, logout } from './login';
 import { changeStyle } from './changeStyle';
-import { viewShipmentLogs, updateTimeline, getTable } from './opsFunctions';
+import {
+  viewShipmentLogs, // REMOVE
+  updateTimeline,
+  getTable,
+  getDogs,
+} from './opsFunctions';
 import { submit, update } from './submitData';
 import {
-  detailsArray,
-  conveyanceArray,
-  customsArray,
-  financialsArray,
-  shipperArray,
   iterator,
   toggleHidden,
   initialize,
-  timelineKeysArr,
   customerIdArray,
-  customerKeyArray,
   consigneesIdArray,
-  consigneesKeyArray,
   metaArray,
   setObject,
 } from './data';
@@ -25,6 +22,9 @@ const currentTheme = localStorage.getItem('theme');
 if (currentTheme) {
   changeStyle();
 }
+
+if (document.querySelector('.main--dogs')) getDogs();
+
 const logOutBtn = document.querySelector('.nav__el--logout');
 const loginForm = document.querySelector('.login-form');
 const submitDataForm = document.querySelector('.data-form__master');
@@ -127,35 +127,45 @@ if (submitDataForm)
 if (submitShipperForm)
   submitShipperForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const shipperObj = setObject(shipperArray);
+    const shipperObj = setObject(
+      metaArray.find((el) => el.name === 'Shippers').array,
+    );
     submit(shipperObj, 'shippers');
   });
 
 if (submitFinancialsForm)
   submitFinancialsForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const financialsObj = setObject(financialsArray);
+    const financialsObj = setObject(
+      metaArray.find((el) => el.name === 'Financials').array,
+    );
     submit(financialsObj, 'financials');
   });
 
 if (submitCustomsForm)
   submitCustomsForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const customsObj = setObject(customsArray);
+    const customsObj = setObject(
+      metaArray.find((el) => el.name === 'Customs').array,
+    );
     submit(customsObj, 'customs');
   });
 
 if (submitDetailsForm)
   submitDetailsForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const detailsObj = setObject(detailsArray);
+    const detailsObj = setObject(
+      metaArray.find((el) => el.name === 'Shipment-details').array,
+    );
     submit(detailsObj, 'shipment-details');
   });
 
 if (submitConveyanceForm)
   submitConveyanceForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const conveyanceObj = setObject(conveyanceArray);
+    const conveyanceObj = setObject(
+      metaArray.find((el) => el.name === 'Conveyance').array,
+    );
     submit(conveyanceObj, 'conveyance');
   });
 
@@ -171,7 +181,7 @@ if (customersForm)
   customersForm.addEventListener('submit', (e) => {
     e.preventDefault();
     let object = {};
-    for (const key of customerKeyArray) {
+    for (const key of metaArray.find((el) => el.name === 'Customers').array) {
       object[key] = null;
     }
     customerIdArray.forEach((el) => {
@@ -189,7 +199,7 @@ if (consigneesForm)
   consigneesForm.addEventListener('submit', (e) => {
     e.preventDefault();
     let object = {};
-    for (const key of consigneesKeyArray) {
+    for (const key of metaArray.find((el) => el.name === 'Consignees').array) {
       object[key] = null;
     }
     consigneesIdArray.forEach((el) => {
@@ -273,7 +283,7 @@ if (document.querySelector('.timeline-select'))
       // Preparing arguments for update function
       const timelineId = document.querySelector('.timeline-id').value;
       let object = {};
-      for (const x of timelineKeysArr) {
+      for (const x of metaArray.find((el) => el.name === 'Timelines').array) {
         object[x] = null;
       }
 
@@ -292,11 +302,13 @@ if (document.querySelector('.timeline-select'))
 
       // 3) Loop through the keys array to match input to a key
       let key;
-      timelineKeysArr.forEach((el) => {
-        if (arr.includes(el)) {
-          key = el;
-        }
-      });
+      metaArray
+        .find((el) => el.name === 'Timelines')
+        .array.forEach((el) => {
+          if (arr.includes(el)) {
+            key = el;
+          }
+        });
 
       object[key] = 'true';
 

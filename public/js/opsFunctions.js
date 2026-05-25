@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { showAlert } from './alert';
 
-const getCsrf = () => getElementById('_csrf').value;
+const getCsrf = () => document.getElementById('_csrf').value;
 // TO BE REPLACED WITH MARIADB CALL
 export const viewShipmentLogs = async (id) => {
   const userid = id;
@@ -77,9 +77,27 @@ export const getTable = async (name, id) => {
     }
   } catch (err) {
     //console.log(err);
-    showAlert('error', err.response);
+    showAlert('error', err.response.data.message);
   }
 };
-//`http://127.0.0.1:8000/api/v1/users/${userid}/shipmentlogs`,
-// `http://127.0.0.1:8000/api/v1/data/timeline/${id}`
-// `http://127.0.0.1:8000/api/v1/data/${selection}/${id}`
+
+export const getDogs = async () => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: 'https://dog.ceo/api/breeds/image/random',
+    });
+    if (res.data.status === 'success') {
+      console.log(res.data);
+      const breed = res.data.message.split('/')[4];
+      document
+        .querySelector('.main')
+        .insertAdjacentHTML(
+          'afterbegin',
+          `<h1> Random dog!🐶 ${breed}</h1> <img src="${res.data.message}">`,
+        );
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};

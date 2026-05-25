@@ -6,7 +6,7 @@ const router = express.Router();
 
 const { doubleCsrfProtection } = doubleCsrf({
   getSecret: () => process.env.CSRF_SECRET || 'default-csrf-secret',
-  getSessionIdentifier: (req) => 'This is an identifier!',
+  getSessionIdentifier: (req) => req.cookies.jwt || 'default non-token message', //req.cookies.jwt,
   cookieName: 'my-csrf-token', //CHANGE TO '__Secure-my-csrf-token',
   cookieOptions: {
     httpOnly: true,

@@ -14,49 +14,78 @@ const Consignees = require('../models/consigneesModel');
 const AppError = require('../utils/AppError');
 const asyncHandler = require('../utils/asyncHandler');
 
-exports.getTimeline = factory.getData(Timeline);
-exports.createTimeline = factory.createData(Timeline);
-exports.deleteTimeline = factory.deleteData(Timeline);
-exports.updateTimeline = factory.updateData(Timeline);
+const filterCrud = (array1, array2) => {
+  const crudOptions = [...array1];
 
-exports.getShippers = factory.getData(Shippers);
-exports.createShippers = factory.createData(Shippers);
-exports.deleteShippers = factory.deleteData(Shippers);
-exports.updateShippers = factory.updateData(Shippers);
+  const newArr = array2.filter((string) => {
+    return crudOptions.some((el) => el === string);
+  });
+  return newArr;
+};
 
-exports.getDetails = factory.getData(Details);
-exports.createDetails = factory.createData(Details);
-exports.deleteDetails = factory.deleteData(Details);
-exports.updateDetails = factory.updateData(Details);
-exports.getSingleDetails = factory.getSingle(Details);
+const wholeCrud = (Model, options) => {
+  const modelString = String(Model).split(' ')[1];
+  let crudArray = ['get', 'create', 'delete', 'update', 'getSingle'];
 
-exports.getFinancials = factory.getData(Financials);
-exports.createFinancials = factory.createData(Financials);
-exports.deleteFinancials = factory.deleteData(Financials);
-exports.updateFinancials = factory.updateData(Financials);
-exports.getSingleFinancials = factory.getSingle(Financials);
+  const crudObject = {};
 
-exports.getCustoms = factory.getData(Customs);
-exports.createCustoms = factory.createData(Customs);
-exports.deleteCustoms = factory.deleteData(Customs);
-exports.updateCustoms = factory.updateData(Customs);
+  if (options) {
+    crudArray = filterCrud(options, crudArray);
+  }
 
-exports.getConveyance = factory.getData(Conveyance);
-exports.createConveyance = factory.createData(Conveyance);
-exports.deleteConveyance = factory.deleteData(Conveyance);
-exports.updateConveyance = factory.updateData(Conveyance);
+  crudArray.forEach((type) => {
+    const dynamicKey = `${type}${modelString}`;
 
-exports.getCustomers = factory.getData(Customers);
-exports.createCustomers = factory.createData(Customers);
-exports.deleteCustomers = factory.deleteData(Customers);
-exports.updateCustomers = factory.updateData(Customers);
-exports.getSingleCustomers = factory.getSingle(Customers);
+    if (type === 'get') {
+      crudObject[dynamicKey] = factory.getData(Model);
+    }
+    if (type === 'create') {
+      crudObject[dynamicKey] = factory.createData(Model);
+    }
+    if (type === 'update') {
+      crudObject[dynamicKey] = factory.updateData(Model);
+    }
+    if (type === 'delete') {
+      crudObject[dynamicKey] = factory.deleteData(Model);
+    }
+    if (type === 'getSingle') {
+      crudObject[dynamicKey] = factory.getSingle(Model);
+    }
+  });
 
-exports.getConsignees = factory.getData(Consignees);
-exports.createConsignees = factory.createData(Consignees);
-exports.deleteConsignees = factory.deleteData(Consignees);
-exports.updateConsignees = factory.updateData(Consignees);
-exports.getSingleConsignees = factory.getSingle(Consignees);
+  return crudObject;
+};
+
+exports.timelineCrud = wholeCrud(Timeline, [
+  'get',
+  'create',
+  'delete',
+  'update',
+]);
+
+exports.shippersCrud = wholeCrud(Shippers, [
+  'get',
+  'create',
+  'delete',
+  'update',
+]);
+
+exports.detailsCrud = wholeCrud(Details);
+
+exports.financialsCrud = wholeCrud(Financials);
+
+exports.customsCrud = wholeCrud(Customs, ['get', 'create', 'delete', 'update']);
+
+exports.conveyanceCrud = wholeCrud(Conveyance, [
+  'get',
+  'create',
+  'delete',
+  'update',
+]);
+
+exports.customersCrud = wholeCrud(Customers);
+
+exports.consigneesCrud = wholeCrud(Consignees);
 
 exports.getMasterData = asyncHandler(async (req, res, next) => {
   const masterQuery = await Master.findAll({

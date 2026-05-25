@@ -15,50 +15,74 @@ router
 
 router
   .route('/shippers')
-  .get(controller.getShippers)
-  .post(controller.createShippers)
-  .delete(authController.restrictToAdmin(), controller.deleteShippers);
+  .get(controller.shippersCrud.getShippers)
+  .post(controller.shippersCrud.createShippers)
+  .delete(
+    authController.restrictToAdmin(),
+    controller.shippersCrud.deleteShippers,
+  );
 
 router
   .route('/timeline')
-  .get(controller.getTimeline)
-  .post(controller.createTimeline)
-  .delete(authController.restrictToAdmin(), controller.deleteTimeline);
+  .get(controller.timelineCrud.getTimeline)
+  .post(controller.timelineCrud.createTimeline)
+  .delete(
+    authController.restrictToAdmin(),
+    controller.timelineCrud.deleteTimeline,
+  );
 
 router
   .route('/shipment-details')
-  .get(controller.getDetails)
-  .post(controller.createDetails)
-  .delete(authController.restrictToAdmin(), controller.deleteDetails);
+  .get(controller.detailsCrud.getDetails)
+  .post(controller.detailsCrud.createDetails)
+  .delete(
+    authController.restrictToAdmin(),
+    controller.detailsCrud.deleteDetails,
+  );
 
 router
   .route('/conveyance')
-  .get(controller.getConveyance)
-  .post(controller.createConveyance)
-  .delete(authController.restrictToAdmin(), controller.deleteConveyance);
+  .get(controller.conveyanceCrud.getConveyance)
+  .post(controller.conveyanceCrud.createConveyance)
+  .delete(
+    authController.restrictToAdmin(),
+    controller.conveyanceCrud.deleteConveyance,
+  );
 
 router
   .route('/customs')
-  .get(controller.getCustoms)
-  .post(controller.createCustoms)
-  .delete(authController.restrictToAdmin(), controller.deleteCustoms);
+  .get(controller.customsCrud.getCustoms)
+  .post(controller.customsCrud.createCustoms)
+  .delete(
+    authController.restrictToAdmin(),
+    controller.customsCrud.deleteCustoms,
+  );
 
 router
   .route('/financials')
-  .get(controller.getFinancials)
-  .post(controller.createFinancials)
-  .delete(authController.restrictToAdmin(), controller.deleteFinancials);
+  .get(controller.financialsCrud.getFinancials)
+  .post(controller.financialsCrud.createFinancials)
+  .delete(
+    authController.restrictToAdmin(),
+    controller.financialsCrud.deleteFinancials,
+  );
 router
   .route('/customers')
-  .get(controller.getCustomers)
-  .post(controller.createCustomers)
-  .delete(controller.deleteCustomers);
+  .get(controller.customersCrud.getCustomers)
+  .post(controller.customersCrud.createCustomers)
+  .delete(
+    authController.restrictToAdmin(),
+    controller.customersCrud.deleteCustomers,
+  );
 
 router
   .route('/consignees')
-  .get(controller.getConsignees)
-  .post(controller.createConsignees)
-  .delete(controller.deleteConsignees);
+  .get(controller.consigneesCrud.getConsignees)
+  .post(controller.consigneesCrud.createConsignees)
+  .delete(
+    authController.restrictToAdmin(),
+    controller.consigneesCrud.deleteConsignees,
+  );
 router
   .route('/:id')
   .get(
@@ -69,22 +93,26 @@ router
 
 router.use(authController.restrictToAdmin());
 
-router.route('/customs/:id').patch(controller.updateCustoms);
-router.route('/financials/:id').patch(controller.updateFinancials);
-router.route('/conveyance/:id').patch(controller.updateConveyance);
+router.route('/customs/:id').patch(controller.customsCrud.updateCustoms);
+router
+  .route('/financials/:id')
+  .patch(controller.financialsCrud.updateFinancials);
+router
+  .route('/conveyance/:id')
+  .patch(controller.conveyanceCrud.updateConveyance);
 router
   .route('/shipment-details/:id')
-  .patch(controller.updateDetails)
-  .get(controller.getSingleDetails);
-router.route('/timeline/:id').patch(controller.updateTimeline);
-router.route('/shippers/:id').patch(controller.updateShippers);
+  .patch(controller.detailsCrud.updateDetails)
+  .get(controller.detailsCrud.getSingleDetails);
+router.route('/timeline/:id').patch(controller.timelineCrud.updateTimeline);
+router.route('/shippers/:id').patch(controller.shippersCrud.updateShippers);
 router
   .route('/customers/:id')
-  .patch(controller.updateCustomers)
-  .get(controller.getSingleCustomers);
+  .patch(controller.customersCrud.updateCustomers)
+  .get(controller.customersCrud.getSingleCustomers);
 router
   .route('/consignees/:id')
-  .patch(controller.updateConsignees)
-  .get(controller.getSingleConsignees);
+  .patch(controller.consigneesCrud.updateConsignees)
+  .get(controller.consigneesCrud.getSingleConsignees);
 
 module.exports = router;

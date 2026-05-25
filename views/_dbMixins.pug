@@ -1,0 +1,57 @@
+//- mixin formatDate(data)
+//-     - return data.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+
+mixin showShipmentDetails(model)
+    .shipment-box-detail 
+        span.shipment-box_label Shipment Details:
+            ul.shipment-box__list
+                li.shipment-box__content= `ID: ${model.id}`
+                li.shipment-box__content= `Incoterms: ${model.incoterms}`
+                li.shipment-box__content= `Routing: ${model.routing}`
+                li.shipment-box__content= `Goods: ${model.goodsDescriptions}`
+                li.shipment-box__content= `Type of packaging: ${model.packagingType}`
+                li.shipment-box__content= `Container specifications: ${model.containerSpecs}`
+                li.shipment-box__content= `Container quantity: ${model.containerQty}`
+                li.shipment-box__content= `Number of items: ${model.numItems}`
+                li.shipment-box__content= `Gross weight: ${model.grossWeightKg}`
+                li.shipment-box__content= `Net weight: ${model.netWeightKg}`
+                li.shipment-box__content= `Volumetric weight: ${model.cbm}`
+                li.shipment-box__content= `Handling requirements: ${model.handlingRequirements}`
+                li.shipment-box__content= `Dangerous goods? ${model.dangerousGoods}`
+                li.shipment-box__content= `Dangerous goods code: ${model.codeDrg}`
+                li.shipment-box__content= `Created At: ${model.createdAt.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+                li.shipment-box__content= `Updated at: ${model.updatedAt.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+
+mixin showCustomer(model)
+    .shipment-box-detail 
+        span.shipment-box_label Customer:
+        ul.shipment-box__list 
+            li.shipment-box__content= `ID: ${model.id}`
+            li.shipment-box__content= `Customer's user ID: ${model.userId}`
+            li.shipment-box__content= `Company Name: ${model.companyName}`
+            li.shipment-box__content= `Phone (landline): ${model.phoneLandline}`
+            li.shipment-box__content= `Phone (mobile): ${model.phoneMobile}`
+            li.shipment-box__content= `Primary Email: ${model.emailPri}`
+            li.shipment-box__content= `Secondary Email: ${model.emailSec}`
+            li.shipment-box__content= `Street: ${model.addressLine1}`
+            li.shipment-box__content= `Suburb: ${model.addressLine2}`
+            li.shipment-box__content= `City & Province/State: ${model.addressLine3}`
+            li.shipment-box__content= `Country: ${model.country}`
+            li.shipment-box__content= `Created: ${model.createdAt.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+            li.shipment-box__content= `Updated: ${model.updatedAt.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+
+mixin showShipper(model)
+    .shipment-box-detail 
+        span.shipment-box_label Shipper: 
+            ul.shipment-box__list 
+                li.shipment-box__content= `ID: ${model.id}`
+                li.shipment-box__content= `Company: ${model.companyName}`
+                li.shipment-box__content= `Phone (landline): ${model.phoneLandline}`
+                li.shipment-box__content= `Phone (mobile): ${model.phoneMobile}`
+                li.shipment-box__content= `Primary Email: ${model.emailPrimary}`
+                li.shipment-box__content= `Secondary Email: ${model.emailSecondary}`
+                li.shipment-box__content= `Street: ${model.addressLine1}`
+                li.shipment-box__content= `Suburb: ${model.addressLine2}`
+                li.shipment-box__content= `City & Province/State: ${model.addressLine3}`
+                li.shipment-box__content= `Country: ${model.country}`
+

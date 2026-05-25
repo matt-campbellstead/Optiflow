@@ -1,7 +1,9 @@
 extends base
 
 block content   
-    main.main 
+    main.main
+    if !user 
+        .main--dogs
     if user
         h1.main--title= `Welcome, ${user.name}, to your dashboard.`
         //- .section-pictures

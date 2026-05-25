@@ -48,16 +48,18 @@ mixin milestoneDate(timeline)
     td= timeline.cargo_delivered_date 
     td= timeline.document_pack_date
 
+include _dbMixins
+
 mixin shipmentFunction(data)
     h2.heading-secondary= `Master ID: ${data.id})`
-        .shipment-box-detail 
-            span.shipment-box_label= `Customer: ${JSON.stringify(data.Customer, null, 4).replaceAll('"', '')}`
-        .shipment-box-detail
-            span.shipment-box_label= `File number: ${data.shipment_file_id}`
-        .shipment-box-detail 
-            span.shipment-box_label= `Shipment Details: ${JSON.stringify(data.Detail, null, 4).replaceAll('"', '')}`
-        .shipment-box-detail 
-            span.shipment-box_label= `Shipper: ${JSON.stringify(data.Shipper, null, 4).replaceAll('"', '')}`
+    .shipment-box-detail
+        span.shipment-box_label= `File number: ${data.shipment_file_id}`
+    if (data.Customer)
+        +showCustomer(data.Customer)
+    if (data.Detail)
+        +showShipmentDetails(data.Detail)
+    if (data.Shipper)
+        +showShipper(data.Shipper)
         .shipment-box-detail 
             span.shipment-box_label= `Consignee: ${JSON.stringify(data.Consignee, null, 4).replaceAll('"', '')}`
         .shipment-box-detail 
@@ -68,6 +70,7 @@ mixin shipmentFunction(data)
             span.shipment-box_label= `Customs Details: ${JSON.stringify(data.Custom, null, 4).replaceAll('"', '')}`
         .shipment-box-detail 
             span.shipment-box_label 🛳️🛳️🛳️ Voilà! 🛳️🛳️🛳️
+
 
 mixin customerFunction(data)
     h2.heading-secondary= `Customer: ${data.users}`
@@ -90,9 +93,9 @@ block content
             .heading-box 
                 h1.heading-primary Operations Dashboard 
                 h2.heading-secondary All current shipments 
-                    each shipment, i in allShipments
-                        .shipment-box
-                            +shipmentFunction(shipment)
+            each shipment, i in allShipments
+                .shipment-box
+                    +shipmentFunction(shipment)
             a#ops-dashboard.nav__el(href='/ops-exports') See exports only
             a#ops-dashboard.nav__el(href='/ops-imports') See imports only
             a#ops-dashboard.nav__el(href='/ops-past-shipments') View past shipments

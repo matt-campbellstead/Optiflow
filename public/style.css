@@ -388,6 +388,19 @@ h1 {
   box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.06);
 }
 
+.shipment-box-detail {
+  white-space: pre-line;
+  overflow-x: auto;
+  font-family: monospace;
+  font-size: 15px;
+  padding: 15px;
+  color: var(--clr-dark);
+}
+
+.shipment-box__list {
+  list-style-type: none;
+}
+
 .update__container.first {
   margin: 20px;
   padding: 15px;
@@ -440,12 +453,6 @@ h1 {
   font-size: 1.5rem;
   padding: 10px;
   position: relative;
-}
-
-.shipment-box-detail {
-  font-family: Arial, Helvetica, sans-serif;
-  color: var(--clr-dark);
-  padding: 10px;
 }
 
 .alert {

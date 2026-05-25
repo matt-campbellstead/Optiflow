@@ -48,7 +48,7 @@ exports.updateData = (Model) =>
       where: { id: req.params.id },
     });
 
-    if (document[0] === 0) {
+    if (document === null) {
       return next(new AppError('No document with that ID found.', 404));
     }
 
@@ -64,7 +64,7 @@ exports.getSingle = (Model) =>
       where: { id: req.params.id },
     });
 
-    if (document[0] === 0) {
+    if (document === null) {
       return next(new AppError('No document with that ID found.', 404));
     }
 

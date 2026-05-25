@@ -14,11 +14,18 @@ const Customers = require('../models/customerModel');
 
 exports.homePage = (req, res) => {
   const token = req.csrfToken();
-
-  res.status(200).set('x-csrf-token', token).render('home', {
-    title: 'Home page',
-    csrfToken: token,
-  });
+  res
+    .status(200)
+    .set(
+      //
+      // 'x-csrf-token': token,
+      'Content-Security-Policy',
+      "default-src 'self' https://dog.ceo ; base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';object-src 'none';script-src https://dog.ceo 'self' blob: ; img-src 'self' https://images.dog.ceo  data:; script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests;",
+    )
+    .render('home', {
+      title: 'Home page',
+      csrfToken: token,
+    });
 };
 
 exports.logInUser = (req, res) => {
