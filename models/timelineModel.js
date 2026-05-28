@@ -1,28 +1,7 @@
 'use strict';
 const { sequelize } = require('../sequelize/db');
 const { Model, DataTypes } = require('sequelize');
-// const arr = [
-//   'Cargo Collected / FCL and LCL',
-//   'Received at Depot / FCL and LCL',
-//   'Cargo Packed / LCL',
-//   'Depot LRD Date / LCL',
-//   'Cargo Loaded/Stuffed / LCL',
-//   'Cargo Departed Port/Airport',
-//   'OBL/AWB Received',
-//   'ANF/Pre-Alert Received',
-//   'Customer Invoiced',
-//   'Payment Received',
-//   'Line Release received',
-//   'Clearing Instruction Issued',
-//   'Delivery Instruction Issued',
-//   'Signed CI received',
-//   'SARS Submission',
-//   'Cargo Arrived Port/Airport',
-//   'Cargo Released/ SARS',
-//   'Cargo Unpacked (LCL)',
-//   'Cargo Delivered',
-//   'Document Pack Sent',
-// ];
+
 class Timeline extends Model {}
 
 Timeline.init(

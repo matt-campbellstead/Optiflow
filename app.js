@@ -1,11 +1,10 @@
-'use strict';
 // Initilisation
 const express = require('express');
 const mylog = require('./log');
 
 process.on('uncaughtException', (err) => {
   console.log('Uncaught exception, oh no! 👻 Shutting down...');
-  console.log(`${err.name}, ${err.message}`);
+  console.log(`${err.message}, ${err}`);
 
   process.exit(1);
 });
@@ -59,6 +58,7 @@ const connectDB = async () => {
 connectDB();
 
 // Sequelize
+
 if (process.env.NODE_ENV === 'development') {
   sequelize.sync({ alter: true }).then(() => {
     const date = new Date().toLocaleString('en-ZA');
@@ -121,12 +121,14 @@ app.use((req, res, next) => {
   deepSanitize(req.body);
   next();
 });
+// Not sure if I need CORS configuration as well?
 
 // Routes
-app.use('/', viewRouter);
+
 app.use('/api/v1/data', dataRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/dbx', dbcrossoverRouter);
+app.use('/', viewRouter);
 
 // Server
 const port = process.env.PORT || 3000;

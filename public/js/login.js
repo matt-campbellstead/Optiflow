@@ -9,7 +9,7 @@ export const login = async (email, password) => {
   try {
     const res = await axios({
       method: 'POST',
-      url: `${process.env.API_CALL_URL}/api/v1/users/login`,
+      url: `${process.env.API_CALL_URL}/api/v1/users/auth/login`,
       data: {
         email,
         password,
@@ -36,13 +36,10 @@ export const logout = async () => {
   try {
     const res = await axios({
       method: 'GET',
-      url: `${process.env.API_CALL_URL}/api/v1/users/logout`,
+      url: `${process.env.API_CALL_URL}/api/v1/users/auth/logout`,
     });
     if (res.data.status === 'success') location.assign('/');
   } catch (err) {
     showAlert('error', err.response.data.message);
   }
 };
-// ${process.env.API_CALL_URL}
-//'http://127.0.0.1:8000/api/v1/users/login'
-//'http://127.0.0.1:8000/api/v1/users/logout'

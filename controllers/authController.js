@@ -1,62 +1,49 @@
-'use strict';
 const mylog = require('../log');
+// I had to do custom logging because the console output wasn't available on the hosting platform
 const asyncHandler = require('../utils/asyncHandler');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { promisify } = require('util');
 const User = require('../models/mongooseModel');
+const RefreshToken = require('../models/mongooseToken');
 const AppError = require('../utils/AppError');
 const Email = require('../utils/email');
-const Master = require('../models/masterModel');
 
-const createSendToken = (user, statusCode, res) => {
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES,
-  });
-  const cookieOptions = {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000,
-    ),
-    //secure: true, // Can only be sent in a secure connection
-    httpOnly: true, // Can not be accessed by the browser
-  };
+const {
+  hashToken,
+  createJti,
+  signAccessToken,
+  signRefreshToken,
+  persistRefreshToken,
+  setRefreshCookie,
+  rotateRefreshToken,
+  setAccessCookie,
+} = require('../utils/tokens');
 
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
-  res.cookie('jwt', token, cookieOptions);
-
-  user.password = undefined;
-
-  res.status(statusCode).json({
-    status: 'success',
-    token,
-    data: {
-      user,
-    },
-  });
-};
-
+// The asyncHandler catches errors and then the errors are routed through errorController.js
 exports.signUp = asyncHandler(async (req, res, next) => {
-  const newUser = await User.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
-  });
+  const { name, email, password } = req.body;
 
-  const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES,
+  const existingUser = await User.findOne({ email });
+  if (existingUser) return next(new AppError('This user already exists!', 500));
+
+  const newUser = await User.create({
+    name,
+    email,
+    password,
+    passwordConfirm: req.body.passwordConfirm,
   });
 
   newUser.password = undefined;
   newUser.passwordConfirm = undefined;
 
-  const url = `${req.protocol}://${req.get('host')}/dashboard`;
-  console.log(url);
+  const url = `${req.protocol}://${req.get('host')}/login`;
+
   await new Email(newUser, url).sendWelcome();
 
   res.status(200).json({
     status: 'success',
-    token,
+    //token,
     data: {
       newUser,
     },
@@ -81,18 +68,98 @@ exports.logIn = asyncHandler(async (req, res, next) => {
   user.password = undefined;
   user.passwordConfirm = undefined;
 
-  createSendToken(user, 200, res);
+  const accessToken = signAccessToken(user);
+
+  setAccessCookie(res, accessToken);
+
+  const jti = createJti();
+
+  const refreshToken = signRefreshToken(user, jti);
+
+  await persistRefreshToken({
+    user,
+    refreshToken,
+    jti,
+    ip: req.ip,
+    userAgent: req.headers['user-agent'] || '',
+  });
+
+  setRefreshCookie(res, refreshToken);
+
+  res.status(200).json({
+    status: 'success',
+  });
 });
 
-exports.logOut = (req, res) => {
-  res.cookie('jwt', '', {
-    expires: new Date(Date.now() + 10 * 1000),
-    httpOnly: true,
+exports.logOut = asyncHandler(async (req, res) => {
+  const token = req.cookies?.refresh_token;
+
+  if (!token) return next(new AppError('No refresh token.', 404));
+
+  if (token) {
+    const tokenHash = hashToken(token);
+
+    const doc = await RefreshToken.findOne({ tokenHash });
+
+    if (!doc) return next(new AppError('No document!', 404));
+
+    if (doc && !doc.revokedAt) {
+      doc.revokedAt = new Date();
+      console.log(`revoked at: ${doc.revokedAt}`);
+      await doc.save();
+    }
+  }
+
+  res.clearCookie('refresh_token', { path: '/api/v1/users/auth' });
+  res.clearCookie('access_token');
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Logged out',
   });
+});
+
+// Currently, the user has to see that their access token has expired and
+// then manually they have to request this endpoint to get it refreshed...
+// This would happen every 15 minutes. I would prefer to automate it but
+// still have to figure that out.
+exports.refresh = asyncHandler(async (req, res, next) => {
+  const token = req.cookies?.refresh_token;
+
+  if (!token) return next(new AppError('No refresh token found!', 401));
+
+  let decoded;
+  try {
+    decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+  } catch (err) {
+    return next(new AppError('Invalid or expired refresh token.', 401));
+  }
+
+  const tokenHash = hashToken(token);
+  const doc = await RefreshToken.findOne({
+    tokenHash,
+    jti: decoded.jti,
+  }).populate('user');
+
+  if (!doc) {
+    return next(new AppError('Refresh token not recognized', 401));
+  }
+  if (doc.revokedAt) {
+    return next(new AppError('Refresh token revoked', 401));
+  }
+  if (doc.expiresAt < new Date()) {
+    return next(new AppError('Refresh token expired', 401));
+  }
+
+  const result = await rotateRefreshToken(doc, doc.user, req, res);
+  setAccessCookie(res, result.accessToken);
   res.status(200).json({ status: 'success' });
-};
+});
 
 exports.protect = asyncHandler(async (req, res, next) => {
+  console.log('request method:', req.method);
+  console.log('request original URL:', req.originalUrl);
+  console.log('req.cookies:', Object.keys(req.cookies));
   let token;
 
   if (
@@ -100,11 +167,9 @@ exports.protect = asyncHandler(async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization?.split(' ')[1];
-  } else if (req.cookies.jwt) {
-    token = req.cookies.jwt;
-  } // else if (req.cookies.jwt && req.cookies.jwt !== 'loggedout') {
-  //   token = req.cookies.jwt;
-  // }
+  } else if (req.cookies.access_token) {
+    token = req.cookies.access_token;
+  }
 
   if (!token) {
     return next(
@@ -135,10 +200,14 @@ exports.protect = asyncHandler(async (req, res, next) => {
 
 exports.isLoggedIn = async (req, res, next) => {
   // ONLY for rendered pages, and there will be no errors
-  if (req.cookies.jwt) {
+  let token;
+
+  if (req.cookies.access_token) {
+    token = token = req.cookies.access_token;
+
     try {
       const decoded = await promisify(jwt.verify)(
-        req.cookies.jwt,
+        token,
         process.env.JWT_SECRET,
       );
 
@@ -162,29 +231,13 @@ exports.isLoggedIn = async (req, res, next) => {
       return next();
     }
   }
+
   next();
 };
 
-exports.restrictToUser = () => {
-  return async (req, res, next) => {
-    const shipment = await Master.findOne({ where: { id: req.params.id } });
-
-    if (!shipment) return next(new AppError('Cannot find that data.', 404));
-
-    const id = String(req.user._id);
-
-    const idArr = Array.isArray(shipment.users)
-      ? shipment.users
-      : [shipment.users];
-    if (!idArr.includes(id)) {
-      return next(new AppError('You do not have permission to do that.', 403));
-    }
-    next();
-  };
-};
-exports.restrictToAdmin = () => {
+exports.restrictTo = (...roles) => {
   return (req, res, next) => {
-    if (!(req.user.role === 'admin'))
+    if (!roles.includes(req.user.role))
       return next(new AppError('You do not have permission to do that.', 403));
     next();
   };
@@ -243,7 +296,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   });
 
   if (!user) {
-    return next(new AppError('Token is invalid or has expired', 400));
+    return next(new AppError('Reset token is invalid or has expired', 400));
   }
 
   user.password = req.body.password;
@@ -252,8 +305,50 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   user.passwordResetExpires = undefined;
   await user.save();
 
-  // Send the token
-  createSendToken(user, 200, res);
+  // Clear current refresh token
+  const token = req.cookies?.refresh_token;
+
+  if (!token) return next(new AppError('No refresh token.', 404));
+
+  if (token) {
+    const tokenHash = hashToken(token);
+
+    const doc = await RefreshToken.findOne({ tokenHash });
+
+    if (!doc) return next(new AppError('No document!', 404));
+
+    if (doc && !doc.revokedAt) {
+      doc.revokedAt = new Date();
+      console.log(`revoked at: ${doc.revokedAt}`);
+      await doc.save();
+    }
+  }
+
+  res.clearCookie('refresh_token', { path: '/api/v1/users/auth' });
+  res.clearCookie('access_token', { path: '/api/v1/users/' });
+
+  // Issue new access token and refresh token
+  const accessToken = signAccessToken(user);
+
+  setAccessCookie(res, accessToken);
+
+  const jti = createJti();
+
+  const refreshToken = signRefreshToken(user, jti);
+
+  await persistRefreshToken({
+    user,
+    refreshToken,
+    jti,
+    ip: req.ip,
+    userAgent: req.headers['user-agent'] || '',
+  });
+
+  setRefreshCookie(res, refreshToken);
+
+  res.status(200).json({
+    status: 'success',
+  });
 });
 
 exports.updatePassword = asyncHandler(async (req, res, next) => {
@@ -267,6 +362,47 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
   user.passwordConfirm = req.body.passwordConfirm;
   await user.save();
 
-  // Log user in, send JWT
-  createSendToken(user, 200, res);
+  // Clear current refresh token
+  const token = req.cookies?.refresh_token;
+
+  if (!token) return next(new AppError('No refresh token.', 404));
+
+  if (token) {
+    const tokenHash = hashToken(token);
+
+    const doc = await RefreshToken.findOne({ tokenHash });
+
+    if (!doc) return next(new AppError('No document!', 404));
+
+    if (doc && !doc.revokedAt) {
+      doc.revokedAt = new Date();
+      console.log(`revoked at: ${doc.revokedAt}`);
+      await doc.save();
+    }
+  }
+
+  res.clearCookie('refresh_token', { path: '/api/v1/users/auth' });
+  res.clearCookie('access_token', { path: '/api/v1/users/' });
+
+  // Issue new access token and refresh token
+  const accessToken = signAccessToken(user);
+
+  const jti = createJti();
+
+  const refreshToken = signRefreshToken(user, jti);
+
+  await persistRefreshToken({
+    user,
+    refreshToken,
+    jti,
+    ip: req.ip,
+    userAgent: req.headers['user-agent'] || '',
+  });
+
+  setRefreshCookie(res, refreshToken);
+
+  res.status(200).json({
+    status: 'success',
+    accessToken,
+  });
 });

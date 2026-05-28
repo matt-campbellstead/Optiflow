@@ -16,6 +16,7 @@ import {
   metaArray,
   setObject,
 } from './data';
+console.log('page origin:', window.location.origin);
 
 const currentTheme = localStorage.getItem('theme');
 

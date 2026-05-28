@@ -1,4 +1,3 @@
-'use strict';
 const express = require('express');
 const controller = require('../controllers/dataController');
 const authController = require('../controllers/authController');
@@ -9,16 +8,16 @@ router.use(authController.protect);
 
 router
   .route('/')
-  .get(authController.restrictToAdmin(), controller.getMasterData)
-  .post(authController.restrictToAdmin(), controller.createMasterData)
-  .delete(authController.restrictToAdmin(), controller.deleteMasterData);
+  .get(authController.restrictTo('admin'), controller.getMasterData)
+  .post(authController.restrictTo('admin'), controller.createMasterData)
+  .delete(authController.restrictTo('admin'), controller.deleteMasterData);
 
 router
   .route('/shippers')
   .get(controller.shippersCrud.getShippers)
   .post(controller.shippersCrud.createShippers)
   .delete(
-    authController.restrictToAdmin(),
+    authController.restrictTo('admin'),
     controller.shippersCrud.deleteShippers,
   );
 
@@ -27,7 +26,7 @@ router
   .get(controller.timelineCrud.getTimeline)
   .post(controller.timelineCrud.createTimeline)
   .delete(
-    authController.restrictToAdmin(),
+    authController.restrictTo('admin'),
     controller.timelineCrud.deleteTimeline,
   );
 
@@ -36,7 +35,7 @@ router
   .get(controller.detailsCrud.getDetails)
   .post(controller.detailsCrud.createDetails)
   .delete(
-    authController.restrictToAdmin(),
+    authController.restrictTo('admin'),
     controller.detailsCrud.deleteDetails,
   );
 
@@ -45,7 +44,7 @@ router
   .get(controller.conveyanceCrud.getConveyance)
   .post(controller.conveyanceCrud.createConveyance)
   .delete(
-    authController.restrictToAdmin(),
+    authController.restrictTo('admin'),
     controller.conveyanceCrud.deleteConveyance,
   );
 
@@ -54,7 +53,7 @@ router
   .get(controller.customsCrud.getCustoms)
   .post(controller.customsCrud.createCustoms)
   .delete(
-    authController.restrictToAdmin(),
+    authController.restrictTo('admin'),
     controller.customsCrud.deleteCustoms,
   );
 
@@ -63,7 +62,7 @@ router
   .get(controller.financialsCrud.getFinancials)
   .post(controller.financialsCrud.createFinancials)
   .delete(
-    authController.restrictToAdmin(),
+    authController.restrictTo('admin'),
     controller.financialsCrud.deleteFinancials,
   );
 router
@@ -71,7 +70,7 @@ router
   .get(controller.customersCrud.getCustomers)
   .post(controller.customersCrud.createCustomers)
   .delete(
-    authController.restrictToAdmin(),
+    authController.restrictTo('admin'),
     controller.customersCrud.deleteCustomers,
   );
 
@@ -80,18 +79,18 @@ router
   .get(controller.consigneesCrud.getConsignees)
   .post(controller.consigneesCrud.createConsignees)
   .delete(
-    authController.restrictToAdmin(),
+    authController.restrictTo('admin'),
     controller.consigneesCrud.deleteConsignees,
   );
 router
   .route('/:id')
   .get(
-    authController.restrictToUser(), // Only users will be able to view their documents on their own
+    authController.restrictTo('user'), // Only users will be able to view their documents on their own
     controller.getSingleData,
   )
-  .patch(authController.restrictToAdmin(), controller.updateMasterData);
+  .patch(authController.restrictTo('admin'), controller.updateMasterData);
 
-router.use(authController.restrictToAdmin());
+router.use(authController.restrictTo('admin'));
 
 router.route('/customs/:id').patch(controller.customsCrud.updateCustoms);
 router
