@@ -1,5 +1,4 @@
 'use strict';
-'use strict';
 const fs = require('fs');
 
 // Source - https://stackoverflow.com/a/75276021
@@ -10,8 +9,5 @@ const mylog = new console.Console(
   fs.createWriteStream('log/logger.log'),
   fs.createWriteStream('log/error.log'),
 );
-
-// mylog.log('Beep beep boop beeeeeeep!');
-// mylog.error('Oops! Error!');
 
 module.exports = mylog;
