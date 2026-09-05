@@ -7,3 +7,4 @@ config.json
 text
 .DS_Store
 misc/
+logs/

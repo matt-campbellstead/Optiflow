@@ -58,7 +58,6 @@ const connectDB = async () => {
 connectDB();
 
 // Sequelize
-
 if (process.env.NODE_ENV === 'development') {
   sequelize.sync({ alter: true }).then(() => {
     const date = new Date().toLocaleString('en-ZA');
@@ -121,10 +120,8 @@ app.use((req, res, next) => {
   deepSanitize(req.body);
   next();
 });
-// Not sure if I need CORS configuration as well?
 
 // Routes
-
 app.use('/api/v1/data', dataRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/dbx', dbcrossoverRouter);

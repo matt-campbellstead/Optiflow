@@ -8,6 +8,7 @@ const User = require('../models/mongooseModel');
 const RefreshToken = require('../models/mongooseToken');
 const AppError = require('../utils/AppError');
 const Email = require('../utils/email');
+const TIME_DIFFERENCE = 1000 * 60 * 60 * 2;
 
 const {
   hashToken,
@@ -91,7 +92,7 @@ exports.logIn = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.logOut = asyncHandler(async (req, res) => {
+exports.logOut = asyncHandler(async (req, res, next) => {
   const token = req.cookies?.refresh_token;
 
   if (!token) return next(new AppError('No refresh token.', 404));
@@ -104,8 +105,7 @@ exports.logOut = asyncHandler(async (req, res) => {
     if (!doc) return next(new AppError('No document!', 404));
 
     if (doc && !doc.revokedAt) {
-      doc.revokedAt = new Date();
-      console.log(`revoked at: ${doc.revokedAt}`);
+      doc.revokedAt = Date.now() + TIME_DIFFERENCE;
       await doc.save();
     }
   }

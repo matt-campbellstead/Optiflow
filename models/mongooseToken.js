@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const TIME_DIFFERENCE = 1000 * 60 * 60 * 2;
+
 const refreshTokenSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true },
   tokenHash: { type: String, required: true, unique: true },
@@ -7,7 +9,7 @@ const refreshTokenSchema = new mongoose.Schema({
   expiresAt: { type: Date, required: true, index: true },
   revokedAt: { type: Date, default: null },
   replacedBy: { type: String, default: null },
-  createdAt: { type: Date, default: Date.now },
+  createdAt: { type: Date, default: Date.now() + TIME_DIFFERENCE },
   ip: String,
   userAgent: String,
 });

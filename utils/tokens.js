@@ -5,6 +5,7 @@ const { doubleCsrf } = require('csrf-csrf');
 
 const ACCESS_TTL = '15m';
 const REFRESH_TTL_SEC = 60 * 60 * 24 * 7;
+const TIME_DIFFERENCE = 1000 * 60 * 60 * 2;
 
 function hashToken(token) {
   return crypto.createHash('sha256').update(token).digest('hex');
@@ -47,8 +48,8 @@ async function persistRefreshToken({ user, refreshToken, jti, ip, userAgent }) {
 function setRefreshCookie(res, refreshToken) {
   const isProd = process.env.NODE_ENV === 'production';
   res.cookie('refresh_token', refreshToken, {
-    httpOnly: true,
-    secure: isProd,
+    httpOnly: false,
+    secure: false,
     sameSite: 'strict',
     path: '/api/v1/users/auth',
     maxAge: REFRESH_TTL_SEC * 1000,
@@ -62,7 +63,7 @@ function setRefreshCookie(res, refreshToken) {
 function setAccessCookie(res, accessToken) {
   const isProd = process.env.NODE_ENV === 'production';
   res.cookie('access_token', accessToken, {
-    httpOnly: true,
+    httpOnly: false,
     //secure: isProd,
     secure: false,
     sameSite: 'strict',
@@ -73,7 +74,7 @@ function setAccessCookie(res, accessToken) {
 
 async function rotateRefreshToken(oldDoc, user, req, res) {
   // revoke old
-  oldDoc.revokedAt = new Date();
+  oldDoc.revokedAt = Date.now() + TIME_DIFFERENCE;
   const newJti = createJti();
   oldDoc.replacedBy = newJti;
   await oldDoc.save();
