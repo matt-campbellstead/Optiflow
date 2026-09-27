@@ -6,5 +6,8 @@ config.js
 config.json
 text
 .DS_Store
+test.html
 misc/
 logs/
+git-filter-repo
+public/js/bundle.js

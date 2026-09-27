@@ -17,10 +17,8 @@ exports.homePage = (req, res) => {
   res
     .status(200)
     .set(
-      //
-      // 'x-csrf-token': token,
       'Content-Security-Policy',
-      "default-src 'self' https://dog.ceo ; base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';object-src 'none';script-src https://dog.ceo 'self' blob: ; img-src 'self' https://images.dog.ceo  data:; script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests;",
+      "connect-src 'self' https://api.mapbox.com https://events.mapbox.com ;default-src 'self' https://api.mapbox.com ; base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';object-src 'none';script-src https://api.mapbox.com 'self' blob: ; img-src 'self' https://api.mapbox.com  data:; script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests;",
     )
     .render('home', {
       title: 'Home page',
@@ -122,75 +120,89 @@ exports.submitData = asyncHandler(async (req, res, next) => {
     order: [['id', 'DESC']],
   });
 
+  const masterQuery = await Master.findAll({ where: { isCurrent: true } });
+
   res.status(200).render('adminSubmit', {
     title: 'Admin Data Submission',
     csrfToken: token,
+    masterQuery,
     customers,
     data,
   });
 });
 
-exports.opsOldShipments = asyncHandler(async (req, res, next) => {
-  const token = req.csrfToken();
-  const oldShipments = await Master.findAll({
-    where: { isCurrent: false },
-    include: [
-      { model: Shippers },
-      { model: Timeline },
-      {
-        model: Details,
-      },
-      { model: Financials },
-      { model: Customs },
-      { model: Conveyance },
-      { model: Customers },
-      { model: Consignees },
-    ],
-  });
-
-  res.status(200).render('adminOld', {
-    title: 'Past Shipments',
-    oldShipments,
-    csrfToken: token,
-  });
-});
-
-const routing = (type) =>
-  asyncHandler(async (req, res, next) => {
-    const token = req.csrfToken();
-    const document = await Master.findAll({
-      where: { isCurrent: true },
-      include: [
-        { model: Shippers },
-        { model: Timeline },
-        {
-          model: Details,
-          where: {
-            routing: `${type}`,
-          },
-        },
-        { model: Financials },
-        { model: Customs },
-        { model: Conveyance },
-        { model: Customers },
-        { model: Consignees },
-      ],
-    });
-
-    res.status(200).render(`admin${type}`, {
-      title: `${type} Shipments`,
-      document,
-      csrfToken: token,
-    });
-  });
-
-exports.opsExports = routing('Export');
-exports.opsImports = routing('Import');
-
+//TODO: make view controller factory function
 exports.updateShipment = (req, res) => {
   const token = req.csrfToken();
+  /*
+  const queryObject = {};
+  if (req.query.id) queryObject.id = req.query.id;
+
+  let query;
+
+  switch (req.query.table) {
+    case 'Customer':
+      query = await Customers.findOne({ where: queryObject });
+      break;
+    case 'Shipment-Details':
+      query = await Details.findOne({ where: queryObject });
+      break;
+    case 'Shipper':
+      query = await Shippers.findOne({ where: queryObject });
+      break;
+    case 'Consignee':
+      query = Consignees.findOne({ where: queryObject });
+      break;
+    case 'Financial':
+      query = await Financials.findOne({ where: queryObject });
+      break;
+    case 'Conveyance':
+      query = await Conveyance.findOne({ where: queryObject });
+      break;
+    case 'Customs':
+      query = await Customs.findOne({ where: queryObject });
+      break;
+  }
+
+  console.log(query);
+  */
+
+  //console.log(req.params);
+
   res.status(200).render('adminUpdate', {
     title: 'Update data',
+    csrfToken: token,
+  });
+};
+
+exports.activateAccount = (req, res) => {
+  const token = req.csrfToken();
+  res.status(200).render('activation', {
+    title: 'Account activation',
+    csrfToken: token,
+  });
+};
+
+exports.resetPasswordInit = (req, res) => {
+  const token = req.csrfToken();
+  res.status(200).render('resetPasswordInit', {
+    title: 'Reset your password',
+    csrfToken: token,
+  });
+};
+
+exports.resetPasswordAction = (req, res) => {
+  const token = req.csrfToken();
+  res.status(200).render('resetPasswordAction', {
+    title: 'Reset your password',
+    csrfToken: token,
+  });
+};
+
+exports.signUp = (req, res) => {
+  const token = req.csrfToken();
+  res.status(200).render('signup', {
+    title: 'Create an account',
     csrfToken: token,
   });
 };

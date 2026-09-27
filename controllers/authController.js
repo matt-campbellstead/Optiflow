@@ -1,5 +1,5 @@
-const mylog = require('../log');
-// I had to do custom logging because the console output wasn't available on the hosting platform
+const logger = require('../utils/logger');
+// custom logging because the console output wasn't available on the hosting platform
 const asyncHandler = require('../utils/asyncHandler');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
@@ -19,6 +19,7 @@ const {
   setRefreshCookie,
   rotateRefreshToken,
   setAccessCookie,
+  signAccountActivationToken,
 } = require('../utils/tokens');
 
 // The asyncHandler catches errors and then the errors are routed through errorController.js
@@ -38,9 +39,11 @@ exports.signUp = asyncHandler(async (req, res, next) => {
   newUser.password = undefined;
   newUser.passwordConfirm = undefined;
 
-  const url = `${req.protocol}://${req.get('host')}/login`;
+  const url = `${req.protocol}://${req.get('host')}/account-activation`;
 
-  await new Email(newUser, url).sendWelcome();
+  const activationToken = signAccountActivationToken(newUser);
+
+  await new Email(newUser, url).sendActivation(activationToken);
 
   res.status(200).json({
     status: 'success',
@@ -51,6 +54,35 @@ exports.signUp = asyncHandler(async (req, res, next) => {
   });
 });
 
+exports.activateAccount = asyncHandler(async (req, res, next) => {
+  const token = req.params.activateToken;
+  let decoded;
+
+  try {
+    decoded = await promisify(jwt.verify)(
+      token,
+      process.env.ACTIVATION_TOKEN_SECRET,
+    );
+  } catch (err) {
+    throw err;
+  }
+
+  const currentUser = await User.findById(decoded.id);
+  if (!currentUser)
+    return next(
+      new AppError('The user belonging to this token no longer exists', 401),
+    );
+
+  currentUser.active = true;
+
+  await currentUser.save({ validateBeforeSave: false });
+
+  const url = `${req.protocol}://${req.get('host')}/login`;
+  await new Email(currentUser, url).sendWelcome();
+
+  res.status(200).json({ status: 'success' });
+});
+
 exports.logIn = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -59,11 +91,21 @@ exports.logIn = asyncHandler(async (req, res, next) => {
       new AppError('Please provide both your email and your password.', 400),
     );
 
-  const user = await User.findOne({ email }).select('+password');
+  const user = await User.findOne({ email })
+    .select('+password')
+    .select('+active');
 
   if (!user || !(await user.correctPassword(password, user.password)))
     return next(
       new AppError('Email or password is incorrect! Please try again.', 401),
+    );
+
+  if (user.active === false)
+    return next(
+      new AppError(
+        'Your account has not been activated or has been deleted.',
+        401,
+      ),
     );
 
   user.password = undefined;
@@ -177,7 +219,12 @@ exports.protect = asyncHandler(async (req, res, next) => {
     );
   }
 
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  let decoded;
+  try {
+    decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  } catch (error) {
+    throw error;
+  }
 
   const currentUser = await User.findById(decoded.id).select('+role');
   if (!currentUser)
@@ -194,7 +241,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
   // Access granted:
   res.locals.user = currentUser;
   req.user = currentUser;
-  // mylog.log(currentUser);
+  // logger.error.log(currentUser);
   next();
 });
 
@@ -227,7 +274,7 @@ exports.isLoggedIn = async (req, res, next) => {
       //console.log(req.user);
       return next(); // Fixes headers error 'cannot set headers after they are sent to the client'
     } catch (err) {
-      mylog.log(err);
+      logger.error.log(err);
       return next();
     }
   }
@@ -257,16 +304,12 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   const resetToken = user.createPasswResetToken();
   await user.save({ validateBeforeSave: false });
 
-  const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetpassword/${resetToken}`;
-  const message = `Forgot your password? Submit a PATCH request with your new
-  password and passwordConfirm to: ${resetURL}\nIf you didn't forget it, please ignore this email.`;
+  const resetURL = `${req.protocol}://${req.get('host')}/reset-action`;
 
   try {
-    await sendEmail({
-      email: user.email,
-      subject: 'your password reset',
-      message,
-    });
+    // sendPasswordReset
+    await new Email(user, resetURL).sendPasswordReset(resetToken);
+
     res.status(200).json({
       status: 'success',
       message: 'token sent to email!',
@@ -308,7 +351,8 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   // Clear current refresh token
   const token = req.cookies?.refresh_token;
 
-  if (!token) return next(new AppError('No refresh token.', 404));
+  //if (!token) return next(new AppError('No refresh token.', 404));
+  // if !token, no problem?
 
   if (token) {
     const tokenHash = hashToken(token);

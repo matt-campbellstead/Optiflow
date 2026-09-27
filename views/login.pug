@@ -1,7 +1,8 @@
 extends base
 
-block content 
-    h1.heading-primary Log in to see your personalised dashboard 
+block content
+    .heading-box
+        h1.heading-primary Log in to see your personalised dashboard 
     form.form.login-form
         .form__group 
             label.form__label(for='email') Email address 
@@ -11,4 +12,7 @@ block content
             input#password.form__input(type='password', placeholder='••••••••', required, minlength='8')
         .form__group 
             button.btn.btn__login Log in
-
+        .form__group 
+            a.small-text(href='/reset-init') Forgotten password?
+        .form__group
+            a.small-text(href='/sign-up') Don't have an account?

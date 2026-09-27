@@ -1,9 +1,5 @@
 extends base
 
-//- mixin formInput(text, class, required)
-//-     .form__group
-//-         label.form__label(for=`${class}`)= `${text}`
-//-         input`#{class}`.form__input(type='text', placeholder='EXW', `${required}`)
 mixin customerData(data)
         .shipment-box-detail 
             span.shipment-box_label= `Customer ID: ${data.id}`
@@ -11,67 +7,88 @@ mixin customerData(data)
             span.shipment-box_label= `Customer user ID string: ${data.userId}`
         .shipment-box-detail 
             span.shipment-box_label= `Company name: ${data.companyName}`
-        
-      
 
 
 block content
-    h1.heading-primary Welcome to the data submission page 
-    h2.heading-secondary Here, you can submit data into the database.
-    section.dashboard__container
-        section.update__container.first
-            p See the drop-down menu for a list of current users
-            select.db-select
-                each customer of customers 
-                    option=`${customer.name} ${customer._id}`
-            p All DB entries in the Customer table:
-            .shipment-box
-                each entry of data
-                    +customerData(entry)
-        section.update__container.second
+    .heading-box
+        h1.heading-primary  Create new shipment files
+        h2.heading-secondary Add new tables for each new file
+   
+    .data-submit__container
+        div
+            .instruction-box
+                | NOTE: If you have not yet created a new entry for the customer, 
+                a(href='#jump-target') do that first, 
+                | then come back and refresh this page.
+                p 1) Use the dropdown box below to choose the customer for this shipment file, then click the button.
+                p --- the customer's user profile and DB ID number will be filled in automatically.
+                p 2) Enter a unique OFS shipment file number.
+                p 3) Review your details, then submit. The Master ID, which is used to identify this file in the next steps, will be set automatically.
+                p 4) Once you see your new shipment file shown on the right, you can proceed to the next step by selecting "Next Step >>" below.
+            .selector-box.customer1
+                select.db-select
+                    each customer of data 
+                        option=`${customer.companyName}`
+                button.file-editor-btn Select customer
+            
+            .selector-box.master(class='hidden')
+                select.db-select(name='') 
+                    each file of masterQuery 
+                        option=`Master ID ${file.id}: ${file.shipment_file_id}`
+                button.file-editor-btn Select file ID
+
             form.form.data-form__master
                 h2.heading-secondary Master table
-                p  NOTE: If you have not yet created a DB entry for the customer, do that first, then come back with the ID for that database entry.
-                p  Use the DB information above to get the ID string of the customer's user profile and the ID number of the customer's DB entry.
-                p Then, enter those below along with a new Shipment File number. The Master ID will be set automatically.
-                    .form__group
-                        label.form__label(for="shipment_file_id") Shipment file no.
-                        input#shipment_file_id.form__input(type='text', placeholder='1234567ABC', required)
-                    .form__group
-                        label.form__label(for="users") Customer's user ID string 
-                        input#users.form__input(type='text', placeholder='e.g. 12a12345bc678de9101f2233 ', required)
-                    .form__group
-                        label.form__label(for='CustomerId') Customer's DB ID number
-                        input#CustomerId.form__input(type='text', placeholder='e.g. "1"', required)
-                    .form__group
-                        input.btn.submit(type="submit")
-
-    button.btn.next1 Next 
-    include _formShipper
-    button.btn.next2 Next
-    include _formDetails
-    button.btn.next3 Next
-    include _formFinancials
-    button.btn.next4 Next
-    include _formCustoms
-    button.btn.next5 Next
-    include _formConveyance
-    button.btn.next6 Next
-    form.form.data-form__timeline
-        h2.heading-secondary Timeline table
-        p Enter the Master document ID below, then click 'submit' to initialise a Timeline table. All values will be false: they can then be updated as needed in the Ops Dashboard. 
-            .form__group 
-                label.form__label(for="timelineMasterId") Master ID number
-                input.form__input(id="timelineMasterId", type="number", placeholder="e.g. 5")
-            .form__group 
-                input.btn.submit(type='submit')
-    button.btn.next7 Next 
-    include _formConsignees
-    button.btn.back Back to start
-    
-    button.btn.show-form Show/hide Customer Details form
-    include _formCustomers
+                
+                
+                .form__group
+                    label.form__label(for="shipment_file_id") Shipment file no.
+                    input#shipment_file_id.form__input(type='text', placeholder='1234567ABC', required)
+                .form__group
+                    label.form__label(for="users") Customer's user ID string 
+                    input#users.form__input(type='text', placeholder='e.g. 12a12345bc678de9101f2233 ', readonly, required)
+                .form__group
+                    label.form__label(for='CustomerId') Customer's DB ID number
+                    input#CustomerId.form__input(type='text', placeholder='e.g. "1"', readonly, required)
+                
+                .form__group
+                    input.btn.submit(type="submit")
+            include _formConsignees
             
-    h2.heading-seconday Your data entry: 
-        section.dashboard__container
+            include _formShipper
+            
+            include _formDetails
+        
+            include _formFinancials
+        
+            include _formCustoms
+            
+            include _formConveyance
+        
+            form.form.data-form__timeline
+                h2.heading-secondary Timeline table
+                | Here, a Timeline table is started with all fields set to 'false' by default. 
+                a(href='/ops-dashboard') go to the Shipment File Editor
+                | to edit them.
+                .form__group 
+                    label.form__label(for="timelineMasterId") Master ID number
+                    input.form__input(id="timelineMasterId", type="number", readonly)
+                .form__group 
+                    input.btn.submit(type='submit')
+
+        .container
+            h2.heading-secondary Your data entry: 
             p.data-preview
+
+    .file-nav-box
+        button.file-editor-btn.previous-shipment << Previous Step
+        button.file-editor-btn.next-shipment Next Step >>
+
+    button.btn.show-form(id='jump-target') Show/hide Customer Details form
+    .container
+        .selector-box.customer2
+            select.db-select
+                each customer of customers 
+                    option=`${customer.name}`
+            button.file-editor-btn Select customer
+        include _formCustomers

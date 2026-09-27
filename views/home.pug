@@ -1,31 +1,50 @@
 extends base
 
+block append head
+  script(src='https://api.mapbox.com/mapbox-gl-js/v3.30.0/mapbox-gl.js')
+  link(href='https://api.mapbox.com/mapbox-gl-js/v3.30.0/mapbox-gl.css' rel='stylesheet')
+
 block content   
     main.main
-    if !user 
-        .main--dogs
+        if !user 
+            //-.main--dogs
+            
+            #map
+            .container
+                .heading-box
+                    h2=`Today - ${new Date().toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })} - in freight and logistics`
+                .main--design-block
+                    h2 Fuel prices 
+                    p quelque chose à venir
+                .main--design-block 
+                    h2 Port congestion 
+                    p quelque chose à venir
+                .main--design-block 
+                    h2 Carriers 
+                    p quelque chose à venir
+                .main--design-block 
+                    h2 Disruptions 
+                    p quelque chose à venir :)
+
+                
     if user
-        h1.main--title= `Welcome, ${user.name}, to your dashboard.`
-        //- .section-pictures
-        //-     .picture-box
-        //-         img.picture-box__img(src="/img/marine-traffic-api-blog-isitix-54746943.jpg" class="picture-box__img--1")
-        //-         img.picture-box__img(src="/img/victoria-and-alfred-harbour-sunrise-cape-town-picture-id1032782128-2653218752.jpg" class="picture-box__img--2")
-        //-         img.picture-box__img(src="/img/shipping-containers-2611069854.jpg", class="picture-box__img--3")
-        p.main--text   
-        if user
+        .heading-box
+            h1.main--title= `Welcome, ${user.name}, to your dashboard.`
+            
+        p.main--text 
             if (user.role === 'user')
                 a#dashboard.nav__el(href='/dashboard') View dashboard
-            
                 
+                    
             if (user.role === 'admin') 
                 .section-pictures
                     .picture-box
                         a.nav__el.home--1(href='/ops-dashboard')
-                            span.nav__text View Operations dashboard
+                            span.nav__text View & Edit Shipment Files
                         a.nav__el.home--2(href='/ops-functions')
-                            span.nav__text View Ops functions
+                            span.nav__text My Account settings
                         a.nav__el.home--3(href='/ops-data')
-                            span.nav__text Submit data
-                        a.nav__el.home--4(href='/ops-update')
-                            span.nav__text Update data 
+                            span.nav__text Create Shipment Files
+                            //- a.nav__el.home--4(href='/ops-update')
+                            //-     span.nav__text Update data 
                         

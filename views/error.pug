@@ -2,7 +2,9 @@ extends base
 
 block content
     main.main 
-        .error 
+        .container 
             .error__title 
                 h2.heading-secondary OOps! Something went wrong :^o
-            .error__msg= msg
+            h3.error__msg= msg
+            p if you did not log out, click below to refresh your session:
+            button.btn.refresh-btn Refresh

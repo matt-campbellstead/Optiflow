@@ -67,7 +67,7 @@ router
   );
 router
   .route('/customers')
-  .get(controller.customersCrud.getCustomers)
+  .get(controller.getCustomers)
   .post(controller.customersCrud.createCustomers)
   .delete(
     authController.restrictTo('admin'),
@@ -92,23 +92,38 @@ router
 
 router.use(authController.restrictTo('admin'));
 
-router.route('/customs/:id').patch(controller.customsCrud.updateCustoms);
+router
+  .route('/customs/:id')
+  .get(controller.customsCrud.getSingleCustoms)
+  .patch(controller.customsCrud.updateCustoms);
+
 router
   .route('/financials/:id')
+  .get(controller.financialsCrud.getSingleFinancials)
   .patch(controller.financialsCrud.updateFinancials);
+
 router
   .route('/conveyance/:id')
+  .get(controller.conveyanceCrud.getSingleConveyance)
   .patch(controller.conveyanceCrud.updateConveyance);
+
 router
   .route('/shipment-details/:id')
   .patch(controller.detailsCrud.updateDetails)
   .get(controller.detailsCrud.getSingleDetails);
+
 router.route('/timeline/:id').patch(controller.timelineCrud.updateTimeline);
-router.route('/shippers/:id').patch(controller.shippersCrud.updateShippers);
+
+router
+  .route('/shippers/:id')
+  .get(controller.shippersCrud.getSingleShippers)
+  .patch(controller.shippersCrud.updateShippers);
+
 router
   .route('/customers/:id')
   .patch(controller.customersCrud.updateCustomers)
   .get(controller.customersCrud.getSingleCustomers);
+
 router
   .route('/consignees/:id')
   .patch(controller.consigneesCrud.updateConsignees)

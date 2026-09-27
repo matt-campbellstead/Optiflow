@@ -115,6 +115,14 @@ const { doubleCsrfProtection } = doubleCsrf({
   ignoredMethods: ['GET', 'HEAD', 'OPTIONS'],
 });
 
+function signAccountActivationToken(user) {
+  const payload = { id: user._id.toString() };
+  const token = jwt.sign(payload, process.env.ACTIVATION_TOKEN_SECRET, {
+    expiresIn: '10m',
+  });
+  return token;
+}
+
 module.exports = {
   hashToken,
   createJti,
@@ -125,4 +133,5 @@ module.exports = {
   rotateRefreshToken,
   setAccessCookie,
   doubleCsrfProtection,
+  signAccountActivationToken,
 };

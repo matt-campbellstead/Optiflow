@@ -1,4 +1,4 @@
-export const changeStyle = () => {
+export const toggleDarkMode = () => {
   document.body.classList.toggle('dark-mode-bg');
 
   const elements = [];
@@ -14,7 +14,15 @@ export const changeStyle = () => {
   const update = document.querySelector('.milestones__update');
   const checkbox = document.querySelector('.checkbox-table');
 
-  elements.push(header, footer, footerT, dashboard, table, update);
+  elements.push(
+    header,
+    footer,
+    footerT,
+    dashboard,
+    table,
+    update,
+    document.querySelector('.shipment-box-detail'),
+  );
 
   elements.forEach((el) => {
     if (el) el.classList.toggle('dark-mode-el');
@@ -26,9 +34,9 @@ export const changeStyle = () => {
     btn.classList.toggle('dark-mode-btn');
   });
 
-  links.forEach((link) => {
-    link.classList.toggle('dark-mode-btn');
-  });
+  // links.forEach((link) => {
+  //   link.classList.toggle('dark-mode-btn');
+  // });
 
   if (forms)
     forms.forEach((form) => {
@@ -55,20 +63,27 @@ export const changeStyle = () => {
     });
 
   if (checkbox) checkbox.classList.toggle('dark-mode-container');
+  if (document.querySelector('table'))
+    document.querySelector('table').classList.toggle('dark-mode-container');
+
+  if (document.querySelector('.data-submit__container'))
+    document
+      .querySelector('.data-submit__container')
+      .classList.toggle('dark-mode-container');
+
+  if (document.querySelector('.heading-secondary'))
+    document
+      .querySelectorAll('.heading-secondary')
+      .forEach((el) => el.classList.toggle('dark-mode-span'));
+
+  document.querySelector('.footer-text img').src =
+    document.querySelector('.footer-text img').src === '/img/OFSicon.png'
+      ? '/img/OFSiconDark.png'
+      : '/img/OFSicon.png';
 
   if (document.body.classList.contains('dark-mode-bg')) {
     localStorage.setItem('theme', 'dark-mode');
   } else {
     localStorage.setItem('theme', '');
   }
-  //   if (
-  //     document.body.classList.contains('dark-mode-bg') &&
-  //     elements.classList.contains('dark-mode-el') &&
-  //     btn.classList.contains('dark-mode-btn') &&
-  //     links.classList.contains('dark-mode-btn')
-  //   ) {
-  //     localStorage.setItem('theme', 'dark-mode');
-  //   } else {
-  //     localStorage.setItem('theme', '');
-  //   }
 };

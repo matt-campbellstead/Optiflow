@@ -1,19 +1,21 @@
 doctype html
 html 
     head 
-   
-        meta(name='viewport' content='width=device-width, initial-scale=1.0')
-        title DB testing | #{title}
-        meta(charset='UTF-8')
-        link(rel='stylesheet' href='style.css')
+        block head
+            meta(name='viewport' content='width=device-width, initial-scale=1.0')
+            title OPTIFLOW | #{title}
+            meta(charset='UTF-8')
+            link(rel='stylesheet' href='/style.css')
 
     body 
         input(type='hidden' name='_csrf' id='_csrf' value=csrfToken)
         header.header
             nav.nav.nav--home 
-                    a.nav__el(href='/') Home
-            .header-logo 
-                    img(src='/img/OFSnew3 small.png')
+                    a.nav__el(href='/')
+                        img(src='/img/home.png')
+            .header-logo
+                    h1 Optiflow
+                    //-img(src='/img/OFSnew3 small.png')
             nav.nav.nav--user
                 if user
                     a.btn.nav__el--logout Log out
@@ -29,9 +31,12 @@ html
                     span — Douglas Adams Le Guide Du Voyageur Galactique
 
         footer.footer
-            a.btn.theme(href='#') 🌞/🌚
+            .nav--theme
+                a.theme(href='#')
+                    img(src='/img/day-and-night-2.png')
             .footer-text
-                p Company Name Pty(Ltd) 2026
+                img(src='/img/OFSicon.png')
+                p Optimum Freight Solutions Pty(Ltd) 2026
                 |
                 p All rights reserved 
     script(src='/js/bundle.js')

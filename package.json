@@ -36,6 +36,7 @@
     "sequelize": "^6.37.8",
     "sequelize-cli": "^6.6.5",
     "umzug": "^3.8.2",
-    "validator": "^13.15.26"
+    "validator": "^13.15.26",
+    "winston": "^3.19.0"
   }
 }

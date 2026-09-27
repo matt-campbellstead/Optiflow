@@ -4,8 +4,11 @@ mixin formInput(id, type, label, placeholder)
         input.form__input(type=type, id=id, placeholder=placeholder)
 form.form.data-form__details
     h2.heading-secondary Shipment Details table
-    p some text
-    +formInput('detailsMasterId', 'number', 'Master ID', 'e.g. 1')
+    
+    .form__group
+        label.form__label(for='detailsMasterId') Master ID
+        input.form__input(type='number', id='detailsMasterId', readonly)
+    //- +formInput('detailsMasterId', 'number', 'Master ID', 'e.g. 1')
     +formInput('incoterms', 'text', 'Incoterms', 'e.g. EXW')
     +formInput('mode', 'text', 'Mode', 'e.g. AIR')
     +formInput('routing', 'text', 'Routing', 'e.g. Import')
@@ -20,5 +23,6 @@ form.form.data-form__details
     +formInput('handlingRequirements', 'text', 'Handling requirements (message)', 'Message here...')
     +formInput('dangerousGoods', 'text', 'Dangerous goods? (true OR false)', 'e.g. true')
     +formInput('codeDrg',  'text','DRG code', 'e.g. 123456')
+    p Fields marked with a '*' are required
     .form__group 
         input.btn.submit(type='submit')

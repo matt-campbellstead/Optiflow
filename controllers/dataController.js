@@ -63,38 +63,76 @@ exports.timelineCrud = wholeCrud(Timeline, [
   'update',
 ]);
 
-exports.shippersCrud = wholeCrud(Shippers, [
-  'get',
-  'create',
-  'delete',
-  'update',
-]);
+exports.shippersCrud = wholeCrud(Shippers);
+// exports.shippersCrud = wholeCrud(Shippers, [
+//   'get',
+//   'create',
+//   'delete',
+//   'update',
+// ]);
 
 exports.detailsCrud = wholeCrud(Details);
 
 exports.financialsCrud = wholeCrud(Financials);
 
-exports.customsCrud = wholeCrud(Customs, ['get', 'create', 'delete', 'update']);
+exports.customsCrud = wholeCrud(Customs);
+//exports.customsCrud = wholeCrud(Customs, ['get', 'create', 'delete', 'update']);
 
-exports.conveyanceCrud = wholeCrud(Conveyance, [
-  'get',
-  'create',
-  'delete',
-  'update',
-]);
+exports.conveyanceCrud = wholeCrud(Conveyance);
+// exports.conveyanceCrud = wholeCrud(Conveyance, [
+//   'get',
+//   'create',
+//   'delete',
+//   'update',
+// ]);
 
 exports.customersCrud = wholeCrud(Customers);
+// exports.customersCrud = wholeCrud(Customers, [
+//   'create',
+//   'delete',
+//   'update',
+//   'getSingle',
+// ]);
+
+exports.getCustomers = asyncHandler(async (req, res, next) => {
+  const whereObject = {};
+
+  if (req.query.userId) whereObject.userId = req.query.userId;
+  if (req.query.id) whereObject.id = req.query.id;
+  if (req.query.companyName) whereObject.companyName = req.query.companyName;
+
+  const query = await Customers.findOne({
+    where: whereObject,
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      query,
+    },
+  });
+});
 
 exports.consigneesCrud = wholeCrud(Consignees);
 
 exports.getMasterData = asyncHandler(async (req, res, next) => {
+  const whereObject = {};
+  const routingWhereObject = {};
+
+  if (req.query.isCurrent)
+    whereObject.isCurrent = req.query.isCurrent === 'true';
+  else whereObject.isCurrent = true;
+
+  if (req.query.routing) routingWhereObject.routing = req.query.routing;
+
   const masterQuery = await Master.findAll({
-    where: { isCurrent: true },
+    //where: { isCurrent: true },
+    where: whereObject,
     order: [['id', 'DESC']],
     include: [
       { model: Shippers },
       { model: Timeline },
-      { model: Details },
+      { model: Details, where: routingWhereObject },
       { model: Financials },
       { model: Customs },
       { model: Conveyance },

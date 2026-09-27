@@ -4,8 +4,11 @@ mixin formInput(id, type, label, placeholder)
         input.form__input(type=type, id=id, placeholder=placeholder)
 form.form.data-form__financials
     h2.heading-secondary Financial Details table
-    p Input the ID of the associated Master document, then fill in the remaining fields, following the correct formatting.
-    +formInput('financialsMasterId', 'text', 'Master ID number', '1, 2, 3...' )
+    
+    .form__group
+        label.form__label(for='financialsMasterId') Master ID
+        input.form__input(type='text', id='financialsMasterId', readonly)
+    //- +formInput('financialsMasterId', 'text', 'Master ID number', '1, 2, 3...' )
     +formInput('shipperInvoiceNum', 'text', 'Shipper invoice number', 'ABC20XX1234ABC')
     +formInput('invoiceDate', 'text', 'Invoice date', '20XX-XX-XX')
     +formInput('invoiceAmount', 'text', 'Invoice amount', '$100,00')
@@ -14,5 +17,6 @@ form.form.data-form__financials
     +formInput('apnNum', 'text', 'APN number', 'ABCDEFGHIJKLMN123456789')
     +formInput('bank', 'text', 'Bank', 'FNB/RMB...')
     +formInput('apnDate', 'text', 'APN date', '20XX-XX-XX')
+    p Fields marked with a '*' are required
     .form__group
         input.btn.submit(type='submit')

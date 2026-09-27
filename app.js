@@ -1,10 +1,11 @@
 // Initilisation
 const express = require('express');
-const mylog = require('./log');
+//const mylog = require('./log');
 
 process.on('uncaughtException', (err) => {
-  console.log('Uncaught exception, oh no! 👻 Shutting down...');
+  console.log('Uncaught exception, oh no! Shutting down...');
   console.log(`${err.message}, ${err}`);
+  console.log(err.stack);
 
   process.exit(1);
 });
@@ -20,9 +21,7 @@ const morgan = require('morgan');
 const fs = require('fs');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-
-///////////////STAGING REMOVE
-process.loadEnvFile('./config.env');
+const logger = require('./utils/logger');
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
@@ -46,12 +45,12 @@ const connectDB = async () => {
   const date = new Date().toLocaleString('en-ZA');
   try {
     await mongoose.connect(DB);
-    mylog.log(
+    logger.info(
       `MongoDB: database connection succesful! At ${date.split(', ')[1]}`,
     );
   } catch (err) {
-    mylog.log('MongoDB connection failed!');
-    mylog.log(err.name, err.message);
+    logger.error('MongoDB connection failed!');
+    logger.error(err.name, err.message);
   }
 };
 
@@ -61,14 +60,14 @@ connectDB();
 if (process.env.NODE_ENV === 'development') {
   sequelize.sync({ alter: true }).then(() => {
     const date = new Date().toLocaleString('en-ZA');
-    mylog.log(`MariaDB connection successful! At ${date.split(', ')[1]}`);
+    logger.info(`MariaDB connection successful! At ${date.split(', ')[1]}`);
   });
 } else if (process.env.NODE_ENV === 'production') {
   (async () => {
     try {
       await connectToDB();
     } catch (err) {
-      mylog.log('Problem connecting to MariaDB database', err);
+      logger.error('Problem connecting to MariaDB database', err);
     }
   })();
 }
@@ -78,9 +77,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(helmet());
 
-// Source - https://stackoverflow.com/a/79668053
-// Posted by Mohammed Sersawy, modified by community. See post 'Timeline' for change history
-// Retrieved 2026-02-11, License - CC BY-SA 4.0
 app.use((req, res, next) => {
   Object.defineProperty(req, 'query', {
     ...Object.getOwnPropertyDescriptor(req, 'query'),
@@ -92,19 +88,27 @@ app.use((req, res, next) => {
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toLocaleString('en-ZA');
-  mylog.log('////////////////' + req.requestTime.split(', ')[1]);
+  logger.log({
+    level: 'http',
+    message: `/////// ${req.method} from ${req.socket.remoteAddress} at ${req.requestTime.split(', ')[1]}`,
+  });
+
   next();
 });
 
-const morganLogStream = fs.createWriteStream(path.join('./log', 'access.log'), {
-  flags: 'a',
-});
-if (process.env.NODE_ENV === 'development')
+const morganLogStream = fs.createWriteStream(
+  path.join('./logs', 'access.log'),
+  {
+    flags: 'a',
+  },
+);
+
+if (process.env.NODE_ENV === 'production')
   app.use(morgan('combined', { stream: morganLogStream }));
 
 const limiter = rateLimit({
-  max: 100,
-  windowMs: 15 * 60 * 1000,
+  max: process.env.MAX_TRIES,
+  windowMs: process.env.TRY_WINDOW,
   message: 'Too many requests from this IP. Please try again later.',
 });
 
@@ -132,7 +136,7 @@ const port = process.env.PORT || 3000;
 
 const server = app.listen(port, '127.0.0.1', () => {
   const date = new Date().toLocaleString('en-ZA');
-  mylog.log(`App is running on port ${port}, at ${date}`);
+  logger.info(`App is running on port ${port}, at ${date}`);
 });
 
 //Error handling
@@ -143,12 +147,18 @@ app.all('/{*any}', (req, res, next) => {
 app.use(globErrHandler);
 
 process.on('unhandledRejection', (err) => {
-  mylog.log(`${err.name}, ${err.message}`);
-  mylog.log('Unhandled rejection, oh no! 👻 Shutting down...');
+  logger.error(`${err.name}, ${err.message}`);
+  logger.error('Unhandled rejection, oh no! Shutting down...');
 
   server.close(() => {
     process.exit(1);
   });
+});
+
+process.on('SIGTERM', () => {
+  logger.info(`Server shutting down on ${new Date().toLocaleString('en-ZA')}`);
+  server.close();
+  process.exit(0);
 });
 
 module.exports = app;

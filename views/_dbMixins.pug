@@ -2,56 +2,335 @@
 //-     - return data.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' });
 
 mixin showShipmentDetails(model)
-    .shipment-box-detail 
-        span.shipment-box_label Shipment Details:
-            ul.shipment-box__list
-                li.shipment-box__content= `ID: ${model.id}`
-                li.shipment-box__content= `Incoterms: ${model.incoterms}`
-                li.shipment-box__content= `Routing: ${model.routing}`
-                li.shipment-box__content= `Goods: ${model.goodsDescriptions}`
-                li.shipment-box__content= `Type of packaging: ${model.packagingType}`
-                li.shipment-box__content= `Container specifications: ${model.containerSpecs}`
-                li.shipment-box__content= `Container quantity: ${model.containerQty}`
-                li.shipment-box__content= `Number of items: ${model.numItems}`
-                li.shipment-box__content= `Gross weight: ${model.grossWeightKg}`
-                li.shipment-box__content= `Net weight: ${model.netWeightKg}`
-                li.shipment-box__content= `Volumetric weight: ${model.cbm}`
-                li.shipment-box__content= `Handling requirements: ${model.handlingRequirements}`
-                li.shipment-box__content= `Dangerous goods? ${model.dangerousGoods}`
-                li.shipment-box__content= `Dangerous goods code: ${model.codeDrg}`
-                li.shipment-box__content= `Created At: ${model.createdAt.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
-                li.shipment-box__content= `Updated at: ${model.updatedAt.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+    .shipment-box-detail
+        table 
+            thead Shipment Details
+                tr
+                    th ID:
+                    td=`${model.id}`
+                tr
+                    th Incoterms: 
+                    td=`${model.incoterms}`
+                tr
+                    th Routing:
+                    td=`${model.routing}`
+                tr
+                    th Goods:
+                    td=`${model.goodsDescriptions}`
+                tr
+                    th Type of packaging:
+                    td=`${model.packagingType}`
+                tr
+                    th Container specifications:
+                    td=`${model.containerSpecs}`
+                tr
+                    th Container quantity:
+                    td=`${model.containerQty}`
+                tr
+                    th Number of items:
+                    td=`${model.numItems}`
+                tr
+                    th Gross weight:
+                    td=`${model.grossWeightKg}`
+                tr
+                    th Net weight:
+                    td=`${model.netWeightKg}`
+                tr
+                    th Volumetric weight:
+                    td=`${model.cbm}`
+                tr
+                    th Handling requirements:
+                    td=`${model.handlingRequirements}`
+                tr
+                    th Dangerous goods?
+                    td=`${model.dangerousGoods}`
+                tr
+                    th Dangerous goods code:
+                    td=`${model.codeDrg}`
+                tr
+                    th Created At:
+                    td=`${model.createdAt.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+                tr    
+                    th Updated at:
+                    td=`${model.updatedAt.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
 
 mixin showCustomer(model)
     .shipment-box-detail 
-        span.shipment-box_label Customer:
-        ul.shipment-box__list 
-            li.shipment-box__content= `ID: ${model.id}`
-            li.shipment-box__content= `Customer's user ID: ${model.userId}`
-            li.shipment-box__content= `Company Name: ${model.companyName}`
-            li.shipment-box__content= `Phone (landline): ${model.phoneLandline}`
-            li.shipment-box__content= `Phone (mobile): ${model.phoneMobile}`
-            li.shipment-box__content= `Primary Email: ${model.emailPri}`
-            li.shipment-box__content= `Secondary Email: ${model.emailSec}`
-            li.shipment-box__content= `Street: ${model.addressLine1}`
-            li.shipment-box__content= `Suburb: ${model.addressLine2}`
-            li.shipment-box__content= `City & Province/State: ${model.addressLine3}`
-            li.shipment-box__content= `Country: ${model.country}`
-            li.shipment-box__content= `Created: ${model.createdAt.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
-            li.shipment-box__content= `Updated: ${model.updatedAt.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+        table
+            thead Customer
+                tr 
+                    th ID:
+                    td= `${model.id}`
+                tr 
+                    th Customer's user ID: 
+                    td= `${model.userId}`
+                tr 
+                    th Company Name: 
+                    td= `${model.companyName}`
+                tr 
+                    th Phone (landline): 
+                    td= `${model.phoneLandline}`
+                tr 
+                    th Phone (mobile):
+                    td= `${model.phoneMobile}`
+                tr 
+                    th Primary Email: 
+                    td=`${model.emailPri}`
+                tr 
+                    th Secondary Email:
+                    td=`${model.emailSec}`
+                tr 
+                    th Street: 
+                    td=`${model.addressLine1}`
+                tr 
+                    th Suburb:
+                    td=`${model.addressLine2}`
+                tr 
+                    th City & Province/State:
+                    td=`${model.addressLine3}`
+                tr 
+                    th Country:
+                    td=`${model.country}`
+                tr 
+                    th Created:
+                    td=`${model.createdAt.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+                tr 
+                    th Updated:
+                    td=`${model.updatedAt.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
 
 mixin showShipper(model)
     .shipment-box-detail 
-        span.shipment-box_label Shipper: 
-            ul.shipment-box__list 
-                li.shipment-box__content= `ID: ${model.id}`
-                li.shipment-box__content= `Company: ${model.companyName}`
-                li.shipment-box__content= `Phone (landline): ${model.phoneLandline}`
-                li.shipment-box__content= `Phone (mobile): ${model.phoneMobile}`
-                li.shipment-box__content= `Primary Email: ${model.emailPrimary}`
-                li.shipment-box__content= `Secondary Email: ${model.emailSecondary}`
-                li.shipment-box__content= `Street: ${model.addressLine1}`
-                li.shipment-box__content= `Suburb: ${model.addressLine2}`
-                li.shipment-box__content= `City & Province/State: ${model.addressLine3}`
-                li.shipment-box__content= `Country: ${model.country}`
+        table 
+            thead Shipper
+                tr
+                    th ID: 
+                    td=`${model.id}`
+                tr
+                
+                    th Company:
+                    td=`${model.companyName}`
+                tr
+                
+                    th Phone (landline):
+                    td=`${model.phoneLandline}`
+                tr
+                    th Phone (mobile):
+                    td=`${model.phoneMobile}`
+                tr
+                    th Primary Email:
+                    td=`${model.emailPrimary}`
+                tr
+                    th Secondary Email:
+                    td=`${model.emailSecondary}`
+                tr
+                    th Street:
+                    td=`${model.addressLine1}`
+                tr
+                    th Suburb:
+                    td=`${model.addressLine2}`
+                tr
+                    th City & Province/State:
+                    td=`${model.addressLine3}`
+                tr
+                    th Country:
+                    td=`${model.country}`
 
+mixin showConsignee(model)
+    .shipment-box-detail 
+        table 
+            thead Consignee
+                tr
+                    th ID: 
+                    td=`${model.id}`
+                tr
+                    th Company:
+                    td=`${model.companyName}`
+                tr
+                    th Phone (landline):
+                    td=`${model.phoneLandline}`
+                tr
+                    th Phone (mobile):
+                    td=`${model.phoneMobile}`
+                tr
+                    th Primary Email:
+                    td=`${model.emailPri}`
+                tr
+                    th Secondary Email:
+                    td=`${model.emailSec}`
+                tr
+                    th Street:
+                    td=`${model.addressLine1}`
+                tr
+                    th Suburb:
+                    td=`${model.addressLine2}`
+                tr
+                    th City & Province/State:
+                    td=`${model.addressLine3}`
+                tr
+                    th Country:
+                    td=`${model.country}`
+
+mixin showFinancial(model)
+    .shipment-box-detail 
+        table 
+            thead Financial
+                tr
+                    th ID:
+                    td=`${model.id}`
+                tr
+                    th Shipper Invoice #:
+                    td=`${model.shipperInvoiceNum}`
+                tr
+                    th Invoice Date:
+                    td=`${model.invoiceDate.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+                tr
+                    th Invoice Amount:
+                    td=`${model.invoiceAmount}`
+                tr
+                    th Currency:
+                    td=`${model.currency}`
+                tr
+                    th Trade Reference:
+                    td=`${model.tradeRef}`
+                tr
+                    th APN Number:
+                    td=`${model.apnNum}`
+                tr
+                    th Bank:
+                    td=`${model.bank}`
+                tr
+                    th APN Date:
+                    td=`${model.apnDate.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+                tr
+                    th Created:
+                    td=`${model.createdAt.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+                tr
+                    th Updated:
+                    td=`${model.updatedAt.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+
+mixin showConveyance(model)
+    .shipment-box-detail 
+        table 
+            thead Conveyance
+                tr
+                    th ID:
+                    td=`${model.id}`
+                tr
+                    th Load Port:
+                    td=`${model.loadPort}`
+                tr
+                    th Port Trans-shipment:
+                    td=`${model.portTransShip}`
+                tr
+                    th Port Discharge:
+                    td=`${model.portDischarge}`
+                tr
+                    th Inland Destination:
+                    td=`${model.inlandDestination}`
+                tr
+                    th Final Delivery:
+                    td=`${model.finalDelivery}`
+                tr
+                    th Airline Name:
+                    td=`${model.airlineName}`
+                tr
+                    th Master Airway Bill:
+                    td=`${model.billMasterAirway}`
+                tr
+                    th House Airway Bill:
+                    td=`${model.billHouseAirway}`
+                tr
+                    th Flight Number 1:
+                    td=`${model.flightNum1}`
+                tr
+                    th Flight Date 1:
+                    td=`${model.flightDate1.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+                tr
+                    th Flight Number 2:
+                    td=`${model.flightNum2}`
+                tr
+                    th Flight Date 2:
+                    td=`${model.flightDate2.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+                tr
+                    th ETD:
+                    td=`${model.etd.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+                tr
+                    th ETA:
+                    td=`${model.eta.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+                tr
+                    th Shipping Line Name:
+                    td=`${model.shippingLineName}`
+                tr
+                    th Vessel Name:
+                    td=`${model.vesselName}`
+                tr
+                    th Voyage Number:
+                    td=`${model.voyageNum}`
+                tr
+                    th Ocean Bill of Lading:
+                    td=`${model.oceanBoLnum}`
+                tr
+                    th House Bill of Lading:
+                    td=`${model.houseBoLnum}`
+                tr
+                    th Container Number:
+                    td=`${model.containerNum}`
+                tr
+                    th Seal Number:
+                    td=`${model.sealNum}`
+                tr
+                    th Shipped Onboard Date:
+                    td=`${model.shippedOnboardDate.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+                tr
+                    th ETA Final Port:
+                    td=`${model.etaFinalPort.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+                tr
+                    th Truck Registration:
+                    td=`${model.truckRegNo}`
+                tr
+                    th Truck Type:
+                    td=`${model.truckType}`
+                tr
+                    th Created:
+                    td=`${model.createdAt.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+                tr
+                    th Updated:
+                    td=`${model.updatedAt.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+
+mixin showCustoms(model)
+    .shipment-box-detail 
+        table 
+            thead Customs
+                tr
+                    th ID:
+                    td=`${model.id}`
+                tr
+                    th Agent:
+                    td=`${model.agent}`
+                tr
+                    th Agent Code:
+                    td=`${model.agentCode}`
+                tr
+                    th BOE Number:
+                    td=`${model.bOeNum}`
+                tr
+                    th BOE Release Date:
+                    td=`${model.bOeReleaseDate.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+                tr
+                    th BOE Assessment Date:
+                    td=`${model.bOeAssessDate.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+                tr
+                    th Release Depot:
+                    td=`${model.releaseDepot}`
+                tr
+                    th LRN Number:
+                    td=`${model.lrnNum}`
+                tr
+                    th MRN Number:
+                    td=`${model.mrnNum}`
+                tr
+                    th Created:
+                    td=`${model.createdAt.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
+                tr
+                    th Updated:
+                    td=`${model.updatedAt.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`

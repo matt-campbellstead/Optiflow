@@ -73,3 +73,5 @@ exports.getSingle = (Model) =>
       data: { document },
     });
   });
+
+exports.renderPageWithToken = (template, title) => (req, res) => {};

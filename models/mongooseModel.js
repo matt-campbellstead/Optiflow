@@ -58,7 +58,7 @@ const userSchema = new mongoose.Schema({
 
   active: {
     type: Boolean,
-    default: true,
+    default: false,
     select: false,
   },
   shipments: [{ type: mongoose.Schema.ObjectId, ref: 'Usershipment' }],

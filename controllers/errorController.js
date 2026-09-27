@@ -1,6 +1,6 @@
 'use strict';
 const AppError = require('../utils/AppError');
-const mylog = require('../log');
+const logger = require('../utils/logger');
 
 const handleCastErrDB = (err) => {
   const message = `Invalid ${err.path}: ${err.value} `;
@@ -61,7 +61,7 @@ const sendProdErr = (err, req, res) => {
         message: err.message,
       });
     } else {
-      mylog.log('ERROR👺', err);
+      logger.error('ERROR👺', err);
 
       res.status(500).json({
         status: 'error',
@@ -76,7 +76,7 @@ const sendProdErr = (err, req, res) => {
         msg: err.message,
       });
     } else {
-      mylog.log('ERROR👺', err);
+      logger.error('ERROR👺', err);
 
       res.status(err.statusCode).render('error', {
         title: 'Something went wrong!',

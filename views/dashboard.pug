@@ -50,26 +50,37 @@ mixin milestoneDate(timeline)
 
 include _dbMixins
 
-mixin shipmentFunction(data)
-    h2.heading-secondary= `Master ID: ${data.id})`
-    .shipment-box-detail
-        span.shipment-box_label= `File number: ${data.shipment_file_id}`
-    if (data.Customer)
-        +showCustomer(data.Customer)
-    if (data.Detail)
-        +showShipmentDetails(data.Detail)
-    if (data.Shipper)
-        +showShipper(data.Shipper)
-        .shipment-box-detail 
-            span.shipment-box_label= `Consignee: ${JSON.stringify(data.Consignee, null, 4).replaceAll('"', '')}`
-        .shipment-box-detail 
-            span.shipment-box_label= `Financial Details: ${JSON.stringify(data.Financial, null, 4).replaceAll('"', '')}`
-        .shipment-box-detail 
-            span.shipment-box_label= `Conveyance: ${JSON.stringify(data.Conveyance, null, 4).replaceAll('"', '')}`
-        .shipment-box-detail 
-            span.shipment-box_label= `Customs Details: ${JSON.stringify(data.Custom, null, 4).replaceAll('"', '')}`
-        .shipment-box-detail 
-            span.shipment-box_label 🛳️🛳️🛳️ Voilà! 🛳️🛳️🛳️
+mixin displayShipmentFile(data)
+    .file__container
+        h2.heading-secondary= `Master ID: ${data.id})`
+        p.shipment-box_label= `File number: ${data.shipment_file_id}`
+        span.shipment-box_label 🛳️🛳️🛳️ Voilà! 🛳️🛳️🛳️
+
+        .table-nav-box 
+            button.file-editor-btn Customer 
+            button.file-editor-btn Shipment Details
+            button.file-editor-btn Shipper
+            button.file-editor-btn Consignee 
+            button.file-editor-btn Financial 
+            button.file-editor-btn Conveyance 
+            button.file-editor-btn Customs
+        
+        button.file-editor-btn(type="button" id="edit-file-link") Edit
+        .shipment-box
+            if (data.Customer)
+                +showCustomer(data.Customer)
+            if (data.Detail)
+                +showShipmentDetails(data.Detail)
+            if (data.Shipper)
+                +showShipper(data.Shipper)
+            if (data.Consignee)
+                +showConsignee(data.Consignee)
+            if (data.Financial)
+                +showFinancial(data.Financial)
+            if (data.Conveyance)
+                +showConveyance(data.Conveyance)
+            if (data.Custom)
+                +showCustoms(data.Custom)
 
 
 mixin customerFunction(data)
@@ -88,17 +99,27 @@ block content
                             +customerFunction(shipment)
             .footer-box
                 span= `Shipment milestones go here`
+                
     if (user.role === 'admin')
         section.dashboard__container 
             .heading-box 
-                h1.heading-primary Operations Dashboard 
-                h2.heading-secondary All current shipments 
+                h1.heading-primary Your shipment files
+
+            .file-count-text=`Number of files: ${allShipments.length}`
+            .file-nav-box
+                button.file-editor-btn.previous-shipment << Previous File
+                button.file-editor-btn.next-shipment Next File >>
+                select.filter-select
+                    option --Please choose an option--
+                    option Exports 
+                    option Imports 
+                    option Past shipments
+                button.file-editor-btn.filter-apply Apply filter
+                    
+            
             each shipment, i in allShipments
-                .shipment-box
-                    +shipmentFunction(shipment)
-            a#ops-dashboard.nav__el(href='/ops-exports') See exports only
-            a#ops-dashboard.nav__el(href='/ops-imports') See imports only
-            a#ops-dashboard.nav__el(href='/ops-past-shipments') View past shipments
+                        +displayShipmentFile(shipment)
+            
         section.milestones__table
             h2.heading-secondary Progress of your shipments
             table.checkbox-table
