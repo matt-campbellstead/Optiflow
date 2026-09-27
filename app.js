@@ -108,7 +108,7 @@ if (process.env.NODE_ENV === 'production')
 
 const limiter = rateLimit({
   max: process.env.MAX_TRIES,
-  windowMs: process.env.TRY_WINDOW,
+  windowMs: Number(process.env.TRY_WINDOW),
   message: 'Too many requests from this IP. Please try again later.',
 });
 
