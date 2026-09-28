@@ -62,6 +62,8 @@ const sendProdErr = (err, req, res) => {
       });
     } else {
       logger.error('ERROR👺', err);
+      logger.error(err.statusCode);
+      logger.error(err.stack);
 
       res.status(500).json({
         status: 'error',
