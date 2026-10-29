@@ -4,11 +4,14 @@ node_modules/
 .prettierrc
 config.js
 config.json
-text
+text.txt
 .DS_Store
 test.html
 misc/
 logs/
 git-filter-repo
 public/js/bundle.js
-misc.txt
+misc.js
+uploads/
+temp/
+seeders/

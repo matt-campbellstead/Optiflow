@@ -1,6 +1,5 @@
 // Initilisation
 const express = require('express');
-//const mylog = require('./log');
 
 process.on('uncaughtException', (err) => {
   console.log('Uncaught exception, oh no! Shutting down...');
@@ -30,6 +29,7 @@ const dataRouter = require('./routes/dataRoute');
 const userRouter = require('./routes/userRoute');
 const dbcrossoverRouter = require('./routes/dbxRoute');
 const viewRouter = require('./routes/viewRoute');
+const uploadRouter = require('./routes/uploadsRoute');
 const AppError = require('./utils/AppError');
 const globErrHandler = require('./controllers/errorController');
 
@@ -45,12 +45,12 @@ const connectDB = async () => {
   const date = new Date().toLocaleString('en-ZA');
   try {
     await mongoose.connect(DB);
-    logger.info(
+    console.log(
       `MongoDB: database connection succesful! At ${date.split(', ')[1]}`,
     );
   } catch (err) {
-    logger.error('MongoDB connection failed!');
-    logger.error(err.name, err.message);
+    console.error('MongoDB connection failed!');
+    console.error(err.name, err.message);
   }
 };
 
@@ -60,14 +60,14 @@ connectDB();
 if (process.env.NODE_ENV === 'development') {
   sequelize.sync({ alter: true }).then(() => {
     const date = new Date().toLocaleString('en-ZA');
-    logger.info(`MariaDB connection successful! At ${date.split(', ')[1]}`);
+    console.log(`MariaDB connection successful! At ${date.split(', ')[1]}`);
   });
 } else if (process.env.NODE_ENV === 'production') {
   (async () => {
     try {
       await connectToDB();
     } catch (err) {
-      logger.error('Problem connecting to MariaDB database', err);
+      console.error('Problem connecting to MariaDB database', err);
     }
   })();
 }
@@ -129,6 +129,7 @@ app.use((req, res, next) => {
 app.use('/api/v1/data', dataRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/dbx', dbcrossoverRouter);
+app.use('/api/v1/uploads', uploadRouter);
 app.use('/', viewRouter);
 
 // Server
@@ -136,7 +137,7 @@ const port = process.env.PORT || 3000;
 
 const server = app.listen(port, '127.0.0.1', () => {
   const date = new Date().toLocaleString('en-ZA');
-  logger.info(`App is running on port ${port}, at ${date}`);
+  console.log(`App is running on port ${port}, at ${date}`);
 });
 
 //Error handling
@@ -147,8 +148,9 @@ app.all('/{*any}', (req, res, next) => {
 app.use(globErrHandler);
 
 process.on('unhandledRejection', (err) => {
-  logger.error(`${err.name}, ${err.message}`);
-  logger.error('Unhandled rejection, oh no! Shutting down...');
+  console.error(err);
+  console.error('Unhandled rejection, oh no! Shutting down...');
+  console.error(err.stack);
 
   server.close(() => {
     process.exit(1);
@@ -156,7 +158,7 @@ process.on('unhandledRejection', (err) => {
 });
 
 process.on('SIGTERM', () => {
-  logger.info(`Server shutting down on ${new Date().toLocaleString('en-ZA')}`);
+  console.log(`Server shutting down on ${new Date().toLocaleString('en-ZA')}`);
   server.close();
   process.exit(0);
 });

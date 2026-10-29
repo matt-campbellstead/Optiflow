@@ -4,8 +4,8 @@ const asyncHandler = require('../utils/asyncHandler');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { promisify } = require('util');
-const User = require('../models/mongooseModel');
-const RefreshToken = require('../models/mongooseToken');
+const User = require('../models/mongoose/mongooseModel');
+const RefreshToken = require('../models/mongoose/mongooseToken');
 const AppError = require('../utils/AppError');
 const Email = require('../utils/email');
 const TIME_DIFFERENCE = 1000 * 60 * 60 * 2;
@@ -161,10 +161,6 @@ exports.logOut = asyncHandler(async (req, res, next) => {
   });
 });
 
-// Currently, the user has to see that their access token has expired and
-// then manually they have to request this endpoint to get it refreshed...
-// This would happen every 15 minutes. I would prefer to automate it but
-// still have to figure that out.
 exports.refresh = asyncHandler(async (req, res, next) => {
   const token = req.cookies?.refresh_token;
 
@@ -199,9 +195,6 @@ exports.refresh = asyncHandler(async (req, res, next) => {
 });
 
 exports.protect = asyncHandler(async (req, res, next) => {
-  console.log('request method:', req.method);
-  console.log('request original URL:', req.originalUrl);
-  console.log('req.cookies:', Object.keys(req.cookies));
   let token;
 
   if (
@@ -241,7 +234,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
   // Access granted:
   res.locals.user = currentUser;
   req.user = currentUser;
-  // logger.error.log(currentUser);
+  // console.error.log(currentUser);
   next();
 });
 
@@ -274,7 +267,7 @@ exports.isLoggedIn = async (req, res, next) => {
       //console.log(req.user);
       return next(); // Fixes headers error 'cannot set headers after they are sent to the client'
     } catch (err) {
-      logger.error.log(err);
+      console.error.log(err);
       return next();
     }
   }

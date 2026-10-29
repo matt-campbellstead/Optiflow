@@ -3,4 +3,12 @@ extends base
 block content
     .container
         h1 Account activation 
-        button.btn.activation-btn Activate my account
+        button.btn.activation-btn 
+            span.btn__text(id='btn__text') Activate my account
+            svg.btn__check(viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true")
+                polyline(points="16 5 8 14 4 10" pathLength="24")
+        .dashboard__container(class='hidden')
+            .heading-box
+                h1 Thank you! 
+                p Your account has now been successfully activated.
+                p You should receive a welcome email which you can check now, or else you can just navigate to the login page to login in to your new account!

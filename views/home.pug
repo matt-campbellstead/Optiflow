@@ -7,44 +7,61 @@ block append head
 block content   
     main.main
         if !user 
-            //-.main--dogs
-            
             #map
             .container
                 .heading-box
                     h2=`Today - ${new Date().toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })} - in freight and logistics`
                 .main--design-block
                     h2 Fuel prices 
-                    p quelque chose à venir
+                    p=`Diesel - Average per gallon: $ ${data.FreightApiFuelPrice.dataValues.dieselAvgPrice}`
+                    p=`% ${data.FreightApiFuelPrice.dataValues.dieselPriceChangePercent}`
+                    p=`Last updated: ${data.FreightApiFuelPrice.dataValues.dieselUpdatedAt}`
+                    p=`Gasoline - Average per gallon: $ ${data.FreightApiFuelPrice.dataValues.gasolineAvgPrice}`
+                    p=`% ${data.FreightApiFuelPrice.dataValues.gasolinePriceChangePercent}`
+                    p=`Last updated: ${data.FreightApiFuelPrice.dataValues.gasolineUpdatedAt}`
+                    p=`Source: ${data.FreightApiFuelPrice.dataValues.infoSource}`
+                
                 .main--design-block 
-                    h2 Port congestion 
-                    p quelque chose à venir
+                    h2 Port congestion - Cape Town
+                    if (!data.FreightApiPortCongestion)
+                        p Currently there is no available port congestion data 
+                    if (data.FreightApiPortCongestion)
+                        
+                
                 .main--design-block 
-                    h2 Carriers 
-                    p quelque chose à venir
-                .main--design-block 
-                    h2 Disruptions 
-                    p quelque chose à venir :)
+                    h2 Possible Disruptions 
+                    span - caused by natural disasters 
+                    each object in data.FreightApiDisruptions
+                        div
+                            p=`${object.dataValues.type}, severity ${object.dataValues.severity} in ${object.dataValues.country}`
+                            p=`from source: ${object.dataValues.source}, last updated: ${object.dataValues.updatedAt}` 
 
                 
     if user
         .heading-box
             h1.main--title= `Welcome, ${user.name}, to your dashboard.`
-            
+                
         p.main--text 
             if (user.role === 'user')
-                a#dashboard.nav__el(href='/dashboard') View dashboard
-                
+                .section-pictures
+                    .picture-box
+                        a.nav__el.home--1(href='/dashboard')
+                            span.nav__text View Your Shipments
+                        a.nav__el.home--2(href='/me')
+                            span.nav__text My Account settings
+                        a.nav__el.home--3(href='/my-files')
+                            span.nav__text Your Files Portal
                     
+                    
+                        
             if (user.role === 'admin') 
                 .section-pictures
                     .picture-box
                         a.nav__el.home--1(href='/ops-dashboard')
                             span.nav__text View & Edit Shipment Files
-                        a.nav__el.home--2(href='/ops-functions')
+                        a.nav__el.home--2(href='/me')
                             span.nav__text My Account settings
                         a.nav__el.home--3(href='/ops-data')
                             span.nav__text Create Shipment Files
-                            //- a.nav__el.home--4(href='/ops-update')
-                            //-     span.nav__text Update data 
-                        
+                            
+                            

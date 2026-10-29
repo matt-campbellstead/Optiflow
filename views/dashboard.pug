@@ -1,8 +1,5 @@
 extends base
 
-//- mixin milestone(rowNum, classNum)
-//-     td(class=`m${rowNum}--${classNum}`)
-
 mixin milestone(timeline)
             td(class=`m${timeline.timelineMasterId}--1`)= String(timeline.cargo_collected)
             td(class=`m${timeline.timelineMasterId}--2`)= String(timeline.received)
@@ -52,7 +49,7 @@ include _dbMixins
 
 mixin displayShipmentFile(data)
     .file__container
-        h2.heading-secondary= `Master ID: ${data.id})`
+        h2.heading-secondary=`${data.id})`
         p.shipment-box_label= `File number: ${data.shipment_file_id}`
         span.shipment-box_label 🛳️🛳️🛳️ Voilà! 🛳️🛳️🛳️
 
@@ -82,23 +79,95 @@ mixin displayShipmentFile(data)
             if (data.Custom)
                 +showCustoms(data.Custom)
 
-
 mixin customerFunction(data)
-    h2.heading-secondary= `Customer: ${data.users}`
-        .shipment-box-detail 
-            span.shipment-box_label= `Shipment Details: ${JSON.stringify(data.Detail, null, 4)}`
+        .container
+            h1 Shipment Details
+            if (data.Detail)
+                
+                .data-item-box
+                    img(src='/img/icons8-clipboard-48.png')
+                    table 
+                        th Routing
+                        td= data.Detail.routing
+                
+                .data-item-box
+                    img(src='/img/icons8-clipboard-48.png')
+                    table 
+                        th Mode 
+                        td= data.Detail.mode
+                    
+                .data-item-box
+                    img(src='/img/icons8-clipboard-48.png')
+                    table 
+                        th Goods 
+                        td=data.Detail.goodsDescriptions
+            
+            if (data.Shipper)
+                .data-item-box 
+                    h2 Shipper
+                    h3=`${data.Shipper.companyName}`
 
+            if (data.Financial)
+                .data-item-box 
+                    h2 Invoice Number
+                    h3=`${data.Financial.shipperInvoiceNum}`
 
 block content
     if (user.role === 'user')
         section.dashboard__container 
             .heading-box 
-                h1.heading-primary Your Current Shipments 
-                    each shipment, i in shipments
-                        .shipment-box 
-                            +customerFunction(shipment)
-            .footer-box
-                span= `Shipment milestones go here`
+                h1.heading-primary Your Current Shipments
+                p Check details for each shipment you have ordered with us
+            
+            if (shipments)
+            each shipment, i in shipments
+                if (shipment.Timeline)
+                    .wrapper
+                        .margin-area
+                            .dot(class='one' style=`${shipment.Timeline.received ? 'background: var(--clr-brand);' : 'background: #bbb;'}`) 1
+                            .dot(class='two' style=`${shipment.Timeline.cargo_loaded ? 'background: var(--clr-brand);' : 'background: #bbb;'}`) 2
+                            .dot(class='three' style=`${shipment.Timeline.cargo_departed ? 'background: var(--clr-brand);' : 'background: #bbb;'}`) 3
+                            .dot(class='four' style=`${shipment.Timeline.cargo_arrived ? 'background: var(--clr-brand);' : 'background: #bbb;'}`) 4
+                            .dot(class='five' style=`${shipment.Timeline.sars ? 'background: var(--clr-brand);' : 'background: #bbb;'}`) 5
+                            .dot(class='six' style=`${shipment.Timeline.delivery ? 'background: var(--clr-brand);' : 'background: #bbb;'}`) 6
+                            .dot(class='seven' style=`${shipment.Timeline.doc ? 'background: var(--clr-brand);' : 'background: #bbb;'}`) 7
+                            .progress-bar(class='first' style= `${shipment.Timeline.cargo_loaded ? 'background: var(--clr-brand);' : ''}`)
+                            .progress-bar(class='second' style= `${shipment.Timeline.cargo_departed ? 'background: var(--clr-brand);' : ''}`)
+                            .progress-bar(class='third' style= `${shipment.Timeline.cargo_arrived ? 'background: var(--clr-brand);' : ''}`)
+                            .progress-bar(class='fourth' style= `${shipment.Timeline.sars ? 'background: var(--clr-brand);' : ''}`)
+                            .progress-bar(class='fifth' style= `${shipment.Timeline.delivery ? 'background: var(--clr-brand);' : ''}`)
+                            .progress-bar(class='sixth' style= `${shipment.Timeline.doc ? 'background: var(--clr-brand);' : ''}`)
+                            
+                            .message(class='message-1') Received at depot 
+                                div
+                                    .message(class='message-2') Loaded
+                                        div 
+                                            .message(class='message-3') Departed
+                                                div
+                                                    .message(class='message-4') Arrived in port/airport
+                                                        div
+                                                            .message(class='message-5') Customs cleared 
+                                                                div 
+                                                                    .message(class='message-6') Out for delivery 
+                                                                        div 
+                                                                            .message(class='message-7') Delivered
+                                                                                - const dateArr = ['received_at_date','cargo_loaded_date','cargo_departed_date','cargo_arrived_date','sars_date','delivery_instruction_date', 'document_pack_date']
+                                                                                - let latestDate
+                                                                                - for (const date of dateArr){  if (shipment.Timeline[date] !== null) latestDate = date;}
+                                                                                .status= `Latest update: ${shipment.Timeline[latestDate]}`
+                                                                                .status(class='code') Here is your tracking code: 
+                                                                                    a(href="#") 123456789
+                else 
+                    .heading-box
+                        p Your timeline data is still being loaded. Please check back again later.
+                .shipment-box 
+                    +customerFunction(shipment)
+                    img.picture-box__img(src='/img/LOGISTICS.jpg')
+            else
+                //- TODO: add mail functionality and the link to the Whatsapp web chat
+                .container
+                    h1 You currently have no active shipments with us. 
+                    p Contact us on info@optimumfreight.co.za or on our Whatsapp chat to order a shipment. 
                 
     if (user.role === 'admin')
         section.dashboard__container 
@@ -121,26 +190,34 @@ block content
                         +displayShipmentFile(shipment)
             
         section.milestones__table
-            h2.heading-secondary Progress of your shipments
-            table.checkbox-table
-                thead.table-columns
-                    - const arr = ['', 'Cargo Collected / FCL and LCL', 'Received at Depot / FCL and LCL', 'Cargo Packed / LCL', 'Depot LRD Date / LCL', 'Cargo Loaded/Stuffed / LCL', 'Cargo Departed Port/Airport', 'OBL/AWB Received', 'ANF/Pre Received','Customer Invoiced','Payment Received','Line Release received','Clearing Instruction Issued','Delivery Instruction Issued','Signed CI received','SARS Submission','Cargo Arrived Port/Airport','Cargo Released/ SARS','Cargo Unpacked (LCL)','Cargo Delivered','Document Pack Sent', 'timeline ID']
-                        tr
-                            for each of arr 
-                                th(scope='col')=`${each}`
-                            
-                tbody.table-rows
-                    each shipment in allShipments
-                        if (shipment.Timeline)
+            .heading-box
+                h2.heading-secondary Progress of your shipments
+            .shipment-box
+                table
+                    thead
+                        - const arr = ['', 'Cargo Collected / FCL and LCL', 'Received at Depot / FCL and LCL', 'Cargo Packed / LCL', 'Depot LRD Date / LCL', 'Cargo Loaded/Stuffed / LCL', 'Cargo Departed Port/Airport', 'OBL/AWB Received', 'ANF/Pre Received','Customer Invoiced','Payment Received','Line Release received','Clearing Instruction Issued','Delivery Instruction Issued','Signed CI received','SARS Submission','Cargo Arrived Port/Airport','Cargo Released/ SARS','Cargo Unpacked (LCL)','Cargo Delivered','Document Pack Sent', 'timeline ID']
                             tr
-                                th(scope='row')= `Shipment ID: ${shipment.id}`
-                                    +milestone(shipment.Timeline)
-                            tr
-                                th(scope='row') Dates
-                                    +milestoneDate(shipment.Timeline)
+                                for each of arr 
+                                    th(scope='col')=`${each}`
+                                
+                    tbody
+                        each shipment in allShipments
+                            if (shipment.Timeline)
+                                tr
+                                    th(scope='row')= `Shipment: ${shipment.shipment_file_id}`
+                                        +milestone(shipment.Timeline)
+                                tr
+                                    th(scope='row') Dates
+                                        +milestoneDate(shipment.Timeline)
+                                tr.blank-row
+                                    for each of arr
+                                        td
+
+
 
         section.milestones__update
-            h2.heading-secondary Update your shipment timelines 
+            .heading-box
+                h2.heading-secondary Update your shipment timelines 
             p Enter the ID number of the timeline document (see the final column in the above table)
                 input.timeline-id(type='number' placeholder='ID?')
             p Select the shipment milestone you want changed to 'true', then click 'submit'.

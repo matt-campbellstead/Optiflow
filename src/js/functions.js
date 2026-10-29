@@ -1,5 +1,8 @@
 import { tablesIterator } from './opsFunctions';
 import { showAlert } from './alert';
+import * as accountRequests from './accountActions';
+import { login } from './login';
+import { submit, update } from './submitData';
 
 export const attachBtnListeners = (element) => {
   let tablesInParentEl;
@@ -55,4 +58,82 @@ export const convertTableName = (name) => {
   }
 
   return table;
+};
+
+export const prepareButtonUI = (btn) => {
+  btn.style.width = btn.offsetWidth + 'px';
+  btn.classList.add('is-loading');
+  btn.disabled = true;
+};
+
+export const makeRequestWithButtonUI = async (type, options = null, btn) => {
+  try {
+    let isSuccess;
+    switch (type) {
+      case 'login':
+        isSuccess = await login(options.email, options.password);
+        break;
+      case 'submit':
+        isSuccess = await submit(options.object, options.tableName);
+        break;
+      case 'update':
+        isSuccess = await update(
+          options.updateObject,
+          options.table,
+          options.id,
+        );
+        break;
+      case 'signUp':
+        isSuccess = await accountRequests.sendSignUpDetails(
+          options.name,
+          options.email,
+          options.password,
+          options.passwordConfirm,
+        );
+        break;
+      case 'refresh':
+        isSuccess = await accountRequests.requestRefresh();
+        break;
+      case 'activation':
+        isSuccess = await accountRequests.sendToken(options.token);
+        break;
+      case 'resetInit':
+        isSuccess = await accountRequests.sendEmailAddress(options.email);
+        break;
+      case 'resetAction':
+        isSuccess = await accountRequests.sendResetPasswords(
+          options.passwordInput,
+          options.passwordConfirmInput,
+          options.token,
+        );
+        break;
+      case 'upload':
+        isSuccess = await accountRequests.makeUploadRequest(options.data);
+        break;
+      case 'changePassword':
+        isSuccess = await accountRequests.requestPasswordChange(options.data);
+        break;
+    }
+
+    if (isSuccess) {
+      btn.classList.remove('is-loading');
+      btn.classList.add('is-success');
+      setTimeout(() => {
+        btn.classList.remove('is-success');
+        btn.disabled = false;
+      }, 1800);
+      return true;
+    } else {
+      btn.classList.remove('is-loading');
+      btn.disabled = false;
+      return false;
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const hideElAndDisplayMessage = (el) => {
+  el.classList.add('hidden');
+  document.querySelector('.dashboard__container').classList.remove('hidden');
 };

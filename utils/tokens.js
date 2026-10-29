@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const RefreshToken = require('../models/mongooseToken');
+const RefreshToken = require('../models/mongoose/mongooseToken');
 const { doubleCsrf } = require('csrf-csrf');
 
 const ACCESS_TTL = '15m';

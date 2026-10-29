@@ -1,0 +1,38 @@
+extends base 
+
+
+block content
+    .heading-box
+        h1.heading-primary My Account Settings 
+    .dashboard__container
+        .shipment-box
+            .container
+                h2 Change Password 
+                form.form.change-password-form
+                    .form__group
+                        label.form__label(for='password-current') Current password
+                        input#password-current.form__input(type='password', placeholder='••••••••', required, minlength='8')
+                    .form__group
+                        label.form__label(for='password') New password
+                        input#password.form__input(type='password', placeholder='••••••••', required, minlength='8')
+                    .form__group
+                        label.form__label(for='password-confirm') Confirm password
+                        input#password-confirm.form__input(type='password', placeholder='••••••••', required, minlength='8')
+                    .form__group
+                        button.btn(type='submit') Save password
+            img.picture-box__img(src='/img/transport-logistics-concept.jpg')
+
+        //- .shipment-box 
+        //-     .container
+        //-         h2 Change Profile Picture 
+        //-         .form
+        //-             .form__group.form__photo-upload
+        //-                 //- TODO: build infrastructure for user photos / src=`/img/users/${user.photo}`
+        //-                 img.form__user-photo(src='', alt='User photo')
+        //-                 input.form__upload(type='file', accept='image/*', id='photo', name='photo')
+        //-                 label(for='photo') Choose new photo
+                
+        //-             .form__group.right
+        //-                 button.btn.btn--small.btn--green Save settings
+        //-     img.picture-box__img(src='')
+

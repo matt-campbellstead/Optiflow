@@ -18,9 +18,11 @@ export const sendToken = async (token) => {
 
     if (res.data.status === 'success') {
       showAlert('success', 'Data submitted successfully');
+      return true;
     }
   } catch (err) {
     showAlert('error', err.response.data.message);
+    return false;
   }
 };
 
@@ -42,10 +44,12 @@ export const sendEmailAddress = async (email) => {
 
     if (res.data.status === 'success') {
       showAlert('success', 'Data submitted successfully');
+      return true;
     }
   } catch (err) {
     console.error(err.response.data);
     showAlert('error', err.response.data.message);
+    return false;
   }
 };
 
@@ -72,10 +76,12 @@ export const sendResetPasswords = async (
 
     if (res.data.status === 'success') {
       showAlert('success', 'Data submitted successfully');
+      return true;
     }
   } catch (err) {
     console.error(err.response.data);
     showAlert('error', err.response.data.message);
+    return false;
   }
 };
 
@@ -105,11 +111,12 @@ export const sendSignUpDetails = async (
 
     if (res.data.status === 'success') {
       showAlert('success', 'Data submitted successfully');
-      //TODO: hide form and display success message
+      return true;
     }
   } catch (err) {
     console.error(err.response.data);
     showAlert('error', err.response.data.message);
+    return false;
   }
 };
 
@@ -131,9 +138,65 @@ export const requestRefresh = async () => {
       setTimeout(() => {
         window.location.reload();
       }, 1500);
+      return true;
     }
   } catch (err) {
     console.error(err);
     showAlert('error', 'Session not refreshed. Try logging in again.');
+    return false;
+  }
+};
+
+export const makeUploadRequest = async (data, type = 'PDF') => {
+  const csrfToken = getCsrf();
+
+  try {
+    const res = await axios({
+      method: 'POST',
+      url: `${process.env.API_CALL_URL}/api/v1/uploads`,
+      headers: {
+        'x-csrf-token': csrfToken,
+      },
+      withCredentials: true,
+      data,
+    });
+
+    if (res.data.status === 'success') {
+      showAlert('success', `${type} uploaded!`);
+      return true;
+    }
+  } catch (err) {
+    console.error(err);
+    showAlert('error', err.response.data.message);
+    return false;
+  }
+};
+
+export const requestPasswordChange = async (data) => {
+  const csrfToken = getCsrf();
+
+  try {
+    const res = await axios({
+      method: 'PATCH',
+      url: `${process.env.API_CALL_URL}/api/v1/users/auth/updatemypassword`,
+      headers: {
+        'x-csrf-token': csrfToken,
+      },
+      withCredentials: true,
+      data: {
+        passwordCurrent: data.passwordCurrent,
+        password: data.password,
+        passwordConfirm: data.passwordConfirm,
+      },
+    });
+
+    if (res.data.status === 'success') {
+      showAlert('success', 'Password changed successfully!');
+      return true;
+    }
+  } catch (err) {
+    console.error(err);
+    showAlert('error', err.response.data.message);
+    return false;
   }
 };

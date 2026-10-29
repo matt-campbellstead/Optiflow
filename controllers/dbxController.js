@@ -1,6 +1,6 @@
 'use strict';
 const asyncHandler = require('../utils/asyncHandler');
-const Usershipment = require('../models/mongooseSubModel');
+const Usershipment = require('../models/mongoose/mongooseSubModel');
 
 // exports.setDocIds = (req, res, next) => {
 //   if (!req.body.user) req.body.user = req.user.id;

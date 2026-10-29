@@ -1,5 +1,5 @@
 'use strict';
-const { sequelize } = require('../sequelize/db');
+const { sequelize } = require('../../../sequelize/db');
 const { Model, DataTypes } = require('sequelize');
 
 class Customers extends Model {}
@@ -65,6 +65,7 @@ Customers.init(
         is: /^[a-zA-Z0-9\s]*$/i,
       },
     },
+    downloadLink: DataTypes.STRING,
   },
   {
     sequelize,

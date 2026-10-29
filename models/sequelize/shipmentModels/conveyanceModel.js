@@ -1,6 +1,5 @@
 'use strict';
-'use strict';
-const { sequelize } = require('../sequelize/db');
+const { sequelize } = require('../../../sequelize/db');
 const { Model, DataTypes } = require('sequelize');
 
 class Conveyance extends Model {}

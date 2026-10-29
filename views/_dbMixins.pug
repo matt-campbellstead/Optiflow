@@ -92,6 +92,9 @@ mixin showCustomer(model)
                     th Country:
                     td=`${model.country}`
                 tr 
+                    th Download link: 
+                    td=model.downloadLink
+                tr 
                     th Created:
                     td=`${model.createdAt.toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`
                 tr 

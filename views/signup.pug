@@ -19,7 +19,14 @@ block content
         
             .form__group 
                 label.form__label(for='passwordConfirm') Confirm your password 
-                input#passwordConfirm.form__input(type='passwordConfirm', placeholder='••••••••', required, minlength='8') 
+                input#passwordConfirm.form__input(type='password', placeholder='••••••••', required, minlength='8') 
 
             .form__group 
-                button.btn Submit
+                button.btn
+                    span.btn__text(id='btn__text') Submit
+                    svg.btn__check(viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true")
+                        polyline(points="16 5 8 14 4 10" pathLength="24")
+        .dashboard__container(class='hidden')
+            .heading-box
+                h1 Great! 
+                p Now please check your inbox for the email address you just entered and follow the instructions there to activate your account.

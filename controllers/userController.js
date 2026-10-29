@@ -1,5 +1,5 @@
 'use strict';
-const User = require('../models/mongooseModel');
+const User = require('../models/mongoose/mongooseModel');
 const asyncHandler = require('../utils/asyncHandler');
 
 exports.getUsers = asyncHandler(async (req, res, next) => {

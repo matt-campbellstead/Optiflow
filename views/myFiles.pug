@@ -1,0 +1,32 @@
+extends base
+
+block content 
+    .heading-box
+        h1.heading-primary My Files 
+    
+    .dashboard__container 
+        .shipment-box
+            .container
+                h2 Download your files
+                if (data)
+                    p Download your files by following this link to your 
+                        a(href=data) Adobe download package.
+                else 
+                    p It looks like there is currently no download link available. 
+                    | The OFS team will generate one for you. Please try again later.
+            img.picture-box__img(src='/img/stock-photo-office-files-office-files-document-paperwork-tower-papers-lot-work-2695660732.webp')
+        .shipment-box 
+            .container
+                h2 Upload your files
+                p Required file format: PDF
+                | Maximum size: 5 MB
+                form.form.file-uploads-form
+                    .form__group
+                        input(type='file', id='file-input' name='pdf')
+                       
+                    .form__group
+                        button.btn(type='submit')
+                            span.btn__text(id='btn__text') Submit
+                            svg.btn__check(viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true")
+                                polyline(points="16 5 8 14 4 10" pathLength="24")
+            img.picture-box__img(src='/img/british-postal-stamps-re-the-post-office-royal-mail-letters-costs-BP5FAR.jpg')

@@ -1,11 +1,9 @@
-import { login, logout } from './login';
+import { logout } from './login';
 import { toggleDarkMode } from './toggleDarkMode';
 
 import {
-  viewShipmentLogs, // REMOVE
   updateTimeline,
   getAndRenderTable,
-  getDogs,
   filterData,
   getData,
 } from './opsFunctions';
@@ -14,27 +12,20 @@ import {
   attachBtnListeners,
   hideElementsExceptFirst,
   convertTableName,
+  prepareButtonUI,
+  makeRequestWithButtonUI,
+  hideElAndDisplayMessage,
 } from './functions';
-
-import { submit, update } from './submitData';
 
 import {
   iterator,
-  toggleHidden,
   initialize,
-  customerIdArray, //FIXME: change to environment variable?
-  consigneesIdArray, // idem?
-  //metaArray,
+  customerIdArray,
+  consigneesIdArray,
+  metaArray,
   setObject,
+  locations,
 } from './data'; //TODO: move to ./functions.js
-
-import {
-  sendToken,
-  sendEmailAddress,
-  sendResetPasswords,
-  sendSignUpDetails,
-  requestRefresh,
-} from './accountActions';
 
 import { showAlert } from './alert';
 
@@ -42,11 +33,7 @@ import { displayMap } from './mapbox';
 
 const currentTheme = localStorage.getItem('theme');
 
-if (currentTheme) {
-  toggleDarkMode();
-}
-
-// if (document.querySelector('.main--dogs')) getDogs();
+if (currentTheme) toggleDarkMode();
 
 const logOutBtn = document.querySelector('.nav__el--logout');
 const loginForm = document.querySelector('.login-form');
@@ -60,21 +47,7 @@ const timelineForm = document.querySelector('.data-form__timeline');
 const customersForm = document.querySelector('.data-form__customers');
 const consigneesForm = document.querySelector('.data-form__consignees');
 const themeBtn = document.querySelector('.theme');
-const viewDbxBtn = document.querySelector('.view-dbx');
-const checkboxes = document.querySelectorAll('ul input');
-const submitBtn = document.querySelector('.submit');
-
 const showCustomerFormBtn = document.querySelector('.show-form');
-/*
-const dbUpdateSelect1 = document.querySelector('.db-select');
-const dbUpdateBtn1 = document.querySelector('.update-select');
-const dbUpdateId = document.querySelector('.document-id');
-const fieldAddBtn = document.querySelector('.update-add1');
-const fieldSelector = document.querySelector('.field-select');
-const updateForm = document.querySelector('.update-form');
-const updateContainer = document.querySelector('.dashboard__container');
-*/
-
 const activationBtn = document.querySelector('.activation-btn');
 const resetPasswordInitForm = document.querySelector(
   '.reset-password-init-form',
@@ -84,6 +57,7 @@ const resetPasswordActionForm = document.querySelector(
 );
 const signUpForm = document.querySelector('.sign-up-form');
 const errorMsg = document.querySelector('.error__msg');
+const uploadsForm = document.querySelector('.file-uploads-form');
 
 const formElements = [];
 formElements.push(
@@ -98,43 +72,88 @@ formElements.push(
 
 for (const el of formElements) if (el) initialize(el);
 
-if (errorMsg) {
-  document.querySelector('.refresh-btn').addEventListener('click', () => {
-    requestRefresh();
+if (
+  errorMsg &&
+  errorMsg.textContent === 'You are not logged in! Please log in to get access'
+) {
+  document.querySelector('.refresh-box').classList.remove('hidden');
+  document.querySelector('.refresh-btn').addEventListener('click', function () {
+    prepareButtonUI(this);
+    makeRequestWithButtonUI('refresh', null, this).then(() =>
+      document.querySelector('.refresh-box').classList.add('hidden'),
+    );
   });
 }
 
+if (uploadsForm)
+  uploadsForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const form = new FormData();
+    form.append('pdf', document.getElementById('file-input').files[0]);
+
+    const btn = document.querySelector('.form__group .btn');
+    prepareButtonUI(btn);
+    makeRequestWithButtonUI('upload', { data: form }, btn);
+  });
+
 if (document.getElementById('map'))
   try {
-    displayMap('');
+    displayMap(locations);
   } catch (error) {
     console.error(error);
   }
 
 if (signUpForm) {
-  signUpForm.addEventListener('submit', (e) => {
+  signUpForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
-    const passwordInput = document.getElementById('password').value;
-    const passwordConfirmInput =
-      document.getElementById('passwordConfirm').value;
-    sendSignUpDetails(name, email, passwordInput, passwordConfirmInput);
+    const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('passwordConfirm').value;
+
+    if (password !== passwordConfirm)
+      return showAlert(
+        'error',
+        'Your password and password confirm do not match. Please try again.',
+      );
+
+    const btn = document.querySelector('.form__group .btn');
+    const elementToHide = document.querySelector('form');
+    prepareButtonUI(btn);
+    makeRequestWithButtonUI(
+      'signUp',
+      { name, email, password, passwordConfirm },
+      btn,
+    ).then((result) =>
+      result === true ? hideElAndDisplayMessage(elementToHide) : '',
+    );
   });
 }
 
 if (activationBtn) {
   const token = window.location.search.split('=')[1];
 
-  activationBtn.addEventListener('click', () => sendToken(token));
+  activationBtn.addEventListener('click', async function () {
+    const btn = this;
+
+    prepareButtonUI(btn);
+    makeRequestWithButtonUI('activation', { token }, btn).then((result) =>
+      result === true ? hideElAndDisplayMessage(btn) : '',
+    );
+  });
 }
 
 if (resetPasswordInitForm) {
-  resetPasswordInitForm.addEventListener('submit', (e) => {
+  resetPasswordInitForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('email').value;
-
-    sendEmailAddress(email);
+    const btn = document.querySelector('.form__group .btn');
+    const elementToHide = document.querySelector('form');
+    prepareButtonUI(btn);
+    makeRequestWithButtonUI('resetInit', { email }, btn).then((result) =>
+      result === true ? hideElAndDisplayMessage(elementToHide) : '',
+    );
   });
 }
 
@@ -142,51 +161,40 @@ if (resetPasswordActionForm) {
   const token = window.location.search.split('=')[1];
   console.log(token);
 
-  resetPasswordActionForm.addEventListener('submit', (e) => {
+  resetPasswordActionForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const passwordInput = document.getElementById('password').value;
     const passwordConfirmInput =
       document.getElementById('passwordConfirm').value;
 
-    sendResetPasswords(passwordInput, passwordConfirmInput, token);
+    const btn = document.querySelector('.form__group .btn');
+    const elementToHide = document.querySelector('form');
+    prepareButtonUI(btn);
+    makeRequestWithButtonUI(
+      'resetAction',
+      { passwordInput, passwordConfirmInput, token },
+      btn,
+    ).then((result) =>
+      result === true ? hideElAndDisplayMessage(elementToHide) : '',
+    );
   });
 }
 
 if (loginForm)
-  loginForm.addEventListener('submit', (e) => {
+  loginForm.addEventListener('submit', async function (e) {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    login(email, password);
+    const btn = document.getElementById('login-btn');
+    prepareButtonUI(btn);
+    makeRequestWithButtonUI('login', { email, password }, btn);
   });
 
 if (logOutBtn) logOutBtn.addEventListener('click', logout);
 
 themeBtn.addEventListener('click', toggleDarkMode);
 
-let id;
-
-if (submitBtn) {
-  submitBtn.addEventListener('click', () => {
-    for (let i = 0; i < checkboxes.length; i++) {
-      if (checkboxes[i].checked) {
-        const idStr = document
-          .querySelector(`.user-li--${i}`)
-          .textContent.split('/')[1];
-
-        id = idStr;
-      }
-    }
-  });
-}
-
-if (viewDbxBtn) {
-  viewDbxBtn.addEventListener('click', () => {
-    viewShipmentLogs(id);
-  });
-}
-
-if (window.location.pathname.includes('ops-data')) {
+if (window.location.pathname === '/ops-data') {
   if (!document.querySelector('.error__msg'))
     document.querySelectorAll('.container').forEach((element) => {
       element.style.margin = '1rem';
@@ -228,6 +236,8 @@ if (window.location.pathname.includes('ops-data')) {
           .setAttribute('disabled', true);
 
       allForms[count].classList.remove('hidden');
+
+      window.location.assign('#form-top');
     });
 
   document.querySelector('.previous-shipment').setAttribute('disabled', true);
@@ -251,68 +261,107 @@ if (window.location.pathname.includes('ops-data')) {
       }
 
       allForms[count].classList.remove('hidden');
+
+      window.location.assign('#form-top');
     });
 
-  submitDataForm.addEventListener('submit', (e) => {
+  const allSubmitButtons = document.querySelectorAll(
+    '.form__group .btn.submit',
+  );
+
+  submitDataForm.addEventListener('submit', async function (e) {
     e.preventDefault();
+    const btn = allSubmitButtons[count];
+    prepareButtonUI(btn);
     const object = {};
     object.shipment_file_id = document.getElementById('shipment_file_id').value;
     object.users = document.getElementById('users').value;
     object.CustomerId = document.getElementById('CustomerId').value;
-
-    submit(object, 'master');
+    makeRequestWithButtonUI('submit', { object, tableName: 'master' }, btn);
   });
 
-  submitShipperForm.addEventListener('submit', (e) => {
+  submitShipperForm.addEventListener('submit', async function (e) {
     e.preventDefault();
     const shipperObj = setObject(
       metaArray.find((el) => el.name === 'Shippers').array,
     );
-    submit(shipperObj, 'shippers');
+    const btn = allSubmitButtons[count];
+    prepareButtonUI(btn);
+    makeRequestWithButtonUI(
+      'submit',
+      { object: shipperObj, tableName: 'shippers' },
+      btn,
+    );
   });
 
-  submitFinancialsForm.addEventListener('submit', (e) => {
+  submitFinancialsForm.addEventListener('submit', async function (e) {
     e.preventDefault();
     const financialsObj = setObject(
       metaArray.find((el) => el.name === 'Financials').array,
     );
-    submit(financialsObj, 'financials');
+    const btn = allSubmitButtons[count];
+    prepareButtonUI(btn);
+    makeRequestWithButtonUI(
+      'submit',
+      { object: financialsObj, tableName: 'financials' },
+      btn,
+    );
   });
 
-  submitCustomsForm.addEventListener('submit', (e) => {
+  submitCustomsForm.addEventListener('submit', async function (e) {
     e.preventDefault();
     const customsObj = setObject(
       metaArray.find((el) => el.name === 'Customs').array,
     );
-    submit(customsObj, 'customs');
+    const btn = allSubmitButtons[count];
+    prepareButtonUI(btn);
+    makeRequestWithButtonUI(
+      'submit',
+      { object: customsObj, tableName: 'customs' },
+      btn,
+    );
   });
 
-  submitDetailsForm.addEventListener('submit', (e) => {
+  submitDetailsForm.addEventListener('submit', async function (e) {
     e.preventDefault();
     const detailsObj = setObject(
       metaArray.find((el) => el.name === 'Shipment-details').array,
     );
-    submit(detailsObj, 'shipment-details');
+    const btn = allSubmitButtons[count];
+    prepareButtonUI(btn);
+    makeRequestWithButtonUI(
+      'submit',
+      { object: detailsObj, tableName: 'shipment-details' },
+      btn,
+    );
   });
 
-  submitConveyanceForm.addEventListener('submit', (e) => {
+  submitConveyanceForm.addEventListener('submit', async function (e) {
     e.preventDefault();
     const conveyanceObj = setObject(
       metaArray.find((el) => el.name === 'Conveyance').array,
     );
-    submit(conveyanceObj, 'conveyance');
+    const btn = allSubmitButtons[count];
+    prepareButtonUI(btn);
+    makeRequestWithButtonUI(
+      'submit',
+      { object: conveyanceObj, tableName: 'conveyance' },
+      btn,
+    );
   });
 
-  timelineForm.addEventListener('submit', (e) => {
+  timelineForm.addEventListener('submit', async function (e) {
     e.preventDefault();
     const object = {};
     object.timelineMasterId = document.getElementById('timelineMasterId').value;
-    submit(object, 'timeline');
+    const btn = allSubmitButtons[count];
+    prepareButtonUI(btn);
+    makeRequestWithButtonUI('submit', { object, tableName: 'timeline' }, btn);
   });
 
-  customersForm.addEventListener('submit', (e) => {
+  customersForm.addEventListener('submit', async function (e) {
     e.preventDefault();
-    let object = {};
+    const object = {};
     for (const key of metaArray.find((el) => el.name === 'Customers').array) {
       object[key] = null;
     }
@@ -323,11 +372,12 @@ if (window.location.pathname.includes('ops-data')) {
       let key = iterator(object, el[0]);
       object[key] = node.value;
     });
-
-    submit(object, 'customers');
+    const btn = allSubmitButtons[count];
+    prepareButtonUI(btn);
+    makeRequestWithButtonUI('submit', { object, tableName: 'customers' }, btn);
   });
 
-  consigneesForm.addEventListener('submit', (e) => {
+  consigneesForm.addEventListener('submit', async function (e) {
     e.preventDefault();
     let object = {};
     for (const key of metaArray.find((el) => el.name === 'Consignees').array) {
@@ -340,11 +390,13 @@ if (window.location.pathname.includes('ops-data')) {
       let key = iterator(object, el[0]);
       object[key] = node.value;
     });
-
-    submit(object, 'consignees');
+    const btn = allSubmitButtons[count];
+    prepareButtonUI(btn);
+    makeRequestWithButtonUI('submit', { object, tableName: 'consignees' }, btn);
   });
 
   let isHidden = true;
+
   if (showCustomerFormBtn) {
     const lastContainerElement = Array.from(
       document.querySelectorAll('.container'),
@@ -360,85 +412,7 @@ if (window.location.pathname.includes('ops-data')) {
       isHidden = isHidden ? false : true;
     });
   }
-}
 
-const milestoneBool = document.querySelectorAll('td');
-
-if (milestoneBool)
-  milestoneBool.forEach((el) => {
-    if (el.textContent === 'true') el.classList.add('truthy');
-  });
-
-if (document.querySelector('.timeline-select'))
-  document
-    .querySelector('.timeline-id__submit')
-    .addEventListener('click', () => {
-      // Preparing arguments for update function
-      const timelineId = document.querySelector('.timeline-id').value;
-      let object = {};
-      for (const x of metaArray.find((el) => el.name === 'Timelines').array) {
-        object[x] = null;
-      }
-
-      // 1) Specify which timeline field the user is selecting
-      let input = document.querySelector('.timeline-select').value;
-
-      // 2) Convert the string using string and array methods
-      input = input.replace('/', ' ');
-      let arr = input.split(' ');
-      for (let i = 0; i < arr.length; i++) {
-        arr[i] = arr[i].toLowerCase();
-      }
-      if (arr.length >= 3) arr.pop();
-      let arrCopy = [...arr];
-      arr = arr.join('_');
-
-      // 3) Loop through the keys array to match input to a key
-      let key;
-      metaArray
-        .find((el) => el.name === 'Timelines')
-        .array.forEach((el) => {
-          if (arr.includes(el)) {
-            key = el;
-          }
-        });
-
-      object[key] = 'true';
-
-      // Get date input and add it to the object
-      const dateInput = document.querySelector('.timeline-date').value;
-
-      for (let i = 0; i <= 3; i++) {
-        while (arrCopy.length >= 3) {
-          arrCopy.pop();
-        }
-      }
-      arrCopy.push('date');
-      arrCopy = arrCopy.join('_');
-
-      object[arrCopy] = dateInput;
-      // Call the update function with the ID and object as arguments
-      updateTimeline(timelineId, object);
-    });
-
-// if (dbUpdateBtn1)
-//   dbUpdateBtn1.addEventListener('click', () => {
-//     const selection = dbUpdateSelect1.value;
-//     // make axios request
-//     getData(
-//       `${process.env.API_CALL_URL}/api/v1/data/customers/?userId=${selection}`,
-//     )
-//       .then((data) => console.log(data))
-//       .catch((err) => console.error(err));
-//     // use the returned response data to fill in the fields
-
-//     const id = dbUpdateId.value;
-
-//     //getTable(selection, id);
-//   });
-
-//TODO:
-if (document.querySelector('.selector-box.customer1 button'))
   document
     .querySelector('.selector-box.customer1 button')
     .addEventListener('click', () => {
@@ -451,21 +425,19 @@ if (document.querySelector('.selector-box.customer1 button'))
         `${process.env.API_CALL_URL}/api/v1/data/customers/?companyName=${selection}`,
       )
         .then((data) => {
-          if (!data.query)
-            showAlert(
+          if (!data.query) {
+            return showAlert(
               'error',
               'There is no customer entry for that user (not yet)!',
             );
-
+          }
           // use the returned response data to fill in the fields
           document.getElementById('users').value = data.query.userId;
           document.getElementById('CustomerId').value = data.query.id;
-          console.log(data);
         })
         .catch((err) => console.error(err));
     });
 
-if (document.querySelector('.selector-box.master button'))
   document
     .querySelector('.selector-box.master button')
     .addEventListener('click', function () {
@@ -473,18 +445,17 @@ if (document.querySelector('.selector-box.master button'))
         .querySelector('.selector-box.master select')
         .value.split(' ')[2];
 
-      const allForms = this.parentElement.parentElement.children;
+      const allForms = Array.from(this.parentElement.parentElement.children);
 
-      const currentForm = Array.from(allForms).findLast(
+      const currentForm = allForms.findLast(
         (el) => !Array.from(el.classList).some((el) => el === 'hidden'),
       );
 
-      currentForm.children[2].children[1].value = selection.slice(0, -1);
-      // if (!classlistArray.some((el) => el === 'hidden'))
-      //   document.getElementById('consigneesMasterId').value = selection;
+      if (currentForm === allForms[allForms.length - 1])
+        currentForm.children[2].children[1].value = selection.slice(0, -1);
+      else currentForm.children[1].children[1].value = selection.slice(0, -1);
     });
 
-if (document.querySelector('.selector-box.customer2 button'))
   document
     .querySelector('.selector-box.customer2 button')
     .addEventListener('click', () => {
@@ -503,51 +474,111 @@ if (document.querySelector('.selector-box.customer2 button'))
         })
         .catch((err) => console.error('Oops, there was an error', err));
     });
+}
 
-// if (fieldAddBtn)
-//   fieldAddBtn.addEventListener('click', (e) => {
-//     e.preventDefault();
-//     const selection = fieldSelector.value;
-//     //console.log(selection);
-//     const markup = `<div class="form__group">
-//   <label class="form__label" for="${selection}">
-//     ${selection.toUpperCase()}
-//   </label>
-//   <input class="form__input" id="${selection}">
-// </div>`;
-//     document
-//       .querySelector('.update-form')
-//       .insertAdjacentHTML('afterbegin', markup);
-//   });
+const milestoneBool = document.querySelectorAll('td');
 
-// if (updateForm)
-//   updateForm.addEventListener('submit', (e) => {
-//     e.preventDefault();
-//     const tableSelection = dbUpdateSelect1.value;
-//     const object = {};
+if (milestoneBool)
+  milestoneBool.forEach((el) => {
+    if (el.textContent === 'true') el.classList.add('truthy');
+  });
 
-//     metaArray.forEach((obj) => {
-//       if (tableSelection === obj.name) {
-//         //console.log(obj.name, obj.array);
-//         obj.array.forEach((el) => {
-//           const node = document.getElementById(el);
-//           if (!node) return;
+if (document.querySelector('.timeline-select'))
+  document
+    .querySelector('.timeline-id__submit')
+    .addEventListener('click', () => {
+      // Preparing arguments for update function
+      const timelineId = document.querySelector('.timeline-id').value;
+      let object = {};
+      // for (const x of metaArray.find((el) => el.name === 'Timelines').array) {
+      //   object[x] = null;
+      // }
+      // 1) Specify which timeline field the user is selecting
+      let input = document.querySelector('.timeline-select').value;
 
-//           let key = el;
-//           object[key] = node.value;
-//         });
-//       }
-//     });
-//     const route = tableSelection.toLowerCase();
-//     const id = dbUpdateId.value;
-//     //console.log(object);
-//     update(object, route, id);
-//   });
+      // 2) Convert the string using string and array methods
+      input = input.replace('/', ' ');
+      let arrayOfStrings = input.split(' ');
+      console.log('1)', arrayOfStrings);
+
+      for (let i = 0; i < arrayOfStrings.length; i++)
+        arrayOfStrings[i] = arrayOfStrings[i].toLowerCase();
+
+      if (arrayOfStrings.length >= 3) arrayOfStrings.pop();
+
+      let arrayOfStringsCopy = [...arrayOfStrings];
+      console.log('2) ', arrayOfStringsCopy);
+
+      arrayOfStrings = arrayOfStrings.join('_');
+      console.log('3) ', arrayOfStrings);
+
+      // 3) Loop through the keys array to match input to a key
+      let key;
+
+      metaArray
+        .find((el) => el.name === 'Timelines')
+        .array.forEach((el) => (arrayOfStrings.includes(el) ? (key = el) : ''));
+      // if (arr.includes(el))
+      //   key = el );
+
+      // object[key] = 'true';
+      object[key] = true;
+
+      // Get date input and add it to the object
+      const dateInput = document.querySelector('.timeline-date').value;
+
+      for (let i = 0; i <= 3; i++)
+        while (arrayOfStringsCopy.length >= 3) arrayOfStringsCopy.pop();
+
+      arrayOfStringsCopy.push('date');
+      arrayOfStringsCopy = arrayOfStringsCopy.join('_');
+
+      object[arrayOfStringsCopy] = dateInput;
+
+      console.log('Data object before function call: ', object);
+      // Call the update function with the ID and object as arguments
+      updateTimeline(timelineId, object);
+    });
+
+if (window.location.pathname === '/me') {
+  document
+    .querySelector('.change-password-form')
+    .addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = {};
+      data.passwordCurrent = document.getElementById('password-current').value;
+      data.password = document.getElementById('password').value;
+      data.passwordConfirm = document.getElementById('password-confirm').value;
+      if (data.password !== data.passwordConfirm)
+        return showAlert(
+          'error',
+          'Your password and password confirm do not match. Please try again.',
+        );
+      const btn = document.querySelector('.btn');
+      prepareButtonUI(btn);
+      makeRequestWithButtonUI('changePassword', { data }, btn);
+    });
+}
+
+if (
+  window.location.pathname === '/dashboard' ||
+  window.location.pathname === '/my-files' ||
+  window.location.pathname === '/me'
+) {
+  document.querySelectorAll('.container').forEach((container) => {
+    container.style.marginTop = '10vh auto';
+    //container.style.marginLeft = '1rem';
+  });
+  document.querySelectorAll('.shipment-box').forEach((box) => {
+    box.style.display = 'grid';
+    box.style.gridTemplateColumns = '1fr 1fr';
+    box.style.border = '1px solid #bbb';
+  });
+}
 
 let filePaginationCount = 0;
 
-// if (document.querySelector('.file__container')) {
-if (window.location.pathname.includes('ops-dashboard')) {
+if (window.location.pathname === '/ops-dashboard') {
   let fileContainerElements = document.querySelectorAll('.file__container');
   let fileTableElements = document.querySelectorAll('.shipment-box-detail');
 
@@ -558,7 +589,7 @@ if (window.location.pathname.includes('ops-dashboard')) {
   hideElementsExceptFirst(fileContainerElements);
 
   hideElementsExceptFirst(fileTableElements);
-  //FIXME:
+
   document.querySelectorAll('.table-nav-box button').forEach((button) => {
     button.addEventListener('click', function () {
       attachBtnListeners(this);
@@ -652,14 +683,7 @@ if (window.location.pathname.includes('ops-dashboard')) {
     //.getElementById('edit-file-link')
     .querySelectorAll('#edit-file-link')
     .forEach((button) => {
-      //FIXME:
       button.addEventListener('click', function () {
-        /*
-        const currentTable =
-          this.parentElement.children[5].children[0].childNodes[0].data;
-
-        const id = document.querySelector('table td').textContent;
-        */
         let currentTable;
 
         for (const element of this.parentElement.children[5].children) {
@@ -682,18 +706,11 @@ if (window.location.pathname.includes('ops-dashboard')) {
               .textContent
           }`,
         );
-
-        // window.location.assign(
-        //   `/ops-update/?table=${this.parentElement.children[5].children[0].childNodes[0].data.trim()}&?id=${
-        //     this.parentElement.children[5].children[0].children[0].children[1]
-        //       .children[0].children[1].textContent
-        //   }`,
-        // );
       });
     });
 }
 
-if (window.location.pathname.includes('ops-update')) {
+if (window.location.pathname === '/ops-update/') {
   const table = window.location.search.split('&')[0].slice(7);
   const id = window.location.search.split('&')[1].slice(4);
 
@@ -704,12 +721,36 @@ if (window.location.pathname.includes('ops-update')) {
     'center';
   document.querySelector('.dashboard__container').style.alignItems = 'center';
 
+  let originalFieldData;
+
   getAndRenderTable(table, id)
     .then(() => {
       document.querySelectorAll('table button').forEach((button) => {
-        button.addEventListener('click', function () {
-          console.log(this.parentElement.parentElement.children);
+        button.style.margin = '0.15rem';
 
+        button.addEventListener('click', function () {
+          // Insert cancel button
+          this.parentElement.parentElement.children[2].insertAdjacentHTML(
+            'afterbegin',
+            "<button class='file-editor-btn cancel-btn' type='button'>Cancel</button>",
+          );
+          document.querySelector('.cancel-btn').style.margin = '0.15rem';
+
+          // add event listener to new button
+          document
+            .querySelector('.cancel-btn')
+            .addEventListener('click', function () {
+              document.querySelector('.form__input').remove();
+              this.parentElement.parentElement.children[1].textContent =
+                originalFieldData;
+              this.remove();
+            });
+
+          // Save text content of field in case of cancellation
+          originalFieldData =
+            this.parentElement.parentElement.children[1].textContent;
+
+          // Empty text content of field and replace with input element
           this.parentElement.parentElement.children[1].textContent = '';
 
           this.parentElement.parentElement.children[1].insertAdjacentHTML(
@@ -725,17 +766,18 @@ if (window.location.pathname.includes('ops-update')) {
     })
     .catch((err) => console.error('Oh noooo,', err));
 
-  document.querySelector('.update-btn').addEventListener('click', () => {
-    const updateObject = {};
+  document
+    .querySelector('.update-btn')
+    .addEventListener('click', async function () {
+      const updateObject = {};
 
-    document.querySelectorAll('.form__input').forEach((input) => {
-      updateObject[input.parentElement.parentElement.children[0].innerText] =
-        input.value;
+      document.querySelectorAll('.form__input').forEach((input) => {
+        updateObject[input.parentElement.parentElement.children[0].innerText] =
+          input.value;
+      });
+
+      const btn = this;
+      prepareButtonUI(btn);
+      makeRequestWithButtonUI('update', { updateObject, table, id }, btn);
     });
-
-    console.log(updateObject);
-    console.log(table);
-
-    update(updateObject, table, id);
-  });
 }

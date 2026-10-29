@@ -25,4 +25,7 @@ form.form.data-form__details
     +formInput('codeDrg',  'text','DRG code', 'e.g. 123456')
     p Fields marked with a '*' are required
     .form__group 
-        input.btn.submit(type='submit')
+        button.btn.submit(type='submit')
+            span.btn__text(id='btn__text') Submit
+            svg.btn__check(viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true")
+                    polyline(points="16 5 8 14 4 10" pathLength="24")

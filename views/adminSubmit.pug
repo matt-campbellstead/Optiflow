@@ -14,7 +14,7 @@ block content
         h1.heading-primary  Create new shipment files
         h2.heading-secondary Add new tables for each new file
    
-    .data-submit__container
+    .data-submit__container(id='form-top')
         div
             .instruction-box
                 | NOTE: If you have not yet created a new entry for the customer, 
@@ -39,8 +39,6 @@ block content
 
             form.form.data-form__master
                 h2.heading-secondary Master table
-                
-                
                 .form__group
                     label.form__label(for="shipment_file_id") Shipment file no.
                     input#shipment_file_id.form__input(type='text', placeholder='1234567ABC', required)
@@ -52,7 +50,10 @@ block content
                     input#CustomerId.form__input(type='text', placeholder='e.g. "1"', readonly, required)
                 
                 .form__group
-                    input.btn.submit(type="submit")
+                    button.btn.submit(type="submit")
+                        span.btn__text(id='btn__text') Submit
+                        svg.btn__check(viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true")
+                            polyline(points="16 5 8 14 4 10" pathLength="24")
             include _formConsignees
             
             include _formShipper
@@ -74,7 +75,10 @@ block content
                     label.form__label(for="timelineMasterId") Master ID number
                     input.form__input(id="timelineMasterId", type="number", readonly)
                 .form__group 
-                    input.btn.submit(type='submit')
+                    button.btn.submit(type='submit')
+                        span.btn__text(id='btn__text') Submit
+                        svg.btn__check(viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true")
+                            polyline(points="16 5 8 14 4 10" pathLength="24")
 
         .container
             h2.heading-secondary Your data entry: 

@@ -1,5 +1,6 @@
 'use strict';
-const { sequelize } = require('../sequelize/db');
+
+const { sequelize } = require('../../../sequelize/db');
 const { Model, DataTypes } = require('sequelize');
 const Shippers = require('./shippersModel');
 const Timeline = require('./timelineModel');

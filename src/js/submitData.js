@@ -25,7 +25,6 @@ export const submit = async (dataObj, type) => {
     });
 
     if (res.data.status === 'success') {
-      console.log(res.data.data);
       showAlert('success', 'Data submitted successfully');
 
       let html = '<table>';
@@ -45,10 +44,13 @@ export const submit = async (dataObj, type) => {
       document
         .querySelector('.container .heading-secondary')
         .insertAdjacentHTML('afterend', html);
+
+      return true;
     }
   } catch (err) {
     console.error(err);
-    showAlert('error', 'something went wrong');
+    showAlert('error', err.response.data.message);
+    return false;
   }
 };
 
@@ -70,9 +72,11 @@ export const update = async (dataObj, table, id) => {
 
     if (res.data.status === 'success') {
       showAlert('success', 'Data submitted successfully');
+      return true;
     }
   } catch (err) {
     console.error('Oh noooo,', err);
     showAlert('error', err.response.data.message);
+    return false;
   }
 };

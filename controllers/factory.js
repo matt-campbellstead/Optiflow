@@ -2,7 +2,7 @@
 const asyncHandler = require('../utils/asyncHandler');
 const AppError = require('../utils/AppError');
 
-exports.getData = (Model) =>
+const getData = (Model) =>
   asyncHandler(async (req, res, next) => {
     const document = await Model.findAll();
     res.status(200).json({
@@ -14,12 +14,9 @@ exports.getData = (Model) =>
     });
   });
 
-exports.createData = (Model) =>
+const createData = (Model) =>
   asyncHandler(async (req, res, next) => {
-    const document = await Model.create(
-      req.body,
-      //object?
-    );
+    const document = await Model.create(req.body);
 
     res.status(201).json({
       status: 'success',
@@ -30,7 +27,7 @@ exports.createData = (Model) =>
     });
   });
 
-exports.deleteData = (Model) =>
+const deleteData = (Model) =>
   asyncHandler(async (req, res, next) => {
     await Model.destroy({
       truncate: true,
@@ -42,13 +39,13 @@ exports.deleteData = (Model) =>
     });
   });
 
-exports.updateData = (Model) =>
+const updateData = (Model) =>
   asyncHandler(async (req, res, next) => {
-    const document = await Model.update(req.body, {
-      where: { id: req.params.id },
-    });
+    const document = await Model.findOne({ where: { id: req.params.id } });
+    await document.update(req.body);
+    await document.save();
 
-    if (document === null) {
+    if (document[0] === 0) {
       return next(new AppError('No document with that ID found.', 404));
     }
 
@@ -58,7 +55,7 @@ exports.updateData = (Model) =>
     });
   });
 
-exports.getSingle = (Model) =>
+const getSingle = (Model) =>
   asyncHandler(async (req, res, next) => {
     const document = await Model.findOne({
       where: { id: req.params.id },
@@ -74,4 +71,55 @@ exports.getSingle = (Model) =>
     });
   });
 
-exports.renderPageWithToken = (template, title) => (req, res) => {};
+const renderPageWithToken = (template, title) => (req, res) => {
+  const token = req.csrfToken();
+
+  res.status(200).render(template, {
+    title: title,
+    csrfToken: token,
+  });
+};
+
+const filterCrud = (array1, array2) => {
+  const crudOptions = [...array1];
+
+  const newArr = array2.filter((string) => {
+    return crudOptions.some((el) => el === string);
+  });
+  return newArr;
+};
+
+const wholeCrud = (Model, options) => {
+  const modelString = String(Model).split(' ')[1];
+  let crudArray = ['get', 'create', 'delete', 'update', 'getSingle'];
+
+  const crudObject = {};
+
+  if (options) crudArray = filterCrud(options, crudArray);
+
+  crudArray.forEach((type) => {
+    const dynamicKey = `${type}${modelString}`;
+
+    if (type === 'get') crudObject[dynamicKey] = getData(Model);
+
+    if (type === 'create') crudObject[dynamicKey] = createData(Model);
+
+    if (type === 'update') crudObject[dynamicKey] = updateData(Model);
+
+    if (type === 'delete') crudObject[dynamicKey] = deleteData(Model);
+
+    if (type === 'getSingle') crudObject[dynamicKey] = getSingle(Model);
+  });
+
+  return crudObject;
+};
+
+module.exports = {
+  getData,
+  createData,
+  deleteData,
+  updateData,
+  getSingle,
+  renderPageWithToken,
+  wholeCrud,
+};

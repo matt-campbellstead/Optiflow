@@ -36,6 +36,7 @@ const deepSanitize = function (val) {
       val[key] = deepSanitize(val[key]);
     });
   }
+  return val;
 };
 
 module.exports = deepSanitize;

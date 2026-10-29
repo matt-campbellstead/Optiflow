@@ -30,6 +30,7 @@ export const updateTimeline = async (docId, data) => {
   const token = getCsrf();
   const id = docId;
   const newData = { ...data };
+  console.log('copy of data object inside function call: ', newData);
   //console.log(id, newData);
   try {
     const res = await axios({
@@ -68,17 +69,6 @@ export const getAndRenderTable = async (name, id) => {
       document
         .querySelectorAll('.dashboard__container')[1]
         .insertAdjacentHTML('afterbegin', tableHtml);
-      /*
-      const markupShipment = `<div class="shipment-box-detail"> <span class="shipment-box_label"> ${JSON.stringify(res.data.data.document, null, 4).replaceAll('"', '')}</span></div>`;
-      Object.keys(res.data.data.document).forEach((key) => {
-        document
-          .querySelector('.field-select')
-          .insertAdjacentHTML('afterbegin', `<option>${key}</option>`);
-      });
-      document
-        .querySelector('.shipment-box')
-        .insertAdjacentHTML('afterbegin', markupShipment);
-        */
     }
   } catch (err) {
     console.log(err);
@@ -143,7 +133,7 @@ export const filterData = async (queryString) => {
       res.data.data.masterQuery.forEach((query) =>
         document
           .querySelector('.file-nav-box')
-          .insertAdjacentHTML('afterend', renderFileHtml(query)),
+          .insertAdjacentHTML('afterend', query),
       );
     }
   } catch (err) {

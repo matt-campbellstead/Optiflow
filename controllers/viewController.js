@@ -1,19 +1,36 @@
 'use strict';
 const asyncHandler = require('../utils/asyncHandler');
-const Master = require('../models/masterModel');
-const Shippers = require('../models/shippersModel');
-const Timeline = require('../models/timelineModel');
-const Details = require('../models/shipDetailModel');
-const User = require('../models/mongooseModel');
 const AppError = require('../utils/AppError');
-const Conveyance = require('../models/conveyanceModel');
-const Financials = require('../models/financialDetailModel');
-const Customs = require('../models/customsModel');
-const Consignees = require('../models/consigneesModel');
-const Customers = require('../models/customerModel');
+const factory = require('./factory');
+const User = require('../models/mongoose/mongooseModel');
+const Master = require('../models/sequelize/shipmentModels/masterModel');
+const Shippers = require('../models/sequelize/shipmentModels/shippersModel');
+const Timeline = require('../models/sequelize/shipmentModels/timelineModel');
+const Details = require('../models/sequelize/shipmentModels/shipDetailModel');
+const Conveyance = require('../models/sequelize/shipmentModels/conveyanceModel');
+const Financials = require('../models/sequelize/shipmentModels/financialDetailModel');
+const Customs = require('../models/sequelize/shipmentModels/customsModel');
+const Consignees = require('../models/sequelize/shipmentModels/consigneesModel');
+const Customers = require('../models/sequelize/shipmentModels/customerModel');
+const FreightApiMaster = require('../models/sequelize/freightApiModels/freightApiMasterModel');
+const FreightApiFuelPrices = require('../models/sequelize/freightApiModels/freightApiFuelPricesModel');
+const FreightApiPortCongestion = require('../models/sequelize/freightApiModels/freightApiPortCongestionModel');
+const FreightApiDisruptions = require('../models/sequelize/freightApiModels/freightApiDisruptionsModel');
 
-exports.homePage = (req, res) => {
+exports.homePage = asyncHandler(async (req, res, next) => {
   const token = req.csrfToken();
+
+  const { count, rows } = await FreightApiMaster.findAndCountAll();
+
+  const freightApiDocument = await FreightApiMaster.findOne({
+    where: { id: count },
+    include: [
+      { model: FreightApiFuelPrices },
+      { model: FreightApiPortCongestion },
+      { model: FreightApiDisruptions },
+    ],
+  });
+
   res
     .status(200)
     .set(
@@ -23,25 +40,14 @@ exports.homePage = (req, res) => {
     .render('home', {
       title: 'Home page',
       csrfToken: token,
+      data: freightApiDocument,
     });
-};
+});
 
-exports.logInUser = (req, res) => {
-  const token = req.csrfToken();
-  res
-    .status(200)
-    // .set(
-    //   //   'Content-Security-Policy',
-    //   //   "default-src 'self' https://cdn.jsdelivr.net ; base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src https://cdn.jsdelivr.net 'self' blob: ;script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests;",
-    //   //
-    //   'x-csrf-token',
-    //   token,
-    // )
-    .render('login', {
-      title: 'Log in to your account',
-      csrfToken: token,
-    });
-};
+exports.logInUser = factory.renderPageWithToken(
+  'login',
+  'Log in to your account',
+);
 
 exports.displayShipment = asyncHandler(async (req, res, next) => {
   const token = req.csrfToken();
@@ -49,14 +55,19 @@ exports.displayShipment = asyncHandler(async (req, res, next) => {
 
   const shipments = await Master.findAll({
     where: { users: userId },
-    include: [{ model: Timeline }, { model: Details }],
+    include: [
+      { model: Timeline },
+      { model: Details },
+      { model: Shippers },
+      { model: Financials },
+    ],
   });
   if (!shipments) {
     return next(
       new AppError('There is no data matching that description.', 404),
     );
   }
-  //console.log(shipment);
+
   res.status(200).render('dashboard', {
     title: 'Your dashboard',
     shipments,
@@ -94,26 +105,14 @@ exports.displayAllShipments = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.opsFunctions = asyncHandler(async (req, res, next) => {
-  const token = req.csrfToken();
-  const allUsers = await User.find();
-
-  if (!allUsers) {
-    return next(new AppError('There are no users matching that request!', 404));
-  }
-
-  res.status(200).render('adminFunctions', {
-    title: 'Admin Functions',
-    allUsers,
-    csrfToken: token,
-  });
-});
-
 exports.submitData = asyncHandler(async (req, res, next) => {
   const token = req.csrfToken();
 
   const customers = await User.find({
-    $and: [{ name: { $ne: 'Barry' } }, { name: { $ne: 'Matt' } }],
+    $and: [
+      { name: { $ne: process.env.ADMIN_1 } },
+      { name: { $ne: process.env.ADMIN_2 } },
+    ],
   });
 
   const data = await Customers.findAll({
@@ -131,78 +130,47 @@ exports.submitData = asyncHandler(async (req, res, next) => {
   });
 });
 
-//TODO: make view controller factory function
-exports.updateShipment = (req, res) => {
+exports.myAccount = factory.renderPageWithToken(
+  'myAccount',
+  'My Account Settings',
+);
+
+exports.updateShipment = factory.renderPageWithToken(
+  'adminUpdate',
+  'Update data',
+);
+
+exports.activateAccount = factory.renderPageWithToken(
+  'activation',
+  'Account activation',
+);
+
+exports.resetPasswordInit = factory.renderPageWithToken(
+  'resetPasswordInit',
+  'Reset your password',
+);
+
+exports.resetPasswordAction = factory.renderPageWithToken(
+  'resetPasswordAction',
+  'Reset your password',
+);
+
+exports.signUp = factory.renderPageWithToken('signup', 'Create an account');
+
+exports.myFiles = asyncHandler(async (req, res, next) => {
   const token = req.csrfToken();
-  /*
-  const queryObject = {};
-  if (req.query.id) queryObject.id = req.query.id;
 
-  let query;
+  const userId = req.user.id;
 
-  switch (req.query.table) {
-    case 'Customer':
-      query = await Customers.findOne({ where: queryObject });
-      break;
-    case 'Shipment-Details':
-      query = await Details.findOne({ where: queryObject });
-      break;
-    case 'Shipper':
-      query = await Shippers.findOne({ where: queryObject });
-      break;
-    case 'Consignee':
-      query = Consignees.findOne({ where: queryObject });
-      break;
-    case 'Financial':
-      query = await Financials.findOne({ where: queryObject });
-      break;
-    case 'Conveyance':
-      query = await Conveyance.findOne({ where: queryObject });
-      break;
-    case 'Customs':
-      query = await Customs.findOne({ where: queryObject });
-      break;
-  }
+  const document = await Customers.findOne({ where: { userId } });
 
-  console.log(query);
-  */
+  //if (!document) return next(new AppError('No customer document found!', 404));
 
-  //console.log(req.params);
+  const data = document ? document.downloadLink : null;
 
-  res.status(200).render('adminUpdate', {
-    title: 'Update data',
+  res.status(200).render('myFiles', {
+    title: 'My file portal',
     csrfToken: token,
+    data,
   });
-};
-
-exports.activateAccount = (req, res) => {
-  const token = req.csrfToken();
-  res.status(200).render('activation', {
-    title: 'Account activation',
-    csrfToken: token,
-  });
-};
-
-exports.resetPasswordInit = (req, res) => {
-  const token = req.csrfToken();
-  res.status(200).render('resetPasswordInit', {
-    title: 'Reset your password',
-    csrfToken: token,
-  });
-};
-
-exports.resetPasswordAction = (req, res) => {
-  const token = req.csrfToken();
-  res.status(200).render('resetPasswordAction', {
-    title: 'Reset your password',
-    csrfToken: token,
-  });
-};
-
-exports.signUp = (req, res) => {
-  const token = req.csrfToken();
-  res.status(200).render('signup', {
-    title: 'Create an account',
-    csrfToken: token,
-  });
-};
+});

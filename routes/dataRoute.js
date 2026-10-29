@@ -4,7 +4,31 @@ const authController = require('../controllers/authController');
 
 const router = express.Router();
 
+router
+  .route('/freight-api/:key')
+  .get(
+    controller.writeApiMasterDoc,
+    controller.queryAndWriteFuelPrices,
+    controller.queryAndWritePortCongestion,
+    controller.queryAndWriteDisruptions,
+  );
+
 router.use(authController.protect);
+
+router
+  .route('/freight-api')
+  .get(controller.freightApiCrud.getFreightApiMaster)
+  .post(controller.freightApiCrud.createFreightApiMaster);
+
+router
+  .route('/freight-api/fuel-prices')
+  .get(controller.freightApiFuelPricesCrud.getFreightApiFuelPrices)
+  .post(controller.freightApiFuelPricesCrud.createFreightApiFuelPrices);
+
+router
+  .route('/freight-api/port-congestion')
+  .get(controller.freightApiPortCongestionCrud.getFreightApiPortCongestion)
+  .post(controller.freightApiPortCongestionCrud.createFreightApiPortCongestion);
 
 router
   .route('/')
@@ -82,6 +106,7 @@ router
     authController.restrictTo('admin'),
     controller.consigneesCrud.deleteConsignees,
   );
+
 router
   .route('/:id')
   .get(

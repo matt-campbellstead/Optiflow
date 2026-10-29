@@ -8,15 +8,23 @@ export const displayMap = (locations) => {
     scrollZoom: false,
     zoom: 2.72,
     center: [18.4232, -33.9258], // longitude/lng, latitude/ltd
-    // center: [-118.113491, 34.111745],
-    // zoom: 10,
-    // interactive: false
   });
 
-  new mapboxgl.Marker({ color: 'rgb(240, 152, 60)', anchor: 'bottom' })
-    .setLngLat([18.4232, -33.9258])
-    .addTo(map);
+  //  new mapboxgl.Marker({
+  //   color: 'rgb(240, 152, 60)',
+  //   anchor: 'bottom',
+  // })
+  //   .setLngLat([18.4232, -33.9258])
+  //   .addTo(map);
 
+  locations.forEach((location) =>
+    new mapboxgl.Marker({
+      color: 'rgb(240, 152, 60)',
+      anchor: 'bottom',
+    })
+      .setLngLat(location.coordinates)
+      .addTo(map),
+  );
   map.addControl(new mapboxgl.NavigationControl());
 
   map.scrollZoom.disable();

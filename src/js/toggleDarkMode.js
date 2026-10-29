@@ -83,7 +83,9 @@ export const toggleDarkMode = () => {
 
   if (document.body.classList.contains('dark-mode-bg')) {
     localStorage.setItem('theme', 'dark-mode');
+    document.querySelector('.footer-text img').src = '/img/OFSiconDark.png';
   } else {
     localStorage.setItem('theme', '');
+    document.querySelector('.footer-text img').src = '/img/OFSiconDark.png';
   }
 };

@@ -17,7 +17,8 @@ router.get('/sign-up', controller.signUp);
 router.use(authController.protect);
 
 router.get('/ops-dashboard', controller.displayAllShipments);
-router.get('/ops-functions', controller.opsFunctions);
+router.get('/me', controller.myAccount);
+router.get('/my-files', controller.myFiles);
 router.get('/ops-data', controller.submitData);
 
 router.route('/ops-update/{*all}').get(controller.updateShipment);

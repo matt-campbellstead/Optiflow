@@ -34,6 +34,8 @@ const handleSqlzeValidationErr = (err) => {
 
 const handleCsrfTokenError = () => new AppError('CSRF validation error', 403);
 
+const handleMulterError = (err) => new AppError(`${err.message}`, 403);
+
 const sendDevErr = (err, req, res) => {
   // API
   if (req.originalUrl.startsWith('/api')) {
@@ -61,9 +63,11 @@ const sendProdErr = (err, req, res) => {
         message: err.message,
       });
     } else {
-      logger.error('ERROR👺', err);
-      logger.error(err.statusCode);
-      logger.error(err.stack);
+      console.error('ERROR👺', err);
+      console.error(err.statusCode);
+      console.error(err.stack);
+
+      console.error(err);
 
       res.status(500).json({
         status: 'error',
@@ -78,7 +82,7 @@ const sendProdErr = (err, req, res) => {
         msg: err.message,
       });
     } else {
-      logger.error('ERROR👺', err);
+      console.error('ERROR👺', err);
 
       res.status(err.statusCode).render('error', {
         title: 'Something went wrong!',
@@ -105,6 +109,7 @@ module.exports = (err, req, res, next) => {
     if (error.name === 'SequelizeValidationError')
       error = handleSqlzeValidationErr(error);
     if (error.name === 'invalidCsrfTokenError') error = handleCsrfTokenError();
+    if (error.name === 'MulterError') error = handleMulterError(error);
 
     sendProdErr(error, req, res);
   }

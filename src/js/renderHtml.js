@@ -58,6 +58,10 @@ const renderCustomerHtml = (data) => {
             <td>${data.country}</td>
           </tr>
           <tr>
+            <th>Download Link:</th>
+            <td>${data.downloadLink}</td>
+          </tr>
+          <tr>
             <th>Created:</th>
             <td>${data.createdAt.toLocaleString('en-ZA', timeObject)}</td>
           </tr>
@@ -345,7 +349,7 @@ export const renderUpdateTableHtml = (data) => {
     html += `<tr>
             <th>${key}</th>
             <td>${val}</td>
-            <td><button type='button'>Edit</button></td>
+            <td><button class='file-editor-btn' type='button'>Edit</button></td>
             </tr>`;
   }
 
