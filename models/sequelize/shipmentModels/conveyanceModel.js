@@ -1,6 +1,7 @@
 'use strict';
 const { sequelize } = require('../../../sequelize/db');
 const { Model, DataTypes } = require('sequelize');
+const AppError = require('../../../utils/AppError');
 
 class Conveyance extends Model {}
 
@@ -162,6 +163,21 @@ Conveyance.init(
     timestamps: true,
   },
 );
+
+Conveyance.beforeCreate(async (conveyance, options) => {
+  // FK = Foreign Key
+  const docWithSameFK = await Conveyance.findOne({
+    where: { conveyanceMasterId: conveyance.conveyanceMasterId },
+  });
+
+  if (docWithSameFK)
+    return Promise.reject(
+      new AppError(
+        "A document with the same value for 'MasterId' already exists.",
+        400,
+      ),
+    );
+});
 
 Conveyance.sync();
 

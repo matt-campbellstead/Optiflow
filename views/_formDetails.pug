@@ -12,7 +12,10 @@ form.form.data-form__details
     +formInput('incoterms', 'text', 'Incoterms', 'e.g. EXW')
     +formInput('mode', 'text', 'Mode', 'e.g. AIR')
     +formInput('routing', 'text', 'Routing', 'e.g. Import')
-    +formInput('goodsDescriptions', 'text','Goods description', 'e.g. Some goods')
+    //-+formInput('goodsDescriptions', 'text','Goods description', 'e.g. Some goods')
+    .form__group
+        label.form__label(for='goodsDescriptions') Goods description(message)
+        textarea.form__input.large-text(type='text', id='goodsDescriptions', placeholder='Message here...', rows='4', cols='80')
     +formInput('packagingType', 'text', 'Packaging type', 'e.g. Cartons')
     +formInput('containerQty', 'number', 'Shipping containers quantity', 'e.g. 10')
     +formInput('containerSpecs', 'text', 'Container specification', 'e.g. 40" GP')
@@ -20,7 +23,10 @@ form.form.data-form__details
     +formInput('grossWeightKg', 'text','Gross weight in kilograms', '...kg' )
     +formInput('netWeightKg', 'text', 'Cargo net weight in kilograms', '...kg')
     +formInput('cbm', 'text', 'Cargo CBM', '...CBM')
-    +formInput('handlingRequirements', 'text', 'Handling requirements (message)', 'Message here...')
+    //-+formInput('handlingRequirements', 'text', 'Handling requirements (message)', 'Message here...')
+    .form__group
+        label.form__label(for='handlingRequirements') Handling requirements(message)
+        textarea.form__input.large-text(type='text', id='handlingRequirements', placeholder='Message here...', rows='4', cols='80')
     +formInput('dangerousGoods', 'text', 'Dangerous goods? (true OR false)', 'e.g. true')
     +formInput('codeDrg',  'text','DRG code', 'e.g. 123456')
     p Fields marked with a '*' are required

@@ -79,9 +79,12 @@ if (
   document.querySelector('.refresh-box').classList.remove('hidden');
   document.querySelector('.refresh-btn').addEventListener('click', function () {
     prepareButtonUI(this);
-    makeRequestWithButtonUI('refresh', null, this).then(() =>
-      document.querySelector('.refresh-box').classList.add('hidden'),
-    );
+    makeRequestWithButtonUI('refresh', null, this).then(() => {
+      document.querySelector('.error__msg').remove();
+      document.querySelector('.refresh-box').classList.add('hidden');
+      document.querySelector('.error__title .heading-secondary').textContent =
+        'Success! Refreshing your page...';
+    });
   });
 }
 
@@ -271,6 +274,10 @@ if (window.location.pathname === '/ops-data') {
 
   submitDataForm.addEventListener('submit', async function (e) {
     e.preventDefault();
+
+    if (document.querySelector('.container table'))
+      document.querySelector('.container table').remove();
+
     const btn = allSubmitButtons[count];
     prepareButtonUI(btn);
     const object = {};
@@ -282,6 +289,10 @@ if (window.location.pathname === '/ops-data') {
 
   submitShipperForm.addEventListener('submit', async function (e) {
     e.preventDefault();
+
+    if (document.querySelector('.container table'))
+      document.querySelector('.container table').remove();
+
     const shipperObj = setObject(
       metaArray.find((el) => el.name === 'Shippers').array,
     );
@@ -296,6 +307,10 @@ if (window.location.pathname === '/ops-data') {
 
   submitFinancialsForm.addEventListener('submit', async function (e) {
     e.preventDefault();
+
+    if (document.querySelector('.container table'))
+      document.querySelector('.container table').remove();
+
     const financialsObj = setObject(
       metaArray.find((el) => el.name === 'Financials').array,
     );
@@ -310,6 +325,10 @@ if (window.location.pathname === '/ops-data') {
 
   submitCustomsForm.addEventListener('submit', async function (e) {
     e.preventDefault();
+
+    if (document.querySelector('.container table'))
+      document.querySelector('.container table').remove();
+
     const customsObj = setObject(
       metaArray.find((el) => el.name === 'Customs').array,
     );
@@ -324,6 +343,10 @@ if (window.location.pathname === '/ops-data') {
 
   submitDetailsForm.addEventListener('submit', async function (e) {
     e.preventDefault();
+    //TODO: follow up if this works and apply to other forms
+    if (document.querySelector('.container table'))
+      document.querySelector('.container table').remove();
+
     const detailsObj = setObject(
       metaArray.find((el) => el.name === 'Shipment-details').array,
     );
@@ -338,6 +361,10 @@ if (window.location.pathname === '/ops-data') {
 
   submitConveyanceForm.addEventListener('submit', async function (e) {
     e.preventDefault();
+
+    if (document.querySelector('.container table'))
+      document.querySelector('.container table').remove();
+
     const conveyanceObj = setObject(
       metaArray.find((el) => el.name === 'Conveyance').array,
     );
@@ -352,6 +379,10 @@ if (window.location.pathname === '/ops-data') {
 
   timelineForm.addEventListener('submit', async function (e) {
     e.preventDefault();
+
+    if (document.querySelector('.container table'))
+      document.querySelector('.container table').remove();
+
     const object = {};
     object.timelineMasterId = document.getElementById('timelineMasterId').value;
     const btn = allSubmitButtons[count];
@@ -379,6 +410,10 @@ if (window.location.pathname === '/ops-data') {
 
   consigneesForm.addEventListener('submit', async function (e) {
     e.preventDefault();
+
+    if (document.querySelector('.container table'))
+      document.querySelector('.container table').remove();
+
     let object = {};
     for (const key of metaArray.find((el) => el.name === 'Consignees').array) {
       object[key] = null;

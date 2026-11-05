@@ -1,6 +1,7 @@
 'use strict';
 const { sequelize } = require('../../../sequelize/db');
 const { Model, DataTypes } = require('sequelize');
+const AppError = require('../../../utils/AppError');
 
 class Customs extends Model {}
 
@@ -59,6 +60,21 @@ Customs.init(
   },
   { sequelize, modelName: 'Customs', timestamps: true },
 );
+
+Customs.beforeCreate(async (customs, options) => {
+  // FK = Foreign Key
+  const docWithSameFK = await Customs.findOne({
+    where: { customsMasterId: customs.customsMasterId },
+  });
+
+  if (docWithSameFK)
+    return Promise.reject(
+      new AppError(
+        "A document with the same value for 'MasterId' already exists.",
+        400,
+      ),
+    );
+});
 
 Customs.sync();
 

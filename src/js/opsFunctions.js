@@ -76,27 +76,6 @@ export const getAndRenderTable = async (name, id) => {
   }
 };
 
-export const getDogs = async () => {
-  try {
-    const res = await axios({
-      method: 'GET',
-      url: 'https://dog.ceo/api/breeds/image/random',
-    });
-    if (res.data.status === 'success') {
-      console.log(res.data);
-      const breed = res.data.message.split('/')[4];
-      document
-        .querySelector('.main')
-        .insertAdjacentHTML(
-          'afterbegin',
-          `<h1> Random dog!🐶 ${breed}</h1> <img src="${res.data.message}">`,
-        );
-    }
-  } catch (err) {
-    console.log(err);
-  }
-};
-
 export const tablesIterator = (array, el) => {
   let matchFound = false;
 
@@ -123,18 +102,41 @@ export const filterData = async (queryString) => {
       url: `${process.env.API_CALL_URL}/api/v1/data/${queryString}`,
     });
     if (res.data.status === 'success') {
+      // TODO: MOVE INTO A DIFFERENT FUNCTION ???
       // Clear '.file__container' elements
       document
         .querySelectorAll('.file__container')
         .forEach((container) => container.remove());
 
+      // clear error messages, if any
+      document
+        .querySelectorAll('.heading-box.error__msg')
+        .forEach((element) => element.remove());
+
       // replace them with elements containing the response data
+      // or with a message if there is no DB data
       console.log(res.data);
-      res.data.data.masterQuery.forEach((query) =>
+      if (res.data.results > 0)
+        res.data.data.masterQuery.forEach((query) => {
+          // render html template
+          const renderedHtml = renderFileHtml(query);
+          // insert html
+          document
+            .querySelector('.file-nav-box')
+            .insertAdjacentHTML('afterend', renderedHtml);
+        });
+      else if (res.data.results === 0) {
+        document
+          .querySelectorAll('.heading-box.error__msg')
+          .forEach((element) => element.remove());
+
         document
           .querySelector('.file-nav-box')
-          .insertAdjacentHTML('afterend', query),
-      );
+          .insertAdjacentHTML(
+            'afterend',
+            "<div class='heading-box error__msg'><h1>There is currently no data matching this filter.</h1><p>Please try again after the appropriate data has been added to the database.</p></div>",
+          );
+      }
     }
   } catch (err) {
     console.error(err);
@@ -155,3 +157,26 @@ export const getData = async (url) => {
     showAlert('error', 'There was a problem making that request');
   }
 };
+
+/*
+export const getDogs = async () => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: 'https://dog.ceo/api/breeds/image/random',
+    });
+    if (res.data.status === 'success') {
+      console.log(res.data);
+      const breed = res.data.message.split('/')[4];
+      document
+        .querySelector('.main')
+        .insertAdjacentHTML(
+          'afterbegin',
+          `<h1> Random dog!🐶 ${breed}</h1> <img src="${res.data.message}">`,
+        );
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+*/

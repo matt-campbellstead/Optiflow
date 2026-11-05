@@ -290,6 +290,7 @@ export const renderFileHtml = (data) => {
     ><button class="file-editor-btn">Conveyance</button
     ><button class="file-editor-btn">Customs</button>
   </div>
+  <button class="file-editor-btn" type="button" id="edit-file-link">Edit</button>
   <div class="shipment-box">`;
 
   html += navHtml;

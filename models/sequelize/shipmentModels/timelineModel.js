@@ -1,6 +1,7 @@
 'use strict';
 const { sequelize } = require('../../../sequelize/db');
 const { Model, DataTypes } = require('sequelize');
+const AppError = require('../../../utils/AppError');
 
 class Timeline extends Model {}
 
@@ -127,6 +128,21 @@ Timeline.init(
     timestamps: true,
   },
 );
+
+Timeline.beforeCreate(async (timeline, options) => {
+  // FK = Foreign Key
+  const docWithSameFK = await Timeline.findOne({
+    where: { timelineMasterId: timeline.timelineMasterId },
+  });
+
+  if (docWithSameFK)
+    return Promise.reject(
+      new AppError(
+        "A document with the same value for 'MasterId' already exists.",
+        400,
+      ),
+    );
+});
 
 Timeline.sync();
 

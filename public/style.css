@@ -433,6 +433,11 @@ h1 {
   box-sizing: border-box;
 }
 
+.large-text {
+  height: 90%;
+  font-size: 0.8rem;
+}
+
 .btn {
   /*
   margin: 1rem;

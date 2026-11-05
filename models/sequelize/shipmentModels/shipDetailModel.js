@@ -1,6 +1,7 @@
 'use strict';
 const { sequelize } = require('../../../sequelize/db');
 const { Model, DataTypes } = require('sequelize');
+const AppError = require('../../../utils/AppError');
 
 class Details extends Model {}
 
@@ -17,7 +18,7 @@ Details.init(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isUppercase: true, // add regex validate that includes forward slash
+        isUppercase: true, // TODO: add regex validate that includes forward slash
       },
     },
     routing: {
@@ -81,6 +82,21 @@ Details.init(
     timestamps: true,
   },
 );
+
+Details.beforeCreate(async (detail, options) => {
+  // FK = Foreign Key
+  const docWithSameFK = await Details.findOne({
+    where: { detailsMasterId: detail.detailsMasterId },
+  });
+
+  if (docWithSameFK)
+    return Promise.reject(
+      new AppError(
+        "A document with the same value for 'MasterId' already exists.",
+        400,
+      ),
+    );
+});
 
 Details.sync();
 
