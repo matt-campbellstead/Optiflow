@@ -2,9 +2,9 @@
 const express = require('express');
 
 process.on('uncaughtException', (err) => {
-  console.log('Uncaught exception, oh no! Shutting down...');
-  console.log(`${err.message}, ${err}`);
-  console.log(err.stack);
+  logger.info('Uncaught exception, oh no! Shutting down...');
+  logger.info(`${err.message}, ${err}`);
+  logger.info(err.stack);
 
   process.exit(1);
 });
@@ -45,12 +45,12 @@ const connectDB = async () => {
   const date = new Date().toLocaleString('en-ZA');
   try {
     await mongoose.connect(DB);
-    console.log(
+    logger.info(
       `MongoDB: database connection succesful! At ${date.split(', ')[1]}`,
     );
   } catch (err) {
-    console.error('MongoDB connection failed!');
-    console.error(err.name, err.message);
+    logger.error('MongoDB connection failed!');
+    logger.error(err.name, err.message);
   }
 };
 
@@ -60,14 +60,14 @@ connectDB();
 if (process.env.NODE_ENV === 'development') {
   sequelize.sync({ alter: true }).then(() => {
     const date = new Date().toLocaleString('en-ZA');
-    console.log(`MariaDB connection successful! At ${date.split(', ')[1]}`);
+    logger.info(`MariaDB connection successful! At ${date.split(', ')[1]}`);
   });
 } else if (process.env.NODE_ENV === 'production') {
   (async () => {
     try {
       await connectToDB();
     } catch (err) {
-      console.error('Problem connecting to MariaDB database', err);
+      logger.error('Problem connecting to MariaDB database', err);
     }
   })();
 }
@@ -137,7 +137,9 @@ const port = process.env.PORT || 3000;
 
 const server = app.listen(port, '127.0.0.1', () => {
   const date = new Date().toLocaleString('en-ZA');
-  console.log(`App is running on port ${port}, at ${date}`);
+  logger.info('*************************');
+  logger.info(`App is running on port ${port}, at ${date}`);
+  logger.info('*************************');
 });
 
 //Error handling
@@ -148,9 +150,9 @@ app.all('/{*any}', (req, res, next) => {
 app.use(globErrHandler);
 
 process.on('unhandledRejection', (err) => {
-  console.error(err);
-  console.error('Unhandled rejection, oh no! Shutting down...');
-  console.error(err.stack);
+  logger.error(err);
+  logger.error('Unhandled rejection, oh no! Shutting down...');
+  logger.error(err.stack);
 
   server.close(() => {
     process.exit(1);
@@ -158,7 +160,7 @@ process.on('unhandledRejection', (err) => {
 });
 
 process.on('SIGTERM', () => {
-  console.log(`Server shutting down on ${new Date().toLocaleString('en-ZA')}`);
+  logger.info(`Server shutting down on ${new Date().toLocaleString('en-ZA')}`);
   server.close();
   process.exit(0);
 });

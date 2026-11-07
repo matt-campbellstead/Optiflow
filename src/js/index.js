@@ -15,17 +15,17 @@ import {
   prepareButtonUI,
   makeRequestWithButtonUI,
   hideElAndDisplayMessage,
+  iterator,
+  initialize,
+  setObject,
 } from './functions';
 
 import {
-  iterator,
-  initialize,
   customerIdArray,
   consigneesIdArray,
   metaArray,
-  setObject,
   locations,
-} from './data'; //TODO: move to ./functions.js
+} from './data';
 
 import { showAlert } from './alert';
 
@@ -162,7 +162,6 @@ if (resetPasswordInitForm) {
 
 if (resetPasswordActionForm) {
   const token = window.location.search.split('=')[1];
-  console.log(token);
 
   resetPasswordActionForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -203,6 +202,7 @@ if (window.location.pathname === '/ops-data') {
       element.style.margin = '1rem';
       element.style.justifyContent = 'start';
     });
+  document.querySelector('.file-nav-box').style.margin = '20px';
 
   let count = 0;
   const allForms = document.querySelectorAll('.form');
@@ -343,7 +343,7 @@ if (window.location.pathname === '/ops-data') {
 
   submitDetailsForm.addEventListener('submit', async function (e) {
     e.preventDefault();
-    //TODO: follow up if this works and apply to other forms
+
     if (document.querySelector('.container table'))
       document.querySelector('.container table').remove();
 
@@ -500,7 +500,6 @@ if (window.location.pathname === '/ops-data') {
 
       getData(`${process.env.API_CALL_URL}/api/v1/users/?name=${selection}`)
         .then((data) => {
-          console.log(data);
           if (!data.user)
             showAlert('error', 'There was a problem getting this user');
 
@@ -534,7 +533,6 @@ if (document.querySelector('.timeline-select'))
       // 2) Convert the string using string and array methods
       input = input.replace('/', ' ');
       let arrayOfStrings = input.split(' ');
-      console.log('1)', arrayOfStrings);
 
       for (let i = 0; i < arrayOfStrings.length; i++)
         arrayOfStrings[i] = arrayOfStrings[i].toLowerCase();
@@ -542,10 +540,8 @@ if (document.querySelector('.timeline-select'))
       if (arrayOfStrings.length >= 3) arrayOfStrings.pop();
 
       let arrayOfStringsCopy = [...arrayOfStrings];
-      console.log('2) ', arrayOfStringsCopy);
 
       arrayOfStrings = arrayOfStrings.join('_');
-      console.log('3) ', arrayOfStrings);
 
       // 3) Loop through the keys array to match input to a key
       let key;
@@ -570,7 +566,6 @@ if (document.querySelector('.timeline-select'))
 
       object[arrayOfStringsCopy] = dateInput;
 
-      console.log('Data object before function call: ', object);
       // Call the update function with the ID and object as arguments
       updateTimeline(timelineId, object);
     });
@@ -610,6 +605,11 @@ if (
     box.style.border = '1px solid #bbb';
   });
 }
+
+if (window.location.pathname === '/my-files')
+  document
+    .querySelectorAll('.container')
+    .forEach((container) => (container.style.padding = '1rem'));
 
 let filePaginationCount = 0;
 
@@ -728,12 +728,6 @@ if (window.location.pathname === '/ops-dashboard') {
           }
         }
 
-        console.log(currentTable.childNodes[0].data);
-        console.log(
-          currentTable.children[0].children[0].children[0].children[1]
-            .textContent,
-        );
-
         // split the table name getter switch block into its own function then use it here
         window.location.assign(
           `/ops-update/?table=${convertTableName(currentTable.childNodes[0].data.trim())}&?id=${
@@ -764,6 +758,7 @@ if (window.location.pathname === '/ops-update/') {
         button.style.margin = '0.15rem';
 
         button.addEventListener('click', function () {
+          //TODO: also diable other edit buttons to avoid overriding 'originalFieldData'
           // Insert cancel button
           this.parentElement.parentElement.children[2].insertAdjacentHTML(
             'afterbegin',
@@ -814,5 +809,7 @@ if (window.location.pathname === '/ops-update/') {
       const btn = this;
       prepareButtonUI(btn);
       makeRequestWithButtonUI('update', { updateObject, table, id }, btn);
+
+      // TODO: go back to view shipment page and refresh??
     });
 }

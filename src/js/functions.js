@@ -4,6 +4,29 @@ import * as accountRequests from './accountActions';
 import { login } from './login';
 import { submit, update } from './submitData';
 
+export const iterator = (obj, str) => {
+  for (let x of Object.keys(obj)) {
+    if (x === str) return x;
+  }
+  return undefined;
+};
+
+export const initialize = (el) => el.classList.add('hidden');
+
+export const setObject = (arr) => {
+  const object = {};
+  for (const key of arr) {
+    object[key] = null;
+  }
+  arr.forEach((el) => {
+    const node = document.getElementById(el);
+    if (!node) return;
+    let key = iterator(object, el);
+    object[key] = node.value;
+  });
+  return object;
+};
+
 export const attachBtnListeners = (element) => {
   let tablesInParentEl;
   tablesInParentEl = element.parentElement.parentElement.children[5].children;

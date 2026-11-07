@@ -234,7 +234,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
   // Access granted:
   res.locals.user = currentUser;
   req.user = currentUser;
-  // console.error.log(currentUser);
+  // logger.error(currentUser);
   next();
 });
 
@@ -264,10 +264,10 @@ exports.isLoggedIn = async (req, res, next) => {
       // There is a logged in user
       res.locals.user = freshUser;
       req.user = freshUser;
-      //console.log(req.user);
+      //logger.info(req.user);
       return next(); // Fixes headers error 'cannot set headers after they are sent to the client'
     } catch (err) {
-      console.error.log(err);
+      logger.error(err);
       return next();
     }
   }
@@ -344,9 +344,6 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   // Clear current refresh token
   const token = req.cookies?.refresh_token;
 
-  //if (!token) return next(new AppError('No refresh token.', 404));
-  // if !token, no problem?
-
   if (token) {
     const tokenHash = hashToken(token);
 
@@ -356,7 +353,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 
     if (doc && !doc.revokedAt) {
       doc.revokedAt = new Date();
-      console.log(`revoked at: ${doc.revokedAt}`);
+      logger.info(`revoked at: ${doc.revokedAt}`);
       await doc.save();
     }
   }
@@ -413,7 +410,7 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
 
     if (doc && !doc.revokedAt) {
       doc.revokedAt = new Date();
-      console.log(`revoked at: ${doc.revokedAt}`);
+      logger.info(`revoked at: ${doc.revokedAt}`);
       await doc.save();
     }
   }

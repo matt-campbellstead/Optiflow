@@ -31,7 +31,7 @@ function signRefreshToken(user, jti) {
   return token;
 }
 
-// Here the data will be written to the 'refreshtokens' collection on MongoDB
+// Here the data will be written to a MongoDB collection
 async function persistRefreshToken({ user, refreshToken, jti, ip, userAgent }) {
   const tokenHash = hashToken(refreshToken);
   const expiresAt = new Date(Date.now() + REFRESH_TTL_SEC * 1000);
@@ -48,26 +48,21 @@ async function persistRefreshToken({ user, refreshToken, jti, ip, userAgent }) {
 function setRefreshCookie(res, refreshToken) {
   const isProd = process.env.NODE_ENV === 'production';
   res.cookie('refresh_token', refreshToken, {
-    httpOnly: false,
-    secure: false,
+    httpOnly: isProd,
+    secure: isProd,
     sameSite: 'strict',
     path: '/api/v1/users/auth',
     maxAge: REFRESH_TTL_SEC * 1000,
   });
 }
 
-// I needed to set httpOnly to false because I needed to run in production mode
-// locally in the dev environment.
-// I tried setting the path as seen below but that meant the cookie was not
-// accessible. Now it's set to '/' and it works.
 function setAccessCookie(res, accessToken) {
   const isProd = process.env.NODE_ENV === 'production';
   res.cookie('access_token', accessToken, {
-    httpOnly: false,
-    //secure: isProd,
-    secure: false,
+    httpOnly: isProd,
+    secure: isProd,
+    //secure: false,
     sameSite: 'strict',
-    //path: '/api/v1/users/',
     maxAge: 60 * 15 * 1000,
   });
 }
@@ -102,10 +97,8 @@ const { doubleCsrfProtection } = doubleCsrf({
   skipCsrfProtection: (req) => {
     return req.path === '/login' || req.path === '/';
   },
-  cookieName: 'my-csrf-token',
-  // process.env.NODE_ENV === 'production'
-  //   ? '__Secure-my-csrf-token'
-  //   : 'my-csrf-token',
+  //cookieName: 'my-csrf-token',
+  cookieName: '__Secure-my-csrf-token',
   cookieOptions: {
     httpOnly: true,
     sameSite: 'strict',

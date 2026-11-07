@@ -147,8 +147,6 @@ exports.freightApiPortCongestionCrud = factory.wholeCrud(
 );
 
 exports.writeApiMasterDoc = asyncHandler(async (req, res, next) => {
-  console.log(req.params);
-
   if (req.params.key !== process.env.MY_FREIGHT_API_KEY)
     return next(new AppError('Not the correct key - access denied.', 401));
 
@@ -156,7 +154,6 @@ exports.writeApiMasterDoc = asyncHandler(async (req, res, next) => {
 
   try {
     query = await FreightApiMaster.create();
-    console.log(query);
     req.masterId = query.dataValues.id;
   } catch (err) {
     throw err;
@@ -167,7 +164,6 @@ exports.writeApiMasterDoc = asyncHandler(async (req, res, next) => {
 
 exports.queryAndWriteFuelPrices = asyncHandler(async (req, res, next) => {
   let result;
-  console.log('Req.masterId is: ', req.masterId);
 
   try {
     const response = await fetch(
@@ -193,7 +189,7 @@ exports.queryAndWriteFuelPrices = asyncHandler(async (req, res, next) => {
   req.documents = [];
 
   if (result.data.available && result.data.available === false)
-    console.log(
+    logger.info(
       'There was no available information for this fuel price request',
     );
 
@@ -244,9 +240,10 @@ exports.queryAndWritePortCongestion = asyncHandler(async (req, res, next) => {
   );
 
   singleResult = singleResult[0];
+  logger.info('port congestion filtered for cape town: ', singleResult);
 
-  if (!singleResult.available) {
-    console.log(
+  if (singleResult.available) {
+    logger.info(
       'there was no available information for Cape Town port. DB entry thus not written.',
     );
     return next();
@@ -259,9 +256,9 @@ exports.queryAndWritePortCongestion = asyncHandler(async (req, res, next) => {
       congestion: singleResult.congestion,
       asOf: singleResult.as_of,
       recentAvgPortcallsPerDay:
-        singleResult.metrics.recent_avg_portcalls_perday,
+        singleResult.metrics.recent_avg_portcalls_per_day,
       baselineAvgPortcallsPerDay:
-        singleResult.metrics.baseline_avg_portcalls_perday,
+        singleResult.metrics.baseline_avg_portcalls_per_day,
       ratioVsBaseline: singleResult.metrics.ratio_vs_baseline,
     });
 
@@ -299,8 +296,6 @@ exports.queryAndWriteDisruptions = asyncHandler(async (req, res, next) => {
       disruption.location !== null &&
       !disruption.affected_countries.every((country) => country === 'USA'),
   );
-
-  console.log(disruptionsOutsideUSA.length);
 
   const bulkDocuments = [];
 

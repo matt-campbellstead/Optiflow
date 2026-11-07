@@ -24,39 +24,6 @@ export const consigneesIdArray = [
   'country_2',
 ];
 
-export const iterator = (obj, str) => {
-  for (let x of Object.keys(obj)) {
-    if (x === str) return x;
-  }
-  return undefined;
-};
-
-export const toggleHidden = (el) => {
-  const [a, b, c, d] = el;
-  a.classList.add('hidden');
-  b.classList.add('hidden');
-  c.classList.remove('hidden');
-  d.classList.remove('hidden');
-};
-
-export const initialize = (el) => {
-  el.classList.add('hidden');
-};
-
-export const setObject = (arr) => {
-  const object = {};
-  for (const key of arr) {
-    object[key] = null;
-  }
-  arr.forEach((el) => {
-    const node = document.getElementById(el);
-    if (!node) return;
-    let key = iterator(object, el);
-    object[key] = node.value;
-  });
-  return object;
-};
-
 export const metaArray = [
   {
     name: 'Shipment-details',

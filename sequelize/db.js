@@ -7,7 +7,7 @@ const logger = require('../utils/logger');
 const logging =
   process.env.NODE_ENV === 'production'
     ? false
-    : (...msg) => console.log(msg[0]); // console.log(msg[0]);
+    : (...msg) => logger.info(msg[0]); // logger.info(msg[0]);
 
 const sequelize = new Sequelize(
   process.env.DATABASE,
@@ -29,7 +29,7 @@ const sequelize = new Sequelize(
 const connectToDB = async () => {
   const date = new Date().toLocaleString('en-ZA');
   await sequelize.authenticate();
-  console.log(
+  logger.info(
     `MariaDB: database connection established successfully. At ${date.split(', ')[1]}.`,
   );
 };
@@ -45,10 +45,10 @@ const runMigrations = async () => {
   await sequelize.authenticate();
   const migrator = new Umzug(migratorConfig);
   const migrations = await migrator.up();
-  console.log(
+  logger.info(
     `Migrations up to date: files: ${migrations.map((mig) => mig.name)}`,
   );
-  console.log('migrations up to date:', {
+  logger.info('migrations up to date:', {
     files: migrations.map((mig) => mig.name),
   });
 };
@@ -57,10 +57,10 @@ const undoMigrations = async () => {
   await sequelize.authenticate();
   const migrator = new Umzug(migratorConfig);
   const migrations = await migrator.down();
-  console.log(
+  logger.info(
     `Migrations reverted: files: ${migrations.map((mig) => mig.name)}`,
   );
-  console.log('migrations reverted:', {
+  logger.info('migrations reverted:', {
     files: migrations.map((mig) => mig.name),
   });
 };

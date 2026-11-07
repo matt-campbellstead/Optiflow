@@ -6,7 +6,7 @@ runMigrations()
     process.exit(0);
   })
   .catch(async (err) => {
-    console.error('Migration failed:', err);
+    logger.error('Migration failed:', err);
     await sequelize.close();
     process.exit(1);
   });

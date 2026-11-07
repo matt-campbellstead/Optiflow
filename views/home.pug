@@ -6,35 +6,69 @@ block append head
 
 block content   
     main.main
-        if !user 
-            #map
+        if !user
+            .map-container
+                #map
             .container
-                .heading-box
-                    h2=`Today - ${new Date().toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })} - in freight and logistics`
+                .heading-box.main--design-header
+                    //-h2.heading-primary=`Today - ${new Date().toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })} - in freight and logistics`
+                    h1.main--title Today
+                    h2.heading-secondary=new Date().toLocaleString('en-ZA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })
+                    h2.main--title in freight and logistics
                 .main--design-block
-                    h2 Fuel prices 
-                    p=`Diesel - Average per gallon: $ ${data.FreightApiFuelPrice.dataValues.dieselAvgPrice}`
-                    p=`% ${data.FreightApiFuelPrice.dataValues.dieselPriceChangePercent}`
-                    p=`Last updated: ${data.FreightApiFuelPrice.dataValues.dieselUpdatedAt}`
-                    p=`Gasoline - Average per gallon: $ ${data.FreightApiFuelPrice.dataValues.gasolineAvgPrice}`
-                    p=`% ${data.FreightApiFuelPrice.dataValues.gasolinePriceChangePercent}`
-                    p=`Last updated: ${data.FreightApiFuelPrice.dataValues.gasolineUpdatedAt}`
-                    p=`Source: ${data.FreightApiFuelPrice.dataValues.infoSource}`
+                    h2 Fuel prices
+                    h3 Diesel
+                    .data-item-box
+                        //- p=`Diesel - Average per gallon: $ ${data.FreightApiFuelPrice.dataValues.dieselAvgPrice}`
+                        p Average per gallon:
+                        p=`$ ${data.FreightApiFuelPrice.dataValues.dieselAvgPrice}`
+                    .data-item-box
+                        p Price change:
+                        div(class=`${data.FreightApiFuelPrice.dataValues.dieselPriceChangePercent > 0 ? 'price-red' : 'price-green'}`)
+                            p=`% ${data.FreightApiFuelPrice.dataValues.dieselPriceChangePercent}`
+                    .data-item-box
+                        p Last updated:
+                        p=data.FreightApiFuelPrice.dataValues.dieselUpdatedAt
+                    h3 Gasoline 
+                    .data-item-box 
+                        p Average per gallon: 
+                        p=`$ ${data.FreightApiFuelPrice.dataValues.gasolineAvgPrice}`
+                    .data-item-box 
+                        p Price change:
+                        div(class=`${data.FreightApiFuelPrice.dataValues.gasolinePriceChangePercent > 0 ? 'price-red' : 'price-green'}`) 
+                            p=`% ${data.FreightApiFuelPrice.dataValues.gasolinePriceChangePercent}`
+                    .data-item-box 
+                        p Last updated: 
+                        p=`${data.FreightApiFuelPrice.dataValues.gasolineUpdatedAt}`
+                    p.small-text=`Source: ${data.FreightApiFuelPrice.dataValues.infoSource}`
                 
                 .main--design-block 
                     h2 Port congestion - Cape Town
                     if (!data.FreightApiPortCongestion)
                         p Currently there is no available port congestion data 
                     if (data.FreightApiPortCongestion)
+                        .data-item-box 
+                            p Congestion: 
+                            p=data.FreightApiPortCongestion.congestion
+                        .data-item-box 
+                            p As of: 
+                            p=data.FreightApiPortCongestion.asOf 
                         
                 
                 .main--design-block 
                     h2 Possible Disruptions 
-                    span - caused by natural disasters 
+                        span - caused by natural disasters 
                     each object in data.FreightApiDisruptions
-                        div
-                            p=`${object.dataValues.type}, severity ${object.dataValues.severity} in ${object.dataValues.country}`
-                            p=`from source: ${object.dataValues.source}, last updated: ${object.dataValues.updatedAt}` 
+                        .data-item-box
+                            p Disaster
+                            p=`${object.dataValues.type}`
+                        .data-item-box
+                            p Severity 
+                            p=object.dataValues.severity
+                        .data-item-box 
+                            p Location
+                            p=object.dataValues.country
+                        p.small-text=`Source: ${object.dataValues.source}, last updated: ${object.dataValues.updatedAt}` 
 
                 
     if user

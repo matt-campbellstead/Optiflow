@@ -63,11 +63,11 @@ const sendProdErr = (err, req, res) => {
         message: err.message,
       });
     } else {
-      console.error('ERROR👺', err);
-      console.error(err.statusCode);
-      console.error(err.stack);
+      logger.error('ERROR👺', err);
+      logger.error(err.statusCode);
+      logger.error(err.stack);
 
-      console.error(err);
+      logger.error(err);
 
       res.status(500).json({
         status: 'error',
@@ -82,7 +82,7 @@ const sendProdErr = (err, req, res) => {
         msg: err.message,
       });
     } else {
-      console.error('ERROR👺', err);
+      logger.error('ERROR👺', err);
 
       res.status(err.statusCode).render('error', {
         title: 'Something went wrong!',

@@ -5,33 +5,31 @@ import { convertTableName } from './functions';
 
 const getCsrf = () => document.getElementById('_csrf').value;
 // TO BE REPLACED WITH MARIADB CALL
-export const viewShipmentLogs = async (id) => {
-  const userid = id;
-  try {
-    const res = await axios({
-      method: 'GET',
-      url: `${process.env.API_CALL_URL}/api/v1/users/${userid}/shipmentlogs`,
-    });
+// export const viewShipmentLogs = async (id) => {
+//   const userid = id;
+//   try {
+//     const res = await axios({
+//       method: 'GET',
+//       url: `${process.env.API_CALL_URL}/api/v1/users/${userid}/shipmentlogs`,
+//     });
 
-    if (res.data.status === 'success') {
-      showAlert('success', 'User shipments loaded');
-      //console.log(res.data.data.data);
+//     if (res.data.status === 'success') {
+//       showAlert('success', 'User shipments loaded');
 
-      const data = JSON.stringify(res.data.data.data, null, 4);
+//       const data = JSON.stringify(res.data.data.data, null, 4);
 
-      document.querySelector('.shipment-logs').textContent = data;
-    }
-  } catch (err) {
-    showAlert('error', err.response.data.msg);
-  }
-};
+//       document.querySelector('.shipment-logs').textContent = data;
+//     }
+//   } catch (err) {
+//     showAlert('error', err.response.data.msg);
+//   }
+// };
 
 export const updateTimeline = async (docId, data) => {
   const token = getCsrf();
   const id = docId;
   const newData = { ...data };
-  console.log('copy of data object inside function call: ', newData);
-  //console.log(id, newData);
+
   try {
     const res = await axios({
       method: 'PATCH',
@@ -64,14 +62,13 @@ export const getAndRenderTable = async (name, id) => {
     });
 
     if (res.data.status === 'success') {
-      console.log(res.data.data);
       const tableHtml = renderUpdateTableHtml(res.data.data.document);
       document
         .querySelectorAll('.dashboard__container')[1]
         .insertAdjacentHTML('afterbegin', tableHtml);
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
     showAlert('error', err.response.data.message);
   }
 };
@@ -115,7 +112,7 @@ export const filterData = async (queryString) => {
 
       // replace them with elements containing the response data
       // or with a message if there is no DB data
-      console.log(res.data);
+
       if (res.data.results > 0)
         res.data.data.masterQuery.forEach((query) => {
           // render html template
@@ -166,7 +163,7 @@ export const getDogs = async () => {
       url: 'https://dog.ceo/api/breeds/image/random',
     });
     if (res.data.status === 'success') {
-      console.log(res.data);
+      (res.data);
       const breed = res.data.message.split('/')[4];
       document
         .querySelector('.main')
@@ -176,7 +173,7 @@ export const getDogs = async () => {
         );
     }
   } catch (err) {
-    console.log(err);
+    (err);
   }
 };
 */

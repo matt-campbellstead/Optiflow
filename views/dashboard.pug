@@ -101,16 +101,26 @@ mixin customerFunction(data)
                     table 
                         th Goods 
                         td=data.Detail.goodsDescriptions
-            
+            if (!data.Detail)
+                .heading-box 
+                    p.small-text Shipment details for your shipment are still being loaded on the system. 
+                        span Thank you for your patience.
             if (data.Shipper)
                 .data-item-box 
                     h2 Shipper
                     h3=`${data.Shipper.companyName}`
-
+            if (!data.Shipper)
+                .heading-box 
+                    p.small-text Your shipper's details are still being loaded on the system. 
+                        span Thank you for your patience.
             if (data.Financial)
                 .data-item-box 
                     h2 Invoice Number
                     h3=`${data.Financial.shipperInvoiceNum}`
+            if (!data.Financial)
+                .heading-box 
+                    p.small-text Your invoice number is still being loaded on the system. 
+                        span Thank you for your patience.
 
 block content
     if (user.role === 'user')
@@ -176,14 +186,18 @@ block content
 
             .file-count-text=`Number of files: ${allShipments.length}`
             .file-nav-box
-                button.file-editor-btn.previous-shipment << Previous File
-                button.file-editor-btn.next-shipment Next File >>
-                select.filter-select
-                    option --Please choose an option--
-                    option Exports 
-                    option Imports 
-                    option Past shipments
-                button.file-editor-btn.filter-apply Apply filter
+                div
+                    button.file-editor-btn.previous-shipment << Previous File
+                    button.file-editor-btn.next-shipment Next File >>
+                div
+                div 
+                    img(src='img/icons8-filter-32.png')
+                    select.filter-select
+                        option --Please choose an option--
+                        option Exports 
+                        option Imports 
+                        option Past shipments
+                    button.file-editor-btn.filter-apply Apply filter
                     
             
             each shipment, i in allShipments

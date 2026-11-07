@@ -11,7 +11,7 @@ const AppError = require('../utils/AppError');
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const tempDir = path.join(__dirname, '..', 'temp');
-    console.log(tempDir);
+    logger.info(tempDir);
     fs.ensureDirSync(tempDir);
     cb(null, tempDir);
   },
@@ -44,7 +44,7 @@ exports.uploadFile = upload.single('pdf');
 // Enhanced file type validation
 exports.validateFileType = asyncHandler(async (req, res, next) => {
   if (!req.file) return next(new AppError('No file uploaded', 400));
-  console.log(req.file);
+  logger.info(req.file);
   try {
     // Read file buffer
     const buffer = req.file.buffer || (await fs.readFile(req.file.path));
@@ -114,7 +114,7 @@ const secureStorage = {
     try {
       await fs.remove(tempPath);
     } catch (error) {
-      console.error('Failed to cleanup temp file:', error);
+      logger.error('Failed to cleanup temp file:', error);
     }
   },
 };
@@ -278,7 +278,7 @@ exports.testFunction = asyncHandler(async (req, res, next) => {
     };
 
     const document = await File.create(fileInfo);
-    console.log('file info for the DB: ', document);
+    logger.info('file info for the DB: ', document);
 
     res.status(200).json({
       status: 'success',
@@ -298,7 +298,7 @@ exports.testFunction = asyncHandler(async (req, res, next) => {
 
 exports.getUploadRecords = asyncHandler(async (req, res, next) => {
   const documents = await File.find();
-  console.log(documents);
+  logger.info(documents);
   if (!documents)
     return next(new AppError('There are no records in the DB!', 404));
 

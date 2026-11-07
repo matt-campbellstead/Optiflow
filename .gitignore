@@ -8,6 +8,7 @@ text.txt
 .DS_Store
 test.html
 misc/
+misc-assets/
 logs/
 git-filter-repo
 public/js/bundle.js
