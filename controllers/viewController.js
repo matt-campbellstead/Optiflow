@@ -62,6 +62,7 @@ exports.displayShipment = asyncHandler(async (req, res, next) => {
       { model: Financials },
     ],
   });
+
   if (!shipments) {
     return next(
       new AppError('There is no data matching that description.', 404),

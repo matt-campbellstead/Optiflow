@@ -18,6 +18,7 @@ export const login = async (email, password) => {
         'x-csrf-token': token,
       },
       withCredentials: true,
+      timeout: 15000,
     });
 
     if (res.data.status === 'success') {
@@ -39,6 +40,7 @@ export const logout = async () => {
     const res = await axios({
       method: 'GET',
       url: `${process.env.API_CALL_URL}/api/v1/users/auth/logout`,
+      timeout: 15000,
     });
     if (res.data.status === 'success') location.assign('/');
   } catch (err) {

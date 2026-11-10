@@ -8,7 +8,6 @@ router.use(doubleCsrfProtection);
 router.get('/', authController.isLoggedIn, controller.homePage);
 router.get('/login', authController.isLoggedIn, controller.logInUser);
 
-router.get('/dashboard', authController.isLoggedIn, controller.displayShipment);
 router.get('/account-activation', controller.activateAccount);
 router.get('/reset-init', controller.resetPasswordInit);
 router.get('/reset-action', controller.resetPasswordAction);
@@ -16,6 +15,7 @@ router.get('/sign-up', controller.signUp);
 
 router.use(authController.protect);
 
+router.get('/dashboard', authController.isLoggedIn, controller.displayShipment);
 router.get('/ops-dashboard', controller.displayAllShipments);
 router.get('/me', controller.myAccount);
 router.get('/my-files', controller.myFiles);

@@ -14,6 +14,7 @@ export const sendToken = async (token) => {
         'x-csrf-token': csrfToken,
       },
       withCredentials: true,
+      timeout: 15000,
     });
 
     if (res.data.status === 'success') {
@@ -40,6 +41,7 @@ export const sendEmailAddress = async (email) => {
         email,
       },
       withCredentials: true,
+      timeout: 15000,
     });
 
     if (res.data.status === 'success') {
@@ -72,6 +74,7 @@ export const sendResetPasswords = async (
         passwordConfirm: passwordConfirmInput,
       },
       withCredentials: true,
+      timeout: 15000,
     });
 
     if (res.data.status === 'success') {
@@ -107,6 +110,7 @@ export const sendSignUpDetails = async (
         passwordConfirm,
       },
       withCredentials: true,
+      timeout: 15000,
     });
 
     if (res.data.status === 'success') {
@@ -131,6 +135,7 @@ export const requestRefresh = async () => {
         'x-csrf-token': csrfToken,
       },
       withCredentials: true,
+      timeout: 15000,
     });
 
     if (res.data.status === 'success') {
@@ -159,6 +164,7 @@ export const makeUploadRequest = async (data, type = 'PDF') => {
       },
       withCredentials: true,
       data,
+      timeout: 30000,
     });
 
     if (res.data.status === 'success') {
@@ -188,6 +194,7 @@ export const requestPasswordChange = async (data) => {
         password: data.password,
         passwordConfirm: data.passwordConfirm,
       },
+      timeout: 15000,
     });
 
     if (res.data.status === 'success') {

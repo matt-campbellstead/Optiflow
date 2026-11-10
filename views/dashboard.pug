@@ -128,11 +128,16 @@ block content
             .heading-box 
                 h1.heading-primary Your Current Shipments
                 p Check details for each shipment you have ordered with us
-            
+            if (shipments.length > 1)
+                .grid-box
+                    each shipment, i in shipments
+                        .nav__el.shipments
+                            button.btn.btn--outline(id=i)=`${shipment.shipment_file_id}` 
+                        
             if (shipments)
             each shipment, i in shipments
                 if (shipment.Timeline)
-                    .wrapper
+                    .wrapper(class=`${shipments.length > 1 ? 'hidden' : ''}`, id=i)
                         .margin-area
                             .dot(class='one' style=`${shipment.Timeline.received ? 'background: var(--clr-brand);' : 'background: #bbb;'}`) 1
                             .dot(class='two' style=`${shipment.Timeline.cargo_loaded ? 'background: var(--clr-brand);' : 'background: #bbb;'}`) 2
@@ -165,12 +170,11 @@ block content
                                                                                 - let latestDate
                                                                                 - for (const date of dateArr){  if (shipment.Timeline[date] !== null) latestDate = date;}
                                                                                 .status= `Latest update: ${shipment.Timeline[latestDate]}`
-                                                                                .status(class='code') Here is your tracking code: 
-                                                                                    a(href="#") 123456789
+                                                                                
                 else 
-                    .heading-box
+                    .heading-box(class=`${shipments.length > 1 ? 'hidden' : ''}`, id=i)
                         p Your timeline data is still being loaded. Please check back again later.
-                .shipment-box 
+                .shipment-box(class=`${shipments.length > 1 ? 'hidden' : ''}`, id=i) 
                     +customerFunction(shipment)
                     img.picture-box__img(src='/img/LOGISTICS.jpg')
             else
@@ -188,7 +192,7 @@ block content
             .file-nav-box
                 div
                     button.file-editor-btn.previous-shipment << Previous File
-                    button.file-editor-btn.next-shipment Next File >>
+                    button.file-editor-btn.next-shipment(disabled=`${allShipments.lenght === 1 ? true : false}`) Next File >>
                 div
                 div 
                     img(src='img/icons8-filter-32.png')

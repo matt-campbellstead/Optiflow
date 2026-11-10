@@ -39,6 +39,7 @@ export const updateTimeline = async (docId, data) => {
         'x-csrf-token': token,
       },
       withCredentials: true,
+      timeout: 15000,
     });
 
     if (res.data.status === 'success') {
@@ -59,6 +60,7 @@ export const getAndRenderTable = async (name, id) => {
     const res = await axios({
       method: 'GET',
       url: `${process.env.API_CALL_URL}/api/v1/data/${table}/${id}`,
+      timeout: 15000,
     });
 
     if (res.data.status === 'success') {
@@ -97,6 +99,7 @@ export const filterData = async (queryString) => {
     const res = await axios({
       method: 'GET',
       url: `${process.env.API_CALL_URL}/api/v1/data/${queryString}`,
+      timeout: 15000,
     });
     if (res.data.status === 'success') {
       // TODO: MOVE INTO A DIFFERENT FUNCTION ???
@@ -146,6 +149,7 @@ export const getData = async (url) => {
     const res = await axios({
       method: 'GET',
       url: url,
+      timeout: 15000,
     });
 
     if (res.data.status === 'success') return res.data.data;
@@ -154,26 +158,3 @@ export const getData = async (url) => {
     showAlert('error', 'There was a problem making that request');
   }
 };
-
-/*
-export const getDogs = async () => {
-  try {
-    const res = await axios({
-      method: 'GET',
-      url: 'https://dog.ceo/api/breeds/image/random',
-    });
-    if (res.data.status === 'success') {
-      (res.data);
-      const breed = res.data.message.split('/')[4];
-      document
-        .querySelector('.main')
-        .insertAdjacentHTML(
-          'afterbegin',
-          `<h1> Random dog!🐶 ${breed}</h1> <img src="${res.data.message}">`,
-        );
-    }
-  } catch (err) {
-    (err);
-  }
-};
-*/

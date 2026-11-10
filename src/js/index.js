@@ -606,6 +606,61 @@ if (
   });
 }
 
+if (window.location.pathname === '/dashboard') {
+  if (document.querySelector('.btn.btn--outline')) {
+    const dashboardButtons = Array.from(
+      document.querySelectorAll('.btn.btn--outline'),
+    );
+    const headingBoxes = document.querySelectorAll('.heading-box');
+    const shipmentBoxes = document.querySelectorAll('.shipment-box');
+    const wrappers = document.querySelectorAll('.wrapper');
+
+    dashboardButtons.forEach((button) => {
+      button.addEventListener('click', function () {
+        document.querySelector('.grid-box').classList.add('hidden');
+
+        document
+          .querySelector('.heading-box')
+          .insertAdjacentHTML(
+            'afterend',
+            "<button class='btn' id='back'>Back</button>",
+          );
+
+        document.getElementById('back').style.width = '30px';
+
+        document.getElementById('back').addEventListener('click', function () {
+          document.querySelector('.grid-box').classList.remove('hidden');
+
+          for (let i = 0; i < headingBoxes.length; i++) {
+            if (i === 0) continue;
+            headingBoxes[i].classList.add('hidden');
+          }
+
+          shipmentBoxes.forEach((el) => el.classList.add('hidden'));
+
+          wrappers.forEach((el) => el.classList.add('hidden'));
+
+          this.classList.add('hidden');
+        });
+
+        const index = this.id;
+
+        headingBoxes.forEach((el) => {
+          if (el.id === index) el.classList.remove('hidden');
+        });
+
+        shipmentBoxes.forEach((el) => {
+          if (el.id === index) el.classList.remove('hidden');
+        });
+
+        wrappers.forEach((el) => {
+          if (el.id === index) el.classList.remove('hidden');
+        });
+      });
+    });
+  }
+}
+
 if (window.location.pathname === '/my-files')
   document
     .querySelectorAll('.container')
@@ -616,6 +671,13 @@ let filePaginationCount = 0;
 if (window.location.pathname === '/ops-dashboard') {
   let fileContainerElements = document.querySelectorAll('.file__container');
   let fileTableElements = document.querySelectorAll('.shipment-box-detail');
+
+  window.addEventListener('pageshow', (e) => {
+    const checkUpdateFlag = sessionStorage.getItem('flag');
+    if (!checkUpdateFlag) return;
+    location.reload();
+    sessionStorage.removeItem('flag');
+  });
 
   document
     .querySelectorAll('.file__container .heading-secondary')
@@ -751,14 +813,22 @@ if (window.location.pathname === '/ops-update/') {
   document.querySelector('.dashboard__container').style.alignItems = 'center';
 
   let originalFieldData;
+  let localArrCopy;
 
   getAndRenderTable(table, id)
     .then(() => {
-      document.querySelectorAll('table button').forEach((button) => {
+      const allEditButtons = document.querySelectorAll('.file-editor-btn');
+
+      allEditButtons.forEach((button) => {
         button.style.margin = '0.15rem';
 
         button.addEventListener('click', function () {
-          //TODO: also diable other edit buttons to avoid overriding 'originalFieldData'
+          // disable other edit buttons to avoid overriding 'originalFieldData'
+          localArrCopy = Array.from(allEditButtons);
+          localArrCopy.forEach((button) =>
+            button.setAttribute('disabled', true),
+          );
+
           // Insert cancel button
           this.parentElement.parentElement.children[2].insertAdjacentHTML(
             'afterbegin',
@@ -766,13 +836,37 @@ if (window.location.pathname === '/ops-update/') {
           );
           document.querySelector('.cancel-btn').style.margin = '0.15rem';
 
-          // add event listener to new button
+          // Insert done button
+          this.parentElement.parentElement.children[2].insertAdjacentHTML(
+            'afterbegin',
+            "<button class='file-editor-btn done-btn' type='button'>Done</button>",
+          );
+
+          // add event listener to new buttons
           document
             .querySelector('.cancel-btn')
             .addEventListener('click', function () {
-              document.querySelector('.form__input').remove();
+              //document.querySelector('.form__input').remove();
+
+              this.parentElement.parentElement.children[1].children[0].remove();
               this.parentElement.parentElement.children[1].textContent =
                 originalFieldData;
+              localArrCopy.forEach((button) =>
+                button.removeAttribute('disabled'),
+              );
+              if (document.querySelector('.done-btn'))
+                document.querySelector('.done-btn').remove();
+              this.remove();
+            });
+
+          document
+            .querySelector('.done-btn')
+            .addEventListener('click', function () {
+              localArrCopy.forEach((button) =>
+                button.removeAttribute('disabled'),
+              );
+              originalFieldData = '';
+              document.querySelector('.cancel-btn').remove();
               this.remove();
             });
 
@@ -808,8 +902,15 @@ if (window.location.pathname === '/ops-update/') {
 
       const btn = this;
       prepareButtonUI(btn);
-      makeRequestWithButtonUI('update', { updateObject, table, id }, btn);
+      const isSuccessful = await makeRequestWithButtonUI(
+        'update',
+        { updateObject, table, id },
+        btn,
+      );
 
-      // TODO: go back to view shipment page and refresh??
+      if (isSuccessful) {
+        sessionStorage.setItem('flag', 'updatedData');
+        setTimeout(() => history.back(), 1500);
+      }
     });
 }

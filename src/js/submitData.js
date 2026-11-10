@@ -22,6 +22,7 @@ export const submit = async (dataObj, type) => {
         'x-csrf-token': token,
       },
       withCredentials: true,
+      timeout: 15000,
     });
 
     if (res.data.status === 'success') {
@@ -68,6 +69,7 @@ export const update = async (dataObj, table, id) => {
         'x-csrf-token': token,
       },
       withCredentials: true,
+      timeout: 15000,
     });
 
     if (res.data.status === 'success') {
