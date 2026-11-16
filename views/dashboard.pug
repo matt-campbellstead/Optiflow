@@ -192,7 +192,7 @@ block content
             .file-nav-box
                 div
                     button.file-editor-btn.previous-shipment << Previous File
-                    button.file-editor-btn.next-shipment(disabled=`${allShipments.lenght === 1 ? true : false}`) Next File >>
+                    button.file-editor-btn.next-shipment(disabled=allShipments.length === 1 ? true : false) Next File >>
                 div
                 div 
                     img(src='img/icons8-filter-32.png')

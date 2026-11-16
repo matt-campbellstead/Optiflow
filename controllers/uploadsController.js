@@ -7,6 +7,7 @@ const path = require('path');
 const sharp = require('sharp');
 const asyncHandler = require('../utils/asyncHandler');
 const AppError = require('../utils/AppError');
+const logger = require('../utils/logger');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
