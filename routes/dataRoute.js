@@ -33,7 +33,11 @@ router
 router
   .route('/')
   .get(authController.restrictTo('admin'), controller.getMasterData)
-  .post(authController.restrictTo('admin'), controller.createMasterData)
+  .post(
+    authController.restrictTo('admin'),
+    controller.findByCompanyName,
+    controller.createMasterData,
+  )
   .delete(authController.restrictTo('admin'), controller.deleteMasterData);
 
 router
@@ -92,7 +96,7 @@ router
 router
   .route('/customers')
   .get(controller.getCustomers)
-  .post(controller.customersCrud.createCustomers)
+  .post(controller.findByUserName, controller.createCustomers)
   .delete(
     authController.restrictTo('admin'),
     controller.customersCrud.deleteCustomers,

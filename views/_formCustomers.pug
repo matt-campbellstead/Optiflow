@@ -6,14 +6,15 @@ form.form.data-form__customers
     h2.heading-secondary Customer Details table
     .instruction-box
         p NOTE: This form is for creating a Customer file for the FIRST TIME ONLY.
-        p 1) Select a registered user from the dropdown box above and click the button. 
-        |The user's ID will then be loaded onto the appropriate form field.
+        p 1) Select a registered user from the dropdown box below.
         p 2) Fill in the remaining fields and submit.
         |You can then use the newly created Customer file in your new shipment file above.
-    //- p There is no need to link this to a Master sheet, as that will be done elsewhere.
+  
     .form__group
-        label.form__label(for='userId') User ID
-        input.form__input(type='text', id='userId', readonly)
+        label.form__label(for='userName') User
+        select.db-select(id='userName')
+                each customer of customers
+                    option=customer.name
     +formInput('companyName_1', 'text', 'Name of company', 'e.g. ABC Commercial Pty Ltd')
     +formInput('phoneLandline_1', 'text', 'Landline phone number', 'e.g. 011 123 4567')
     +formInput('phoneMobile_1', 'text', 'Mobile phone number', 'e.g. 071 123 4567')

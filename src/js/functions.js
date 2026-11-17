@@ -160,3 +160,47 @@ export const hideElAndDisplayMessage = (el) => {
   el.classList.add('hidden');
   document.querySelector('.dashboard__container').classList.remove('hidden');
 };
+
+export const attachSaveProgressListeners = (selector, storageObject) => {
+  let saveObject = {};
+
+  document.querySelectorAll(selector).forEach((inputEl) => {
+    inputEl.addEventListener('change', (e) => {
+      if (sessionStorage.getItem(storageObject))
+        saveObject = JSON.parse(sessionStorage.getItem(storageObject));
+      saveObject[e.target.id] = e.target.value;
+
+      sessionStorage.setItem(storageObject, JSON.stringify(saveObject));
+    });
+  });
+};
+
+export const removeSaveProgressListeners = (selector, storageObject) => {
+  document.querySelectorAll(selector).forEach((inputEl) =>
+    inputEl.removeEventListener('change', (e) => {
+      if (sessionStorage.getItem(storageObject))
+        saveObject = JSON.parse(sessionStorage.getItem(storageObject));
+      saveObject[e.target.id] = e.target.value;
+
+      sessionStorage.setItem(storageObject, JSON.stringify(saveObject));
+    }),
+  );
+};
+
+export const loadSavedProgress = (selector, storageObject) => {
+  setTimeout(
+    () =>
+      showAlert(
+        'success',
+        'Your form data was saved before the page refreshed. Please continue where you left off.',
+      ),
+    1000,
+  );
+
+  const sessionSaveObject = JSON.parse(sessionStorage.getItem(storageObject));
+
+  document.querySelectorAll(selector).forEach((inputEl) => {
+    if (sessionSaveObject[inputEl.id])
+      inputEl.value = sessionSaveObject[inputEl.id];
+  });
+};

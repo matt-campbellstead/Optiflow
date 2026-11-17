@@ -1,12 +1,7 @@
 import { logout } from './login';
 import { toggleDarkMode } from './toggleDarkMode';
-
-import {
-  updateTimeline,
-  getAndRenderTable,
-  filterData,
-  getData,
-} from './opsFunctions';
+import { requestRefresh } from './accountActions';
+import { updateTimeline, getAndRenderTable, filterData } from './opsFunctions';
 
 import {
   attachBtnListeners,
@@ -18,6 +13,9 @@ import {
   iterator,
   initialize,
   setObject,
+  attachSaveProgressListeners,
+  removeSaveProgressListeners,
+  loadSavedProgress,
 } from './functions';
 
 import {
@@ -25,6 +23,7 @@ import {
   consigneesIdArray,
   metaArray,
   locations,
+  selectorsAndSaveObjects,
 } from './data';
 
 import { showAlert } from './alert';
@@ -76,6 +75,8 @@ if (
   errorMsg &&
   errorMsg.textContent === 'You are not logged in! Please log in to get access'
 ) {
+  if (sessionStorage.getItem('hasLoggedIn') === 'true') requestRefresh();
+
   document.querySelector('.refresh-box').classList.remove('hidden');
   document.querySelector('.refresh-btn').addEventListener('click', function () {
     prepareButtonUI(this);
@@ -189,10 +190,20 @@ if (loginForm)
     const password = document.getElementById('password').value;
     const btn = document.getElementById('login-btn');
     prepareButtonUI(btn);
-    makeRequestWithButtonUI('login', { email, password }, btn);
+    const isLoggedIn = makeRequestWithButtonUI(
+      'login',
+      { email, password },
+      btn,
+    );
+    if (isLoggedIn && !sessionStorage.getItem('hasLoggedIn'))
+      sessionStorage.setItem('hasLoggedIn', 'true');
   });
 
-if (logOutBtn) logOutBtn.addEventListener('click', logout);
+if (logOutBtn)
+  logOutBtn.addEventListener('click', () => {
+    logout();
+    sessionStorage.removeItem('hasLoggedIn');
+  });
 
 themeBtn.addEventListener('click', toggleDarkMode);
 
@@ -203,6 +214,15 @@ if (window.location.pathname === '/ops-data') {
       element.style.justifyContent = 'start';
     });
   document.querySelector('.file-nav-box').style.margin = '20px';
+
+  selectorsAndSaveObjects.forEach((obj) => {
+    if (sessionStorage.getItem(obj.saveObject))
+      loadSavedProgress(obj.selector, obj.saveObject);
+  });
+
+  selectorsAndSaveObjects.forEach((obj) =>
+    attachSaveProgressListeners(obj.selector, obj.saveObject),
+  );
 
   let count = 0;
   const allForms = document.querySelectorAll('.form');
@@ -224,9 +244,7 @@ if (window.location.pathname === '/ops-data') {
       if (count > 0) {
         // hide customer selector and show master selector
         // hide instructions block
-        document
-          .querySelector('.selector-box.customer1')
-          .classList.add('hidden');
+
         document
           .querySelector('.selector-box.master')
           .classList.remove('hidden');
@@ -256,9 +274,6 @@ if (window.location.pathname === '/ops-data') {
         document.querySelector('.next-shipment').removeAttribute('disabled');
 
       if (count < 1) {
-        document
-          .querySelector('.selector-box.customer1')
-          .classList.remove('hidden');
         document.querySelector('.selector-box.master').classList.add('hidden');
         this.setAttribute('disabled', true);
       }
@@ -282,8 +297,10 @@ if (window.location.pathname === '/ops-data') {
     prepareButtonUI(btn);
     const object = {};
     object.shipment_file_id = document.getElementById('shipment_file_id').value;
-    object.users = document.getElementById('users').value;
-    object.CustomerId = document.getElementById('CustomerId').value;
+    object.companyName = document.getElementById('companyName').value;
+
+    //object.users = document.getElementById('users').value;
+    //object.CustomerId = document.getElementById('CustomerId').value;
     makeRequestWithButtonUI('submit', { object, tableName: 'master' }, btn);
   });
 
@@ -298,11 +315,19 @@ if (window.location.pathname === '/ops-data') {
     );
     const btn = allSubmitButtons[count];
     prepareButtonUI(btn);
-    makeRequestWithButtonUI(
+    const isSuccessful = makeRequestWithButtonUI(
       'submit',
       { object: shipperObj, tableName: 'shippers' },
       btn,
     );
+
+    if (isSuccessful) {
+      sessionStorage.removeItem('shipperFormData');
+      removeSaveProgressListeners(
+        '.data-form__shipper .form__input',
+        'shipperFormData',
+      );
+    }
   });
 
   submitFinancialsForm.addEventListener('submit', async function (e) {
@@ -316,11 +341,19 @@ if (window.location.pathname === '/ops-data') {
     );
     const btn = allSubmitButtons[count];
     prepareButtonUI(btn);
-    makeRequestWithButtonUI(
+    const isSuccessful = makeRequestWithButtonUI(
       'submit',
       { object: financialsObj, tableName: 'financials' },
       btn,
     );
+
+    if (isSuccessful) {
+      sessionStorage.removeItem('financialsFormData');
+      removeSaveProgressListeners(
+        '.data-form__financials .form__input',
+        'financialsFormData',
+      );
+    }
   });
 
   submitCustomsForm.addEventListener('submit', async function (e) {
@@ -334,11 +367,19 @@ if (window.location.pathname === '/ops-data') {
     );
     const btn = allSubmitButtons[count];
     prepareButtonUI(btn);
-    makeRequestWithButtonUI(
+    const isSuccessful = makeRequestWithButtonUI(
       'submit',
       { object: customsObj, tableName: 'customs' },
       btn,
     );
+
+    if (isSuccessful) {
+      sessionStorage.removeItem('customsFormData');
+      removeSaveProgressListeners(
+        '.data-form__customs .form__input',
+        'customsFormData',
+      );
+    }
   });
 
   submitDetailsForm.addEventListener('submit', async function (e) {
@@ -352,11 +393,19 @@ if (window.location.pathname === '/ops-data') {
     );
     const btn = allSubmitButtons[count];
     prepareButtonUI(btn);
-    makeRequestWithButtonUI(
+    const isSuccessful = makeRequestWithButtonUI(
       'submit',
       { object: detailsObj, tableName: 'shipment-details' },
       btn,
     );
+
+    if (isSuccessful) {
+      sessionStorage.removeItem('shipmentDetailsFormData');
+      removeSaveProgressListeners(
+        '.data-form__details .form__input',
+        'shipmentDetailsFormData',
+      );
+    }
   });
 
   submitConveyanceForm.addEventListener('submit', async function (e) {
@@ -370,11 +419,19 @@ if (window.location.pathname === '/ops-data') {
     );
     const btn = allSubmitButtons[count];
     prepareButtonUI(btn);
-    makeRequestWithButtonUI(
+    const isSuccessful = makeRequestWithButtonUI(
       'submit',
       { object: conveyanceObj, tableName: 'conveyance' },
       btn,
     );
+
+    if (isSuccessful) {
+      sessionStorage.removeItem('conveyanceFormData');
+      removeSaveProgressListeners(
+        '.data-form__conveyance .form__input',
+        'conveyanceFormData',
+      );
+    }
   });
 
   timelineForm.addEventListener('submit', async function (e) {
@@ -403,9 +460,22 @@ if (window.location.pathname === '/ops-data') {
       let key = iterator(object, el[0]);
       object[key] = node.value;
     });
+
     const btn = allSubmitButtons[count];
     prepareButtonUI(btn);
-    makeRequestWithButtonUI('submit', { object, tableName: 'customers' }, btn);
+    const isSuccessful = makeRequestWithButtonUI(
+      'submit',
+      { object, tableName: 'customers' },
+      btn,
+    );
+
+    if (isSuccessful) {
+      sessionStorage.removeItem('customersFormData');
+      removeSaveProgressListeners(
+        '.data-form__customers .form__input',
+        'customersFormData',
+      );
+    }
   });
 
   consigneesForm.addEventListener('submit', async function (e) {
@@ -427,7 +497,19 @@ if (window.location.pathname === '/ops-data') {
     });
     const btn = allSubmitButtons[count];
     prepareButtonUI(btn);
-    makeRequestWithButtonUI('submit', { object, tableName: 'consignees' }, btn);
+    const isSuccessful = makeRequestWithButtonUI(
+      'submit',
+      { object, tableName: 'consignees' },
+      btn,
+    );
+
+    if (isSuccessful) {
+      sessionStorage.removeItem('consigneesFormData');
+      removeSaveProgressListeners(
+        '.data-form__consignees .form__input',
+        'consigneesFormData',
+      );
+    }
   });
 
   let isHidden = true;
@@ -449,31 +531,6 @@ if (window.location.pathname === '/ops-data') {
   }
 
   document
-    .querySelector('.selector-box.customer1 button')
-    .addEventListener('click', () => {
-      const selection = document.querySelector(
-        '.selector-box.customer1 select',
-      ).value;
-
-      // make axios request
-      getData(
-        `${process.env.API_CALL_URL}/api/v1/data/customers/?companyName=${selection}`,
-      )
-        .then((data) => {
-          if (!data.query) {
-            return showAlert(
-              'error',
-              'There is no customer entry for that user (not yet)!',
-            );
-          }
-          // use the returned response data to fill in the fields
-          document.getElementById('users').value = data.query.userId;
-          document.getElementById('CustomerId').value = data.query.id;
-        })
-        .catch((err) => console.error(err));
-    });
-
-  document
     .querySelector('.selector-box.master button')
     .addEventListener('click', function () {
       let selection = document
@@ -489,24 +546,6 @@ if (window.location.pathname === '/ops-data') {
       if (currentForm === allForms[allForms.length - 1])
         currentForm.children[2].children[1].value = selection.slice(0, -1);
       else currentForm.children[1].children[1].value = selection.slice(0, -1);
-    });
-
-  document
-    .querySelector('.selector-box.customer2 button')
-    .addEventListener('click', () => {
-      const selection = document.querySelector(
-        '.selector-box.customer2 select',
-      ).value;
-
-      getData(`${process.env.API_CALL_URL}/api/v1/users/?name=${selection}`)
-        .then((data) => {
-          if (!data.user)
-            showAlert('error', 'There was a problem getting this user');
-
-          // use the returned response data to fill in the field
-          document.getElementById('userId').value = data.user._id;
-        })
-        .catch((err) => console.error('Oops, there was an error', err));
     });
 }
 

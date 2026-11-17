@@ -20,16 +20,10 @@ block content
                 | NOTE: If you have not yet created a new entry for the customer, 
                 a(href='#jump-target') do that first, 
                 | then come back and refresh this page.
-                p 1) Use the dropdown box below to choose the customer for this shipment file, then click the button.
-                p --- the customer's user profile and DB ID number will be filled in automatically.
-                p 2) Enter a unique OFS shipment file number.
-                p 3) Review your details, then submit. The Master ID, which is used to identify this file in the next steps, will be set automatically.
-                p 4) Once you see your new shipment file shown on the right, you can proceed to the next step by selecting "Next Step >>" below.
-            .selector-box.customer1
-                select.db-select
-                    each customer of data 
-                        option=`${customer.companyName}`
-                button.file-editor-btn Select customer
+                p 1) Enter a unique OFS shipment file number.
+                p 2) Use the dropdown box below to select the customer for this shipment file
+                p 3) Once you see your new shipment file shown on the right, you can proceed to the next step by selecting "Next Step >>" below.
+          
             
             .selector-box.master(class='hidden')
                 select.db-select(name='') 
@@ -40,14 +34,13 @@ block content
             form.form.data-form__master
                 h2.heading-secondary Master table
                 .form__group
-                    label.form__label(for="shipment_file_id") Shipment file no.
+                    label.form__label(for="shipment_file_id") Shipment File ID
                     input#shipment_file_id.form__input(type='text', placeholder='1234567ABC', required)
-                .form__group
-                    label.form__label(for="users") Customer's user ID string 
-                    input#users.form__input(type='text', placeholder='e.g. 12a12345bc678de9101f2233 ', readonly, required)
-                .form__group
-                    label.form__label(for='CustomerId') Customer's DB ID number
-                    input#CustomerId.form__input(type='text', placeholder='e.g. "1"', readonly, required)
+                .form__group 
+                    label.form__label(for='companyName') Name of Client Company
+                    select.db-select(id='companyName')
+                        each customer of data 
+                            option=customer.companyName
                 
                 .form__group
                     button.btn.submit(type="submit")
@@ -92,9 +85,4 @@ block content
         h2.heading-secondary Create a new customer record below
         button.btn.show-form(id='jump-target') Show/hide Customer Details form
     .container
-        .selector-box.customer2
-            select.db-select
-                each customer of customers 
-                    option=`${customer.name}`
-            button.file-editor-btn Select customer
         include _formCustomers

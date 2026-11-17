@@ -1,5 +1,5 @@
 export const customerIdArray = [
-  'userId',
+  'userName',
   'companyName_1',
   'phoneLandline_1',
   'phoneMobile_1',
@@ -148,7 +148,7 @@ export const metaArray = [
   {
     name: 'Customers',
     array: [
-      'userId',
+      'userName',
       'companyName',
       'phoneLandline',
       'phoneMobile',
@@ -222,5 +222,36 @@ export const locations = [
   {
     name: 'Port Newark-Elizabeth Marine Terminal',
     coordinates: [-74.1505, 40.68155],
+  },
+];
+
+export const selectorsAndSaveObjects = [
+  {
+    selector: '.data-form__shipper .form__input',
+    saveObject: 'shipperFormData',
+  },
+  {
+    selector: '.data-form__consignees .form__input',
+    saveObject: 'consigneesFormData',
+  },
+  {
+    selector: '.data-form__conveyance .form__input',
+    saveObject: 'conveyanceFormData',
+  },
+  {
+    selector: '.data-form__customers .form__input',
+    saveObject: 'customersFormData',
+  },
+  {
+    selector: '.data-form__customs .form__input',
+    saveObject: 'customsFormData',
+  },
+  {
+    selector: '.data-form__details .form__input',
+    saveObject: 'shipmentDetailsFormData',
+  },
+  {
+    selector: '.data-form__financials .form__input',
+    saveObject: 'financialsFormData',
   },
 ];

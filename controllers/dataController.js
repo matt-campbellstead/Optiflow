@@ -36,7 +36,45 @@ exports.customsCrud = factory.wholeCrud(Customs);
 
 exports.conveyanceCrud = factory.wholeCrud(Conveyance);
 
-exports.customersCrud = factory.wholeCrud(Customers);
+exports.findByUserName = async (req, res, next) => {
+  const document = await User.findOne({ name: req.body.userName });
+
+  if (!document)
+    return next(new AppError('Could not find a user by that name', 400));
+
+  req.userId = String(document._id);
+  next();
+};
+
+exports.createCustomers = asyncHandler(async (req, res, next) => {
+  const document = await Customers.create({
+    userId: req.userId,
+    companyName: req.body.companyName,
+    phoneLandline: req.body.phoneLandline,
+    phoneMobile: req.body.phoneMobile,
+    emailPri: req.body.emailPri,
+    emailSec: req.body.emailSec,
+    addressLine1: req.body.addressLine1,
+    addressLine2: req.body.addressLine2,
+    addressLine3: req.body.addressLine3,
+    country: req.body.country,
+  });
+
+  res.status(201).json({
+    status: 'success',
+    message: 'entry added successfully',
+    data: {
+      document,
+    },
+  });
+});
+
+exports.customersCrud = factory.wholeCrud(Customers, [
+  'get',
+  'update',
+  'delete',
+  'getSingle',
+]);
 
 exports.getCustomers = asyncHandler(async (req, res, next) => {
   const whereObject = {};
@@ -110,12 +148,29 @@ exports.getSingleData = asyncHandler(async (req, res, next) => {
   });
 });
 
+exports.findByCompanyName = async (req, res, next) => {
+  const companyName = req.body.companyName;
+  const document = await Customers.findOne({
+    where: {
+      companyName,
+    },
+  });
+
+  if (!document)
+    return next(new AppError('Company by that name not found.', 400));
+
+  req.CustomerId = document.id;
+  req.users = document.userId;
+  next();
+  //
+};
+
 exports.createMasterData = asyncHandler(async (req, res, next) => {
   const masterPost = await Master.create({
     shipment_file_id: req.body.shipment_file_id,
-    users: req.body.users,
-    isCurrent: req.body.isCurrent,
-    CustomerId: req.body.CustomerId,
+    users: req.users,
+    isCurrent: true,
+    CustomerId: req.CustomerId,
   });
 
   const newId = masterPost.id;

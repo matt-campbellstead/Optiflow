@@ -109,12 +109,14 @@ exports.displayAllShipments = asyncHandler(async (req, res, next) => {
 exports.submitData = asyncHandler(async (req, res, next) => {
   const token = req.csrfToken();
 
-  const customers = await User.find({
-    $and: [
-      { name: { $ne: process.env.ADMIN_1 } },
-      { name: { $ne: process.env.ADMIN_2 } },
-    ],
-  });
+  // const customers = await User.find({
+  //   $and: [
+  //     { name: { $ne: process.env.ADMIN_1 } },
+  //     { name: { $ne: process.env.ADMIN_2 } },
+  //   ],
+  // });
+
+  const customers = await User.find({ role: 'user' });
 
   const data = await Customers.findAll({
     order: [['id', 'DESC']],

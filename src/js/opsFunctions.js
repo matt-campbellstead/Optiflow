@@ -143,18 +143,3 @@ export const filterData = async (queryString) => {
     showAlert('error', 'Something went wrong while trying to load the data');
   }
 };
-
-export const getData = async (url) => {
-  try {
-    const res = await axios({
-      method: 'GET',
-      url: url,
-      timeout: 15000,
-    });
-
-    if (res.data.status === 'success') return res.data.data;
-  } catch (err) {
-    console.error(err);
-    showAlert('error', 'There was a problem making that request');
-  }
-};
